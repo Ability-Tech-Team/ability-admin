@@ -1,0 +1,11 @@
+{
+  "Metadata": {
+    "title": "Community Admin",
+    "description": "إدارة تطبيق المجتمع للهاتف المحمول، من Ability-Tech."
+  },
+  "Home": {
+    "title": "Community Admin",
+    "description": "هذا التطبيق قيد الإنشاء. ستتم إضافة الميزات تدريجيًا.",
+    "switchLocale": "{locale, select, en {English} ar {العربية} other {{locale}}}"
+  }
+}

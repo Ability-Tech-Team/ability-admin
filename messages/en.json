@@ -1,0 +1,11 @@
+{
+  "Metadata": {
+    "title": "Community Admin",
+    "description": "Administration for the community mobile app, by Ability-Tech."
+  },
+  "Home": {
+    "title": "Community Admin",
+    "description": "This application is under construction. Features will be added incrementally.",
+    "switchLocale": "{locale, select, en {English} ar {العربية} other {{locale}}}"
+  }
+}
