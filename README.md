@@ -63,6 +63,9 @@ sanitized keys to `.env.example`.
 - `src/app/[locale]/` - root layout (`lang`/`dir`) and the placeholder page
 - `src/proxy.ts` - locale routing, and the redirect to the Portal's sign-in
   for visits without a session cookie
+- `src/app/aws/health-check/route.ts` - `GET /aws/health-check` answers 200
+  with `{"status":200}` for the load balancer, as in Amer CRM (no locale or
+  session)
 - `src/lib/access.ts` - the access check every page runs (server-only)
 - `src/lib/sessionDetails.ts`, `session.ts` - read and validate the Portal's
   session cookie (tested)
