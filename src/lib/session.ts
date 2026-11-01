@@ -1,7 +1,7 @@
 import "server-only";
 import { cookies, headers } from "next/headers";
 import { cache } from "react";
-import { isLoopbackHost } from "./baseUrl";
+import { requestOrigin } from "./portal";
 import {
   parseSessionDetails,
   SESSION_DETAILS_COOKIE,
@@ -19,21 +19,5 @@ export const readSessionDetails = cache(
  * validates the address against its configured product destinations.
  */
 export async function entryUrl(locale: string): Promise<string> {
-  const requestHeaders = await headers();
-  const host =
-    requestHeaders.get("x-forwarded-host")?.split(",")[0]?.trim() ??
-    requestHeaders.get("host") ??
-    "localhost";
-  const forwardedProto = requestHeaders
-    .get("x-forwarded-proto")
-    ?.split(",")[0]
-    ?.trim();
-  const protocol =
-    forwardedProto === "http" || forwardedProto === "https"
-      ? forwardedProto
-      : isLoopbackHost(host.replace(/:\d+$/, ""))
-        ? "http"
-        : "https";
-
-  return `${protocol}://${host}/${locale}`;
+  return `${requestOrigin(await headers())}/${locale}`;
 }
