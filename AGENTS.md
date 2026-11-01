@@ -10,7 +10,7 @@ the workspace instead of assuming it exists.
 
 - **Target:** a chat started in this directory targets Community Admin, the
   administration product for the community mobile app (npm package
-  `ability-community-admin`, local port 3200). Do not change sibling apps
+  `ability-community-admin`, local port 9993). Do not change sibling apps
   unless the request names them.
 - **Scope:** Amer CRM's module inventory is a reference, not this product's
   scope. Community Admin's scope comes from the community app requirements and
@@ -80,12 +80,12 @@ Commands, from this directory (details in `README.md`):
 ```bash
 npm ci
 cp .env.example .env.local   # Portal settings
-npm run dev -- --port 3200
+npm run dev
 npm run lint
 npm run typecheck
 npm test
 npm run build
-npm run start -- --port 3200
+npm run start
 ```
 
 State, decisions, and the Community Admin tracker: `../docs/MIGRATION.md`.
@@ -96,7 +96,7 @@ or outdated. Keep it unchanged.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 

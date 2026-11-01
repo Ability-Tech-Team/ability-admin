@@ -23,12 +23,12 @@ From `CRM/`:
 ```bash
 npm --prefix Ability-Community-Admin ci
 cp Ability-Community-Admin/.env.example Ability-Community-Admin/.env.local
-npm --prefix Ability-Community-Admin run dev -- --port 3200
+npm --prefix Ability-Community-Admin run dev
 ```
 
-Or from this directory: `npm ci`, then `npm run dev -- --port 3200`.
-Open <http://localhost:3200>. Without a session you are sent to the
-Portal's sign-in page (port 3300) and brought back afterwards; signed in, `/`
+Or from this directory: `npm ci`, then `npm run dev`.
+Open <http://localhost:9993>. Without a session you are sent to the
+Portal's sign-in page (port 9992) and brought back afterwards; signed in, `/`
 redirects to `/en` (or the browser's preferred supported locale), and `/ar`
 renders right-to-left. Ability Portal (`../Ability-Portal`) links here by
 default. Signing in needs the Portal and the portal backend (see
@@ -40,13 +40,13 @@ default. Signing in needs the Portal and the portal backend (see
 | Type check (`tsc --noEmit`) | `npm run typecheck` |
 | Unit tests (Vitest) | `npm test` |
 | Production build | `npm run build` |
-| Production server | `npm run start -- --port 3200` |
+| Production server | `npm run start` |
 
 ## Environment
 
 | Variable | Local value | Purpose |
 | --- | --- | --- |
-| `PORTAL_URL` | `http://localhost:3300` | Where signed-out users sign in |
+| `PORTAL_URL` | `http://localhost:9992` | Where signed-out users sign in |
 
 It is server-only and read at runtime. Without it, signed-out visits get
 "Sign-in isn't available" instead of the product.
@@ -70,7 +70,7 @@ npm run docker:prod:update
 
 | Command | What it does |
 | --- | --- |
-| `npm run docker:prod:update` | Builds a new image, checks it in a private preview container, then switches port 3200 to it. The running container serves until then and comes back if the new one doesn't answer. Also does the first deploy |
+| `npm run docker:prod:update` | Builds a new image, checks it in a private preview container, then switches port 9993 to it. The running container serves until then and comes back if the new one doesn't answer. Also does the first deploy |
 | `npm run docker:prod:build` | Builds the image only |
 | `npm run docker:prod` | (Re)starts the container from the last image, e.g. after changing `.env.production` |
 | `npm run docker:prod:logs` | Follows the container's logs |
@@ -86,7 +86,7 @@ npm run docker:prod:update
   values without quotes; the script refuses quoted ones.
 - **Readiness:** `GET /aws/health-check`, for the script's switch and the
   image's `HEALTHCHECK`.
-- **Options:** `PORT` (host port, default 3200), `ENV_FILE` (default
+- **Options:** `PORT` (host port, default 9993), `ENV_FILE` (default
   `.env.production`), `IMAGE` and `NAME` (default `ability-community-admin`),
   `STARTUP_TIMEOUT` (60 seconds), and `KEEP_RELEASES` (3), e.g.
   `PORT=8080 npm run docker:prod:update`.
