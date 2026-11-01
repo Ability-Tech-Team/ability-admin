@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 import AccessNotice from "@/src/components/AccessNotice";
 import AccountBar from "@/src/components/AccountBar";
 import LocaleLinks from "@/src/components/LocaleLinks";
-import { Link } from "@/src/i18n/navigation";
 import { requireProductAccess } from "@/src/lib/access";
 import { buildPortalHomeUrl, getPortalBaseUrl } from "@/src/lib/portal";
 
@@ -30,21 +29,17 @@ export default async function HomePage({ params }: Props) {
         </>
       ) : access.status === "denied" ? (
         <AccessNotice
-          title={tAccess(`${access.reason}.title`)}
-          description={tAccess(`${access.reason}.description`)}
+          title={tAccess("notAvailable.title")}
+          description={tAccess("notAvailable.description")}
         />
       ) : (
         <AccessNotice
-          title={tAccess("unavailable.title")}
-          description={tAccess("unavailable.description")}
-        >
-          <Link href="/" className="text-sm underline underline-offset-4">
-            {tAccess("tryAgain")}
-          </Link>
-        </AccessNotice>
+          title={tAccess("signInUnavailable.title")}
+          description={tAccess("signInUnavailable.description")}
+        />
       )}
       <AccountBar
-        account={access.status === "unavailable" ? null : access.account}
+        account={access.status === "sign-in-unavailable" ? null : access.account}
         portalHomeUrl={portalHomeUrl}
       />
       <LocaleLinks />

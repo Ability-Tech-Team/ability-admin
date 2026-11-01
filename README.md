@@ -2,10 +2,10 @@
 
 Community Admin is Ability-Tech's administration product for the community
 mobile app. Client organizations buy it separately from, or together with,
-Ability CRM. Its page is still a placeholder, now behind the access check:
-clients sign in on Ability Portal, and this app opens only for a client whose
-subscription includes Community Admin and whom Ability-Tech hasn't locked out.
-It has no business module or business API client yet. Mobile resident and
+Ability CRM. Its page is still a placeholder behind the sign-in: users sign
+in on Ability Portal through the portal backend, and this app opens only when
+the sign-in lists `community-admin` for the user. It has no business module or
+business API client yet. Mobile resident and
 guest access is separate and not part of this sign-in.
 
 Read `../AGENTS.md` (shared project instructions) and `../docs/MIGRATION.md`
@@ -31,7 +31,8 @@ Open <http://localhost:3200>. Without a session you are sent to the
 Portal's sign-in page (port 3300) and brought back afterwards; signed in, `/`
 redirects to `/en` (or the browser's preferred supported locale), and `/ar`
 renders right-to-left. Ability Portal (`../Ability-Portal`) links here by
-default. Signing in needs the account service (see Environment).
+default. Signing in needs the Portal and the portal backend (see
+`../README.md`).
 
 | Task | Command (from this directory) |
 | --- | --- |
@@ -45,14 +46,15 @@ default. Signing in needs the account service (see Environment).
 
 | Variable | Local value | Purpose |
 | --- | --- | --- |
-| `ACCOUNT_SERVICE_URL` | `http://localhost:3400` | The account service (contract: `../docs/ACCOUNT-SERVICE-API.md`) |
-| `ACCOUNT_SERVICE_CLIENT_ID` | `ability-community-admin` | This app's credentials, issued by the backend team |
-| `ACCOUNT_SERVICE_CLIENT_SECRET` | from the backend team | Keep it in `.env.local`; never commit it |
-| `PORTAL_URL` | `http://localhost:3300` | Where signed-out clients sign in |
+| `PORTAL_URL` | `http://localhost:3300` | Where signed-out users sign in |
 
-These are server-only values, read when the server starts. A missing or
-invalid value is logged by name, never by value, and every page then shows the
-access-check error instead of the product. This app never uses Amer CRM's API
+It is server-only and read at runtime. Without it, signed-out visits get
+"Sign-in isn't available" instead of the product.
+
+The sign-in itself comes from the Portal's `ability_portal_session` cookie
+(the portal backend's answer), on the same host locally and on the shared
+parent domain when deployed. Until this app has its API, that cookie listing
+`community-admin` is its only access check. This app never uses Amer CRM's API
 URL, cookies, or secrets. Keep real values in ignored `.env*` files and add
 sanitized keys to `.env.example`.
 
@@ -62,10 +64,9 @@ sanitized keys to `.env.example`.
 - `src/proxy.ts` - locale routing, and the redirect to the Portal's sign-in
   for visits without a session cookie
 - `src/lib/access.ts` - the access check every page runs (server-only)
-- `src/services/accountSession.ts` - the session check with the account
-  service (server-only)
-- `src/lib/portal.ts`, `sessionCookie.ts`, `tokens.ts`, `baseUrl.ts`,
-  `accountServiceConfig.ts` - helpers and settings
+- `src/lib/sessionDetails.ts`, `session.ts` - read and validate the Portal's
+  session cookie (tested)
+- `src/lib/portal.ts`, `baseUrl.ts` - the Portal's sign-in and home links
 - `src/components/AccessNotice.tsx`, `AccountBar.tsx`, `LocaleLinks.tsx` -
   the access page, who is signed in, and the language links
 - `src/i18n/` - locale routing, navigation, request config

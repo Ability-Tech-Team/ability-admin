@@ -11,22 +11,13 @@
   "Access": {
     "signedInAs": "تم تسجيل الدخول باسم <strong>{name}</strong>",
     "backToPortal": "العودة إلى Ability Portal",
-    "tryAgain": "حاول مرة أخرى",
-    "not_subscribed": {
-      "title": "Community Admin غير مشمول في اشتراكك",
-      "description": "تواصل مع Ability Tech لإضافته إلى اشتراكك."
-    },
-    "locked": {
-      "title": "Community Admin مقفل لحسابك",
-      "description": "تواصل مع Ability Tech لفتحه."
-    },
-    "unknown": {
+    "notAvailable": {
       "title": "Community Admin غير متاح لحسابك",
-      "description": "تواصل مع Ability Tech إذا كنت تحتاج إليه."
+      "description": "خطة مؤسستك أو دورك لا يشمل Community Admin. تواصل مع مسؤول النظام إذا كنت تحتاج إليه."
     },
-    "unavailable": {
-      "title": "تعذّر التحقق من صلاحياتك",
-      "description": "لم تستجب خدمة تسجيل الدخول، لذا لا يمكن فتح Community Admin الآن. حاول مرة أخرى بعد قليل."
+    "signInUnavailable": {
+      "title": "تسجيل الدخول غير متاح الآن",
+      "description": "لا يمكن لـ Community Admin توجيهك إلى صفحة تسجيل الدخول لأنها غير مهيأة. تواصل مع مسؤول النظام."
     }
   }
 }

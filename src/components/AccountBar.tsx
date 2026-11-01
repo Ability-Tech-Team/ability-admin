@@ -1,9 +1,9 @@
 import { useTranslations } from "next-intl";
-import type { AccountSummary } from "@/src/types/account";
+import type { SessionAccount } from "@/src/lib/access";
 
 type AccountBarProps = {
-  account: AccountSummary | null;
-  /** The Portal home in this locale, where clients sign out and switch apps. */
+  account: SessionAccount | null;
+  /** The Portal home in this locale, where users sign out and switch apps. */
   portalHomeUrl: string | null;
 };
 
@@ -19,7 +19,7 @@ export default function AccountBar({ account, portalHomeUrl }: AccountBarProps) 
       {account ? (
         <p>
           {t.rich("signedInAs", {
-            name: account.name.trim() || account.email,
+            name: account.name,
             strong: (chunks) => (
               <strong className="font-semibold text-gray-900">
                 {/* Isolated, so a Latin name's punctuation stays with it
@@ -28,6 +28,12 @@ export default function AccountBar({ account, portalHomeUrl }: AccountBarProps) 
               </strong>
             ),
           })}
+          {account.roleName ? (
+            <>
+              {" · "}
+              <bdi>{account.roleName}</bdi>
+            </>
+          ) : null}
         </p>
       ) : null}
       {portalHomeUrl ? (

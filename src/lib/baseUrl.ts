@@ -1,7 +1,7 @@
 /**
- * Validation for configured base URLs (product destinations, the account
- * service): an absolute `https:` URL, or `http:` for loopback hosts during
- * local development, with an optional base path.
+ * Validation for configured base URLs (the Portal): an absolute `https:` URL,
+ * or `http:` for loopback hosts during local development, with an optional
+ * base path.
  */
 
 export type BaseUrlProblem =

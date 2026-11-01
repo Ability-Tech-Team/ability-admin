@@ -11,22 +11,13 @@
   "Access": {
     "signedInAs": "Signed in as <strong>{name}</strong>",
     "backToPortal": "Back to Ability Portal",
-    "tryAgain": "Try again",
-    "not_subscribed": {
-      "title": "Community Admin isn’t included in your subscription",
-      "description": "Contact Ability Tech to add it to your subscription."
-    },
-    "locked": {
-      "title": "Community Admin is locked for your account",
-      "description": "Contact Ability Tech to unlock it."
-    },
-    "unknown": {
+    "notAvailable": {
       "title": "Community Admin isn’t available for your account",
-      "description": "Contact Ability Tech if you need it."
+      "description": "Your organization’s plan or your role doesn’t include Community Admin. Contact your administrator if you need it."
     },
-    "unavailable": {
-      "title": "We couldn’t check your access",
-      "description": "The sign-in service didn’t answer, so Community Admin can’t open right now. Try again in a moment."
+    "signInUnavailable": {
+      "title": "Sign-in isn’t available right now",
+      "description": "Community Admin can’t send you to the sign-in page because it isn’t configured. Contact your administrator."
     }
   }
 }

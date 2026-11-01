@@ -20,33 +20,32 @@ the workspace instead of assuming it exists.
   build output, and local Git repository. Never import runtime code from
   `../Amer-CRM`, `../Ability-CRM`, or `../Ability-Portal`. Copy and adapt
   reference code when useful, and record its source in `../docs/MIGRATION.md`.
-- **Status (2026-10-01):** the placeholder page now sits behind the access
-  check; there is no business module or business API client yet. The checks
-  below were verified against a contract stand-in, but the account service
-  itself doesn't exist yet, so without it (or without the settings) every page
-  shows the access-check error. Do not expose protected features without the
-  check, and do not add a stub, bypass, or demo mode.
-- **Sign-in and access** (rules in `../AGENTS.md`): clients sign in once, on
-  Ability Portal; this app has no password form and keeps no passwords. It
-  reads the Portal's `ability_session` cookie and never sets or deletes it.
-  Mobile residents and guests are not Portal accounts (see Scope).
-  - `src/proxy.ts`: without a well-formed session cookie, redirects straight
-    to `<PORTAL_URL>/<locale>/sign-in?returnTo=<this page>`. This is only an
+- **Status (2026-11-01):** the placeholder page sits behind the Portal's
+  session cookie; there is no business module or API client yet. Checked end
+  to end against contract stand-ins. Do not expose protected features without
+  the check, and do not add a stub, bypass, or demo mode.
+- **Sign-in and access** (decided 2026-11-01; rules in `../AGENTS.md`): users
+  sign in once, on Ability Portal, through the portal backend; this app has
+  no password form and keeps no passwords. It reads the Portal's
+  `ability_portal_session` cookie and never sets or deletes it. Mobile
+  residents and guests are not Portal users (see Scope).
+  - `src/proxy.ts`: without the cookie, redirects straight to
+    `<PORTAL_URL>/<locale>/sign-in?returnTo=<this page>`. This is only an
     optimistic check.
-  - `src/lib/access.ts` (server-only): `requireProductAccess(locale)` checks
-    the session with the account service once per render, redirects
-    signed-out clients to the Portal, and returns `available`, `denied`
-    (`not_subscribed`, `locked`, or `unknown`), or `unavailable`. Every
-    protected page and data request calls it first, not only a layout; the
-    future business APIs must enforce the same checks on the server.
-  - `src/services/accountSession.ts` makes the only account service call
-    (`GET /v1/auth/session`, 5-second timeout, zod-checked response). This
-    app's product key is `communityAdmin` (`src/lib/sessionCookie.ts`).
-    Anything outside the contract counts as "unavailable", which never shows
-    the product.
-  - `src/components/`: `AccessNotice.tsx` (denied or unavailable),
-    `AccountBar.tsx` (who is signed in, with a link back to the Portal), and
-    `LocaleLinks.tsx`.
+  - `src/lib/sessionDetails.ts`: reads and validates the cookie (the sign-in's
+    `session`, with the same rules as the Portal's `src/lib/signInAnswer.ts`
+    and Ability CRM's `src/lib/sessionDetails.ts`; keep them in step).
+    `src/lib/session.ts` reads it once per render.
+  - `src/lib/access.ts` (server-only): `requireProductAccess(locale)` redirects
+    signed-out users to the Portal and returns `available` when the sign-in's
+    `platforms` lists `community-admin`, `denied` otherwise, or
+    `sign-in-unavailable` when `PORTAL_URL` isn't set. Every protected page and
+    data request calls it first, not only a layout. Until this app has an API,
+    the cookie is its only check; that API must check the backend's
+    `access_token` on every call.
+  - `src/components/`: `AccessNotice.tsx` (not available, or sign-in not
+    configured), `AccountBar.tsx` (who is signed in and their role, with a
+    link back to the Portal), and `LocaleLinks.tsx`.
 - **Structure:** follow Amer CRM's definitions module (route-colocated
   `hooks/`, `components/`, `schema.ts`, `types.ts`, `utils.ts`; entity API
   operations in `src/services/`; HTTP client and configuration in `src/lib/`).
@@ -58,21 +57,18 @@ the workspace instead of assuming it exists.
   layout, and the request locale comes from `next/root-params`. English is the
   default; Arabic renders right-to-left. This app owns `messages/en.json` and
   `messages/ar.json`.
-- **Environment** (`.env.example`): `ACCOUNT_SERVICE_URL`,
-  `ACCOUNT_SERVICE_CLIENT_ID` (`ability-community-admin`),
-  `ACCOUNT_SERVICE_CLIENT_SECRET`, and `PORTAL_URL`, all server-only and read
-  at runtime. Never reuse Amer CRM's API URL, cookies, or credentials.
+- **Environment** (`.env.example`): `PORTAL_URL`, server-only and read at
+  runtime. Never reuse Amer CRM's API URL, cookies, or credentials.
   Document new keys in `.env.example` with placeholder values.
 - **Tests:** `npm test` runs Vitest (`vitest.config.mts`) on
   `src/**/*.test.ts`; `test/server-only.ts` stands in for `server-only`. The
-  tests cover the session check against the contract (with a mocked `fetch`)
-  and the Portal URLs.
+  tests cover the session cookie and the Portal URLs.
 
 Commands, from this directory (details in `README.md`):
 
 ```bash
 npm ci
-cp .env.example .env.local   # account service and Portal settings
+cp .env.example .env.local   # Portal settings
 npm run dev -- --port 3200
 npm run lint
 npm run typecheck
