@@ -1,5 +1,6 @@
-import type { MenuItem } from "../types/types";
+import type { ReactNode } from "react";
 import {
+  type IconProps,
   DashboardIcon,
   MasterDataIcon,
   ProjectsSubIcon,
@@ -25,7 +26,27 @@ import {
   RolesSubIcon,
   AuditLogSubIcon,
   SettingsIcon,
-} from "../components/icons";
+} from "@/src/components/icons/SideMenuIcons";
+
+/**
+ * The side menu's entries (src/components/SideMenu.tsx). Labels come from the
+ * `SideMenu` catalog namespace by `key`. `href: "#"` marks a module that
+ * isn't built yet: it shows, but doesn't link.
+ */
+export type SubItem = {
+  key: string;
+  href: string;
+  icon: (props: IconProps) => ReactNode;
+  /** A count from the API (none yet); never a made-up number. */
+  badge?: number;
+};
+
+export type MenuItem = {
+  key: string;
+  href: string;
+  icon: (props: IconProps) => ReactNode;
+  children?: SubItem[];
+};
 
 export const menuItems: MenuItem[] = [
   { key: "dashboard", href: "/", icon: DashboardIcon },
@@ -47,10 +68,10 @@ export const menuItems: MenuItem[] = [
     href: "#",
     icon: OperationsIcon,
     children: [
-      { key: "serviceRequests", href: "#", icon: ServiceReqSubIcon, badge: 47 },
-      { key: "complaints", href: "#", icon: ComplaintsSubIcon, badge: 19 },
-      { key: "invoicesPayments", href: "#", icon: InvoicesSubIcon, badge: 23 },
-      { key: "guestInvitations", href: "#", icon: GuestInvSubIcon, badge: 4 },
+      { key: "serviceRequests", href: "#", icon: ServiceReqSubIcon },
+      { key: "complaints", href: "#", icon: ComplaintsSubIcon },
+      { key: "invoicesPayments", href: "#", icon: InvoicesSubIcon },
+      { key: "guestInvitations", href: "#", icon: GuestInvSubIcon },
     ],
   },
   { key: "notifications", href: "#", icon: NotificationsIcon },

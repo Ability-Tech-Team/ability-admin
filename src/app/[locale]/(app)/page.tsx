@@ -21,7 +21,8 @@ export default async function HomePage({ params }: Props) {
     : null;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-8 text-center">
+    // The layout provides <main>.
+    <div className="flex flex-1 flex-col items-center justify-center gap-6 p-4 text-center">
       {access.status === "available" ? (
         <>
           <h1 className="text-3xl font-semibold">{t("title")}</h1>
@@ -43,6 +44,6 @@ export default async function HomePage({ params }: Props) {
         portalHomeUrl={portalHomeUrl}
       />
       <LocaleLinks />
-    </main>
+    </div>
   );
 }

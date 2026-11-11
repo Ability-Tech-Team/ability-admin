@@ -38,7 +38,8 @@
     "rolesPermissions": "Roles & Permissions",
     "auditLog": "Audit Log",
     "settings": "Settings",
-    "collapse": "Collapse sidebar"
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
   },
   "Navbar": {
     "allProjects": "All Projects",
@@ -49,7 +50,8 @@
     "searchPlaceholder_unitNumber": "Enter unit number",
     "searchPlaceholder_customerName": "Enter customer name",
     "searchPlaceholder_mobile": "Enter mobile number",
-    "searchPlaceholder_idNumber": "Enter ID number"
+    "searchPlaceholder_idNumber": "Enter ID number",
+    "notifications": "Notifications"
   },
   "Access": {
     "signedInAs": "Signed in as <strong>{name}</strong>",

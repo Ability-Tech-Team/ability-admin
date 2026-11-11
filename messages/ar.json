@@ -38,7 +38,8 @@
     "rolesPermissions": "الأدوار والصلاحيات",
     "auditLog": "سجل المراجعة",
     "settings": "الإعدادات",
-    "collapse": "طي القائمة"
+    "collapse": "طي القائمة",
+    "expand": "توسيع القائمة"
   },
   "Navbar": {
     "allProjects": "كل المشاريع",
@@ -49,7 +50,8 @@
     "searchPlaceholder_unitNumber": "أدخل رقم الوحدة",
     "searchPlaceholder_customerName": "أدخل اسم العميل",
     "searchPlaceholder_mobile": "أدخل رقم الجوال",
-    "searchPlaceholder_idNumber": "أدخل رقم الهوية"
+    "searchPlaceholder_idNumber": "أدخل رقم الهوية",
+    "notifications": "الإشعارات"
   },
   "Access": {
     "signedInAs": "تم تسجيل الدخول باسم <strong>{name}</strong>",

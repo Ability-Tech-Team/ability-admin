@@ -23,7 +23,9 @@ the workspace instead of assuming it exists.
 - **Status (2026-11-01):** the placeholder page sits behind the Portal's
   session cookie; there is no business module or API client yet. Since
   2026-11-11 it reads its API address from the sign-in and has the local dev
-  proxy (below), ready for the team's API client. Checked end
+  proxy (below), ready for the team's API client, and the admin shell (side
+  menu and navbar, from the team's `issue/1-side-menu`) whose entries link
+  nowhere yet. Checked end
   to end against contract stand-ins. Do not expose protected features without
   the check, and do not add a stub, bypass, or demo mode.
 - **Sign-in and access** (decided 2026-11-01; rules in `../AGENTS.md`): users
@@ -59,6 +61,16 @@ the workspace instead of assuming it exists.
   - `src/components/`: `AccessNotice.tsx` (not available, or sign-in not
     configured), `AccountBar.tsx` (who is signed in and their role, with a
     link back to the Portal), and `LocaleLinks.tsx`.
+  - **The admin shell** (`src/app/[locale]/(app)/layout.tsx`): it runs
+    `requireProductAccess` and draws `SideMenu.tsx` and `Navbar.tsx`
+    (`src/components/`, icons in `src/components/icons/`) only when the
+    status is `available`; otherwise the page alone shows the notice. The
+    navbar shows the session's user (never a fixed name).
+    - The menu's entries are in `src/lib/sideMenuItems.ts`: `href: "#"` for
+      modules not built yet, and a `badge` only from real API counts.
+    - On narrow screens the menu starts collapsed and, once opened, covers
+      the page.
+    - Labels come from the `SideMenu` and `Navbar` catalog namespaces.
 - **Structure:** follow Amer CRM's definitions module (route-colocated
   `hooks/`, `components/`, `schema.ts`, `types.ts`, `utils.ts`; entity API
   operations in `src/services/`; HTTP client and configuration in `src/lib/`).

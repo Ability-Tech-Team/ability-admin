@@ -81,9 +81,13 @@ export function SettingsIcon({ className }: IconProps) {
 /*  Sub-item icons (emoji)                                             */
 /* ------------------------------------------------------------------ */
 
-function EmojiIcon({ className, emoji, label }: IconProps & { emoji: string; label: string }) {
+/**
+ * Decorative: the translated label next to it names the item, so screen
+ * readers skip the emoji (`label` only documents which one it is).
+ */
+function EmojiIcon({ className, emoji }: IconProps & { emoji: string; label: string }) {
   return (
-    <span className={`${className} flex items-center justify-center leading-none`} role="img" aria-label={label}>
+    <span className={`${className} flex items-center justify-center leading-none`} aria-hidden="true">
       {emoji}
     </span>
   );
