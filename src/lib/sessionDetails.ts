@@ -8,8 +8,10 @@ import { z } from "zod";
  * the Portal's (`Ability-Portal/src/lib/signInAnswer.ts`), so a cookie the
  * Portal writes always reads here.
  *
- * It is display data (who is signed in) and the list of products the user
- * may open; this app has no API yet, so it is also its only access check.
+ * It is display data (who is signed in), the list of products the user may
+ * open, and this app's API address (`platforms[community-admin].apiUrl`,
+ * used only when `API_ALLOWED_URLS` lists it: src/lib/session.ts). This app
+ * has no API client yet, so the list is also its only access check.
  */
 export const SESSION_DETAILS_COOKIE = "ability_portal_session";
 
@@ -40,7 +42,15 @@ const sessionSchema = z.object({
   platforms: z.array(z.string()).nullish(),
 });
 
-const cookieSchema = z.object({ session: sessionSchema });
+const platformSchema = z.object({
+  key: z.string(),
+  apiUrl: optionalText,
+});
+
+const cookieSchema = z.object({
+  session: sessionSchema,
+  platforms: z.array(platformSchema).nullish(),
+});
 
 export type SessionDetails = {
   userName: string;
@@ -48,6 +58,11 @@ export type SessionDetails = {
   roleName: string | null;
   /** Null when the session doesn't list platforms. */
   platforms: string[] | null;
+  /**
+   * The sign-in's address for this app's API. Untrusted until checked against
+   * `API_ALLOWED_URLS` (`readApiBaseUrl` in src/lib/session.ts).
+   */
+  apiUrl: string | null;
 };
 
 function decodeBase64Url(value: string): string | null {
@@ -92,13 +107,17 @@ export function parseSessionDetails(
     return null;
   }
 
-  const { session } = parsed.data;
+  const { session, platforms } = parsed.data;
 
   return {
     userName: session.user_name,
     fullName: session.employee_name?.trim() || null,
     roleName: session.role_name?.trim() || null,
     platforms: session.platforms ?? null,
+    apiUrl:
+      platforms
+        ?.find((platform) => platform.key === COMMUNITY_ADMIN_PLATFORM)
+        ?.apiUrl?.trim() || null,
   };
 }
 

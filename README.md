@@ -31,8 +31,8 @@ Open <http://localhost:9993>. Without a session you are sent to the
 Portal's sign-in page (port 9992) and brought back afterwards; signed in, `/`
 redirects to `/en` (or the browser's preferred supported locale), and `/ar`
 renders right-to-left. Ability Portal (`../Ability-Portal`) links here by
-default. Signing in needs the Portal and the portal backend (see
-`../README.md`).
+default. Signing in needs the Portal and the portal backend: `npm run dev`
+from `CRM/` starts all three apps (see `../README.md`).
 
 | Task | Command (from this directory) |
 | --- | --- |
@@ -42,19 +42,44 @@ default. Signing in needs the Portal and the portal backend (see
 | Production build | `npm run build` |
 | Production server | `npm run start` |
 
+### Local API proxy (`npm run dev` only)
+
+- **Why:** the API's CORS lists only the deployed apps, and the backend's
+  `access_token` cookie belongs to the API's host, out of reach of a page on
+  `localhost`.
+- **How:** during `next dev`, the browser calls this app's own
+  `/api/dev-proxy/admin/<n>` (the n-th address in `API_ALLOWED_URLS`), and `next.config.ts` forwards each call
+  (`src/lib/devApiProxy.ts`). The backend's `access_token` cookie is then
+  stored for `localhost`, where the Portal, Ability CRM, and Community Admin
+  all receive it, so local runs need no CORS entry.
+- **Same-origin only:** a request from another site (by `Sec-Fetch-Site`)
+  doesn't match the rewrite and gets a 404.
+- **Builds:** `next build` and the container have no rewrites; deployed, the
+  browser calls the backend directly.
+- **Browsers:** checked in Edge. Safari may refuse the backend's `Secure`
+  cookie on `http://localhost`; use Chrome, Edge, or Firefox.
+
 ## Environment
 
 | Variable | Local value | Purpose |
 | --- | --- | --- |
 | `PORTAL_URL` | `http://localhost:9992` | Where signed-out users sign in |
+| `API_ALLOWED_URLS` | `https://api-prd.ability-tech.com/admin` (the dev server) | The Community Admin API addresses this app accepts from the sign-in (`platforms[community-admin].apiUrl`), comma-separated. An unlisted address is never used. `https:`, or `http:` for loopback and private-network hosts |
 
-It is server-only and read at runtime. Without it, signed-out visits get
+Both are server-only and read at runtime. Without it, signed-out visits get
 "Sign-in isn't available" instead of the product.
 
 The sign-in itself comes from the Portal's `ability_portal_session` cookie
 (the portal backend's answer), on the same host locally and on the shared
-parent domain when deployed. Until this app has its API, that cookie listing
-`community-admin` is its only access check. This app never uses Amer CRM's API
+parent domain when deployed. Until this app has its API client, that cookie
+listing `community-admin` is its only access check.
+
+For the API client the team builds: `readApiBaseUrl()` (`src/lib/session.ts`,
+server-only) returns the sign-in's API address once `API_ALLOWED_URLS` lists
+it, and `browserApiBaseUrl()` (`src/lib/devApiProxy.ts`) turns it into the
+address the browser calls: the local proxy under `npm run dev`, the API
+itself otherwise. Browser calls need `credentials: "include"` (axios
+`withCredentials`), and the API must check `access_token` on every call. This app never uses Amer CRM's API
 URL, cookies, or secrets. Keep real values in ignored `.env*` files and add
 sanitized keys to `.env.example`.
 

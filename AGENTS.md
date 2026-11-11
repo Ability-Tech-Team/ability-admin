@@ -21,7 +21,9 @@ the workspace instead of assuming it exists.
   `../Amer-CRM`, `../Ability-CRM`, or `../Ability-Portal`. Copy and adapt
   reference code when useful, and record its source in `../docs/MIGRATION.md`.
 - **Status (2026-11-01):** the placeholder page sits behind the Portal's
-  session cookie; there is no business module or API client yet. Checked end
+  session cookie; there is no business module or API client yet. Since
+  2026-11-11 it reads its API address from the sign-in and has the local dev
+  proxy (below), ready for the team's API client. Checked end
   to end against contract stand-ins. Do not expose protected features without
   the check, and do not add a stub, bypass, or demo mode.
 - **Sign-in and access** (decided 2026-11-01; rules in `../AGENTS.md`): users
@@ -46,6 +48,14 @@ the workspace instead of assuming it exists.
     data request calls it first, not only a layout. Until this app has an API,
     the cookie is its only check; that API must check the backend's
     `access_token` on every call.
+  - **The API address** (2026-11-11): `readApiBaseUrl()` in
+    `src/lib/session.ts` returns the sign-in's
+    `platforms[community-admin].apiUrl` only when `API_ALLOWED_URLS` lists it.
+    The browser calls `browserApiBaseUrl(...)` from `src/lib/devApiProxy.ts`:
+    under `next dev`, `/api/dev-proxy/admin/<n>`, which `next.config.ts`
+    forwards to the n-th allowed address (same-origin requests only), so the
+    backend's cookie lands on `localhost`; otherwise the API itself. Builds
+    have no rewrites. Calls need `credentials: "include"`.
   - `src/components/`: `AccessNotice.tsx` (not available, or sign-in not
     configured), `AccountBar.tsx` (who is signed in and their role, with a
     link back to the Portal), and `LocaleLinks.tsx`.
@@ -60,8 +70,8 @@ the workspace instead of assuming it exists.
   layout, and the request locale comes from `next/root-params`. English is the
   default; Arabic renders right-to-left. This app owns `messages/en.json` and
   `messages/ar.json`.
-- **Environment** (`.env.example`): `PORTAL_URL`, server-only and read at
-  runtime. Never reuse Amer CRM's API URL, cookies, or credentials.
+- **Environment** (`.env.example`): `PORTAL_URL` and `API_ALLOWED_URLS`,
+  server-only and read at runtime. Never reuse Amer CRM's API URL, cookies, or credentials.
   Document new keys in `.env.example` with placeholder values.
 - **Container** (README.md, Container): `Dockerfile` (the standalone server,
   built with `NEXT_OUTPUT=standalone`; `next.config.ts` keeps the regular

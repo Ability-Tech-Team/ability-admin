@@ -41,6 +41,7 @@ describe("parseSessionDetails", () => {
       fullName: "Super Admin",
       roleName: "Super Admin",
       platforms: ["crm", "community-admin"],
+      apiUrl: "http://172.20.1.141:9998",
     });
     expect(includesCommunityAdminPlatform(details!)).toBe(true);
   });
@@ -62,8 +63,16 @@ describe("parseSessionDetails", () => {
       fullName: null,
       roleName: null,
       platforms: null,
+      apiUrl: null,
     });
     expect(includesCommunityAdminPlatform(details!)).toBe(false);
+  });
+
+  it("has no API address when the sign-in lists none for this app", () => {
+    const details = parseSessionDetails(
+      encode({ ...COOKIE, platforms: [{ key: "crm", apiUrl: "https://api.example.com/crm" }] }),
+    );
+    expect(details?.apiUrl).toBeNull();
   });
 
   it.each([
