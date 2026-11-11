@@ -1,2 +1,2 @@
-export { default as Navbar } from "./Navbar";
-export type { SearchTab } from "./types";
+export { default as Navbar } from "./screens/Navbar";
+export type { SearchTab } from "./types/types";

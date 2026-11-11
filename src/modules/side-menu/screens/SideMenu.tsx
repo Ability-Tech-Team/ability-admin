@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/src/i18n/navigation";
-import { ChevronIcon, CollapseIcon } from "./icons";
-import { menuItems } from "./menuItems";
+import { ChevronIcon, CollapseIcon } from "../components/icons";
+import { menuItems } from "../services/menuItems";
 
 type SideMenuProps = {
   notificationCount?: number;

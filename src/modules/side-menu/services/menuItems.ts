@@ -1,4 +1,4 @@
-import type { MenuItem } from "./types";
+import type { MenuItem } from "../types/types";
 import {
   DashboardIcon,
   MasterDataIcon,
@@ -25,7 +25,7 @@ import {
   RolesSubIcon,
   AuditLogSubIcon,
   SettingsIcon,
-} from "./icons";
+} from "../components/icons";
 
 export const menuItems: MenuItem[] = [
   { key: "dashboard", href: "/", icon: DashboardIcon },

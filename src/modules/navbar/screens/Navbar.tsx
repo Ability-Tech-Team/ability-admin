@@ -5,8 +5,8 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/src/i18n/navigation";
 import { routing } from "@/src/i18n/routing";
 import { useLocale } from "next-intl";
-import { CalendarIcon, SearchIcon, BellIcon, ChevronDownIcon } from "./icons";
-import type { SearchTab } from "./types";
+import { CalendarIcon, SearchIcon, BellIcon, ChevronDownIcon } from "../components/icons";
+import type { SearchTab } from "../types/types";
 
 type NavbarProps = {
   userName?: string;

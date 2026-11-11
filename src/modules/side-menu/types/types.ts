@@ -1,4 +1,4 @@
-import type { IconProps } from "./icons";
+import type { IconProps } from "../components/icons";
 
 export type SubItem = {
   key: string;

@@ -1,3 +1,3 @@
-export { default as SideMenu } from "./SideMenu";
-export type { MenuItem, SubItem } from "./types";
-export type { IconProps } from "./icons";
+export { default as SideMenu } from "./screens/SideMenu";
+export type { MenuItem, SubItem } from "./types/types";
+export type { IconProps } from "./components/icons";
