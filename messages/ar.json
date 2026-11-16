@@ -1,0 +1,525 @@
+{
+  "Metadata": {
+    "title": "Community Admin",
+    "description": "إدارة تطبيق المجتمع للهاتف المحمول، من Ability-Tech."
+  },
+  "Home": {
+    "title": "Community Admin",
+    "description": "هذا التطبيق قيد الإنشاء. ستتم إضافة الميزات تدريجيًا.",
+    "switchLocale": "{locale, select, en {English} ar {العربية} other {{locale}}}"
+  },
+  "SideMenu": {
+    "adminPanel": "لوحة الإدارة",
+    "dashboard": "لوحة التحكم",
+    "masterData": "البيانات الرئيسية",
+    "projects": "المشاريع",
+    "units": "الوحدات",
+    "customers": "العملاء",
+    "unitAssignment": "تخصيص الوحدات",
+    "familyMembers": "أفراد العائلة",
+    "rentalManagement": "إدارة الإيجارات",
+    "operations": "العمليات",
+    "serviceRequests": "طلبات الخدمة",
+    "complaints": "الشكاوى",
+    "invoicesPayments": "الفواتير والمدفوعات",
+    "guestInvitations": "دعوات الضيوف",
+    "cmsAppBuilder": "نظام المحتوى / بناء التطبيق",
+    "appBuilder": "بناء التطبيق",
+    "contentEditor": "محرر المحتوى",
+    "notifications": "الإشعارات",
+    "eventsContent": "الأحداث والمحتوى",
+    "events": "الأحداث",
+    "aboutUs": "من نحن",
+    "phoneDirectory": "دليل الهاتف",
+    "guidelines": "الإرشادات",
+    "newsShops": "الأخبار والمتاجر",
+    "usersPermissions": "المستخدمون والصلاحيات",
+    "users": "المستخدمون",
+    "rolesPermissions": "الأدوار والصلاحيات",
+    "auditLog": "سجل المراجعة",
+    "settings": "الإعدادات",
+    "collapse": "طي القائمة",
+    "expand": "توسيع القائمة"
+  },
+  "Navbar": {
+    "allProjects": "كل المشاريع",
+    "unitNumber": "رقم الوحدة",
+    "customerName": "اسم العميل",
+    "mobile": "الجوال",
+    "idNumber": "رقم الهوية",
+    "searchPlaceholder_unitNumber": "أدخل رقم الوحدة",
+    "searchPlaceholder_customerName": "أدخل اسم العميل",
+    "searchPlaceholder_mobile": "أدخل رقم الجوال",
+    "searchPlaceholder_idNumber": "أدخل رقم الهوية",
+    "notifications": "الإشعارات",
+    "backToPortal": "العودة إلى البوابة"
+  },
+  "PageHeader": {
+    "breadcrumb": "مسار التنقل",
+    "from": "من",
+    "to": "إلى",
+    "widgets": "الأدوات"
+  },
+  "Dashboard": {
+    "title": "لوحة التحكم",
+    "subtitle": "نظرة عامة في الوقت الفعلي على جميع المشاريع والعمليات",
+    "totalProjects": "إجمالي المشاريع",
+    "totalUnits": "إجمالي الوحدات",
+    "activeCustomers": "العملاء النشطون",
+    "totalOwners": "إجمالي المُلّاك",
+    "totalGuests": "إجمالي الضيوف",
+    "totalTenants": "إجمالي المستأجرين",
+    "avgOccupancy": "متوسط نسبة الإشغال",
+    "openServiceRequests": "طلبات الخدمة المفتوحة",
+    "openComplaints": "الشكاوى المفتوحة",
+    "overdueInvoices": "الفواتير المتأخرة",
+    "totalInvoiceValue": "إجمالي قيمة الفواتير",
+    "collectedInvoices": "الفواتير المحصّلة",
+    "overdueInvoiceValue": "قيمة الفواتير المتأخرة",
+    "serviceRequestTrend": "اتجاه طلبات الخدمة",
+    "open": "مفتوح",
+    "resolved": "تم الحل",
+    "occupancyByProject": "الإشغال حسب المشروع",
+    "quickMetrics": "مقاييس سريعة",
+    "avgOccupancyShort": "متوسط الإشغال",
+    "srResolved": "طلبات محلولة",
+    "slaMet": "مستوى الخدمة",
+    "projectsOverview": "نظرة عامة على المشاريع",
+    "viewAll": "عرض الكل",
+    "units": "وحدات",
+    "residents": "سكان",
+    "occupancy": "إشغال",
+    "recentServiceRequests": "طلبات الخدمة الأخيرة",
+    "recentServiceRequestsSubtitle": "أحدث 5 طلبات مفتوحة وقيد التنفيذ",
+    "requestId": "رقم الطلب",
+    "srTitle": "العنوان",
+    "project": "المشروع",
+    "customer": "العميل",
+    "priority": "الأولوية",
+    "status": "الحالة",
+    "sla": "مستوى الخدمة"
+  },
+  "MasterData": {
+    "title": "البيانات الرئيسية",
+    "subtitle": "إدارة المشاريع والوحدات والعملاء والتخصيصات",
+    "tabs": {
+      "projects": "المشاريع",
+      "units": "الوحدات",
+      "customers": "العملاء",
+      "unitAssignment": "تخصيص الوحدات",
+      "familyMembers": "أفراد العائلة",
+      "rentalMgmt": "إدارة الإيجارات"
+    },
+    "searchProjects": "البحث عن مشاريع...",
+    "searchUnits": "البحث عن وحدات...",
+    "searchCustomers": "البحث عن عملاء...",
+    "searchAssignments": "البحث عن تخصيصات...",
+    "searchMembers": "البحث عن أفراد العائلة...",
+    "searchRentals": "البحث عن وحدة أو مستأجر أو هوية...",
+    "exactSearch": "بحث دقيق",
+    "status": "الحالة",
+    "export": "تصدير",
+    "import": "استيراد",
+    "addProject": "إضافة مشروع",
+    "addUnit": "إضافة وحدة",
+    "addCustomer": "إضافة عميل",
+    "addAssignment": "إضافة تخصيص",
+    "addMember": "إضافة فرد عائلة",
+    "addRental": "إضافة إيجار وحدة",
+    "contract": "العقد",
+    "columns": {
+      "project": "المشروع",
+      "location": "الموقع",
+      "type": "النوع",
+      "units": "الوحدات",
+      "occupancy": "الإشغال",
+      "manager": "المدير",
+      "actions": "الإجراءات",
+      "unitId": "رقم الوحدة",
+      "unitNumber": "رقم الوحدة",
+      "projectBuilding": "المشروع / المبنى",
+      "currentOwner": "المالك الحالي",
+      "contract": "العقد",
+      "status": "الحالة",
+      "customer": "العميل",
+      "idPassportType": "نوع الهوية / جواز السفر",
+      "idPassport": "الهوية / جواز السفر",
+      "contact": "التواصل",
+      "unit": "الوحدة",
+      "nationality": "الجنسية",
+      "customerType": "النوع",
+      "joinDate": "تاريخ الانضمام",
+      "attachments": "المرفقات",
+      "assignmentId": "رقم التخصيص",
+      "familyMembers": "أفراد العائلة",
+      "occupancyType": "نوع الإشغال",
+      "startDate": "تاريخ البدء"
+    },
+    "filters": {
+      "projects": "المشاريع",
+      "occupancyType": "نوع الإشغال",
+      "relationship": "العلاقة",
+      "source": "المصدر"
+    },
+    "rentalColumns": {
+      "rentalId": "رقم الإيجار",
+      "unit": "الوحدة",
+      "tenantName": "اسم المستأجر",
+      "idPassportType": "نوع الهوية / جواز السفر",
+      "idPassport": "الهوية / جواز السفر",
+      "start": "البداية",
+      "end": "النهاية",
+      "annualRent": "الإيجار السنوي",
+      "source": "المصدر",
+      "printRC": "طباعة عقد"
+    },
+    "rentalDetail": {
+      "tenantsOn": "المستأجرون في",
+      "showAttachments": "عرض المرفقات",
+      "attachmentDescription": "عقد إيجار أو مستند هوية مرفق بهذا الإيجار."
+    },
+    "familyColumns": {
+      "familyMember": "فرد العائلة",
+      "ownerName": "اسم المالك",
+      "idPassportType": "نوع الهوية / جواز السفر",
+      "idPassport": "الهوية / جواز السفر",
+      "assignedUnit": "الوحدة المخصصة",
+      "relationship": "العلاقة",
+      "mobile": "الجوال",
+      "email": "البريد الإلكتروني",
+      "requestStatus": "حالة الطلب",
+      "approve": "موافقة",
+      "reject": "رفض",
+      "statuses": {
+        "pending": "قيد الانتظار",
+        "approved": "معتمد",
+        "rejected": "مرفوض"
+      }
+    },
+    "view": "عرض",
+    "unitAssignment": "تخصيص الوحدة",
+    "assignmentDetail": {
+      "customersAssigned": "العملاء المخصصون للوحدة",
+      "familyMembersTitle": "أفراد العائلة",
+      "nationalId": "الرقم الوطني",
+      "mobile": "الجوال",
+      "email": "البريد الإلكتروني",
+      "nationality": "الجنسية",
+      "assignmentStart": "تاريخ بدء التخصيص",
+      "relationship": "العلاقة",
+      "attachments": "المرفقات",
+      "roles": {
+        "owner": "مالك",
+        "co-owner": "مالك مشارك",
+        "tenant": "مستأجر"
+      },
+      "statuses": {
+        "approved": "معتمد",
+        "pending": "قيد الانتظار"
+      },
+      "attachmentPreview": "معاينة المرفق",
+      "attachmentDescription": "مستند هوية أو ملكية مرفق بتخصيص الوحدة."
+    },
+    "contractTypes": {
+      "annual": "سنوي",
+      "monthly": "شهري"
+    },
+    "types": {
+      "residential": "سكني",
+      "commercial": "تجاري",
+      "mixed-use": "متعدد الاستخدام"
+    },
+    "idTypes": {
+      "id": "هوية",
+      "passport": "جواز سفر"
+    },
+    "customerTypes": {
+      "owner": "مالك",
+      "tenant": "مستأجر"
+    },
+    "customerProfile": "ملف العميل",
+    "profileFields": {
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "nationality": "الجنسية",
+      "idType": "نوع الهوية",
+      "idNumber": "رقم الهوية",
+      "unit": "الوحدة",
+      "joinDate": "تاريخ الانضمام"
+    },
+    "editProfile": "تعديل الملف",
+    "deleteCustomer": "حذف العميل",
+    "showAttachments": "عرض المرفقات",
+    "editCustomer": "تعديل العميل",
+    "removeCustomer": "حذف العميل",
+    "cancel": "إلغاء",
+    "saveChanges": "حفظ التغييرات",
+    "formFields": {
+      "customerName": "اسم العميل",
+      "mobileNumber": "رقم الهاتف",
+      "email": "البريد الإلكتروني",
+      "idPassportType": "نوع الهوية / جواز السفر",
+      "idPassportNumber": "رقم الهوية / جواز السفر",
+      "nationality": "الجنسية",
+      "project": "المشروع",
+      "assignedUnit": "الوحدة المخصصة",
+      "joinDate": "تاريخ الانضمام",
+      "identityAttachment": "مرفق الهوية"
+    },
+    "attachmentsTitle": "المرفقات",
+    "open": "فتح",
+    "noAttachments": "لا توجد مرفقات.",
+    "openingFile": "جاري فتح {fileName}",
+    "show": "عرض",
+    "edit": "تعديل",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "showing": "عرض {from}-{to} من {total}",
+    "projectsComingSoon": "وحدة المشاريع قيد الإنشاء.",
+    "unitsComingSoon": "وحدة الوحدات قيد الإنشاء.",
+    "customersComingSoon": "وحدة العملاء قيد الإنشاء.",
+    "unitAssignmentComingSoon": "وحدة تخصيص الوحدات قيد الإنشاء.",
+    "familyMembersComingSoon": "وحدة أفراد العائلة قيد الإنشاء.",
+    "rentalManagementComingSoon": "وحدة إدارة الإيجارات قيد الإنشاء."
+  },
+  "Operations": {
+    "title": "العمليات",
+    "subtitle": "إدارة طلبات الخدمة والشكاوى والفواتير ودعوات الضيوف",
+    "tabs": {
+      "serviceRequests": "طلبات الخدمة",
+      "complaints": "الشكاوى",
+      "invoicesPayments": "الفواتير والمدفوعات",
+      "guestInvitations": "دعوات الضيوف"
+    },
+    "statusCards": {
+      "open": "مفتوح",
+      "inProgress": "قيد التنفيذ",
+      "critical": "حرج",
+      "overdueSla": "تجاوز مستوى الخدمة"
+    },
+    "searchRequests": "البحث عن طلبات...",
+    "searchComplaints": "البحث عن شكاوى...",
+    "searchInvoices": "البحث عن فواتير...",
+    "searchGuests": "البحث عن ضيف أو مقيم أو وحدة...",
+    "newRequest": "طلب جديد",
+    "newComplaint": "شكوى جديدة",
+    "exactSearch": "بحث دقيق",
+    "status": "الحالة",
+    "export": "تصدير",
+    "columns": {
+      "requestId": "رقم الطلب",
+      "issue": "المشكلة",
+      "projectUnit": "المشروع / الوحدة",
+      "customer": "العميل",
+      "dueDate": "تاريخ الاستحقاق",
+      "status": "الحالة"
+    },
+    "statuses": {
+      "open": "مفتوح",
+      "in-progress": "قيد التنفيذ",
+      "resolved": "تم الحل",
+      "delayed": "متأخر"
+    },
+    "detail": {
+      "project": "المشروع",
+      "unit": "الوحدة",
+      "customer": "العميل",
+      "type": "النوع",
+      "assignedTo": "مخصص إلى",
+      "created": "تاريخ الإنشاء",
+      "dueDateAndTime": "تاريخ ووقت الاستحقاق",
+      "activityTimeline": "سجل النشاط",
+      "addComment": "إضافة تعليق",
+      "commentPlaceholder": "اكتب تعليقاً أو تحديثاً..."
+    },
+    "serviceRequest": {
+      "create": {
+        "title": "طلب خدمة جديد",
+        "issueTitle": "عنوان المشكلة",
+        "serviceType": "نوع الخدمة",
+        "project": "المشروع",
+        "unit": "الوحدة",
+        "customer": "العميل",
+        "dueDate": "تاريخ الاستحقاق",
+        "dueTimeSlot": "وقت الاستحقاق",
+        "cancel": "إلغاء",
+        "submit": "إنشاء طلب"
+      }
+    },
+    "showing": "عرض {from}-{to} من {total}",
+    "filters": {
+      "projects": "المشاريع",
+      "priority": "الأولوية",
+      "invoiceType": "نوع الفاتورة"
+    },
+    "invoice": {
+      "summary": {
+        "totalOutstanding": "إجمالي المستحق",
+        "overdueAmount": "المبلغ المتأخر",
+        "collectedThisMonth": "المحصّل هذا الشهر"
+      },
+      "columns": {
+        "invoiceId": "رقم الفاتورة",
+        "project": "المشروع",
+        "unit": "الوحدة",
+        "invoiceType": "نوع الفاتورة",
+        "amount": "المبلغ"
+      },
+      "types": {
+        "annual-rent": "إيجار سنوي",
+        "monthly-rent": "إيجار شهري",
+        "service-charge": "رسوم خدمة"
+      },
+      "statuses": {
+        "paid": "مدفوع",
+        "pending": "قيد الانتظار",
+        "overdue": "متأخر"
+      },
+      "actions": {
+        "view": "عرض",
+        "markPaid": "تحديد كمدفوع",
+        "download": "تحميل"
+      },
+      "generateInvoice": "إنشاء فاتورة",
+      "maintenanceDeposit": "فرق وديعة الصيانة",
+      "deposit": {
+        "title": "فرق وديعة الصيانة — رفع جماعي",
+        "uploadTitle": "رفع ملف فرق وديعة الصيانة",
+        "uploadDescription": "ملف Excel أو CSV يحتوي على رقم الوحدة والوديعة الحالية والوديعة المطلوبة والفرق.",
+        "unitNumber": "رقم الوحدة",
+        "currentDeposit": "الوديعة الحالية",
+        "requiredDeposit": "الوديعة المطلوبة",
+        "difference": "الفرق",
+        "downloadTemplate": "تحميل القالب",
+        "cancel": "إلغاء",
+        "uploadSheet": "رفع الملف"
+      },
+      "generate": {
+        "title": "إنشاء فاتورة",
+        "customerName": "اسم العميل",
+        "invoiceType": "نوع الفاتورة",
+        "amount": "المبلغ لكل وحدة (ج.م)",
+        "dueDate": "تاريخ الاستحقاق",
+        "units": "الوحدات",
+        "selectUnits": "اختر وحدة واحدة أو أكثر",
+        "unitInfo": "0 وحدات محددة. سيتم إنشاء فاتورة واحدة لكل وحدة.",
+        "cancel": "إلغاء"
+      }
+    },
+    "complaint": {
+      "columns": {
+        "complaintId": "رقم الشكوى",
+        "subject": "الموضوع",
+        "description": "الوصف",
+        "submittedBy": "مقدم من",
+        "priority": "الأولوية",
+        "assignedTo": "مخصص إلى",
+        "date": "التاريخ"
+      },
+      "create": {
+        "title": "شكوى جديدة",
+        "subject": "الموضوع",
+        "description": "الوصف",
+        "project": "المشروع",
+        "unit": "الوحدة",
+        "customer": "العميل",
+        "priority": "الأولوية",
+        "status": "الحالة",
+        "cancel": "إلغاء",
+        "submit": "إنشاء شكوى"
+      },
+      "priorities": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع"
+      }
+    },
+    "complaintDetail": {
+      "submittedBy": "مقدم من",
+      "ticketTimeline": "سجل التذكرة",
+      "customerVoiceNote": "ملاحظة صوتية من العميل",
+      "comments": "التعليقات",
+      "noComments": "لا توجد تعليقات بعد.",
+      "writeComment": "اكتب تعليقاً...",
+      "addComment": "إضافة تعليق"
+    },
+    "serviceRequestsComingSoon": "وحدة طلبات الخدمة قيد الإنشاء.",
+    "complaintsComingSoon": "وحدة الشكاوى قيد الإنشاء.",
+    "invoicesComingSoon": "وحدة الفواتير والمدفوعات قيد الإنشاء.",
+    "guestInvitationsComingSoon": "وحدة دعوات الضيوف قيد الإنشاء.",
+    "guest": {
+      "summary": {
+        "activeQrPasses": "تصاريح QR النشطة",
+        "scheduledVisits": "الزيارات المجدولة",
+        "scannedEntries": "عمليات المسح",
+        "outsideGeofence": "خارج النطاق الجغرافي",
+        "availableNow": "متاح الآن",
+        "upcoming": "قادمة",
+        "thisPeriod": "هذه الفترة",
+        "qrHiddenInApp": "QR مخفي في التطبيق"
+      },
+      "columns": {
+        "guest": "الضيف",
+        "invitedBy": "دعوة من",
+        "visitDate": "تاريخ الزيارة",
+        "qrStatus": "حالة QR",
+        "locationRule": "قاعدة الموقع",
+        "scans": "عمليات المسح"
+      },
+      "qrStatuses": {
+        "active": "نشط",
+        "scheduled": "مجدول",
+        "expired": "منتهي",
+        "revoked": "ملغى"
+      },
+      "locationRules": {
+        "inside-zone": "داخل النطاق",
+        "outside-zone": "خارج النطاق"
+      },
+      "actions": {
+        "view": "عرض"
+      },
+      "createInvitation": "إنشاء دعوة",
+      "create": {
+        "title": "إنشاء دعوة ضيف",
+        "guestName": "اسم الضيف",
+        "guestPhone": "هاتف الضيف",
+        "residentName": "اسم المقيم",
+        "project": "المشروع",
+        "unit": "الوحدة",
+        "visitDate": "تاريخ الزيارة",
+        "cancel": "إلغاء"
+      },
+      "detailTitle": "دعوة ضيف",
+      "detail": {
+        "invitationId": "رقم الدعوة",
+        "guest": "الضيف",
+        "guestPhone": "هاتف الضيف",
+        "resident": "المقيم",
+        "unit": "الوحدة",
+        "project": "المشروع",
+        "visitDate": "تاريخ الزيارة",
+        "created": "تاريخ الإنشاء",
+        "successfulScans": "عمليات المسح الناجحة",
+        "mobileQrBehavior": "سلوك QR على الهاتف",
+        "mobileQrDescription": "يظهر رمز QR فقط على جهاز الضيف عندما يكون داخل نطاق السياج الجغرافي المحدد. خارج النطاق، يكون رمز QR مخفياً في التطبيق.",
+        "resendInvitation": "إعادة إرسال الدعوة",
+        "revoke": "إلغاء",
+        "resentSuccess": "تم إعادة إرسال الدعوة {id}",
+        "revokedSuccess": "تم إلغاء دعوة الضيف"
+      }
+    }
+  },
+  "Access": {
+    "signedInAs": "تم تسجيل الدخول باسم <strong>{name}</strong>",
+    "backToPortal": "العودة إلى Ability Portal",
+    "notAvailable": {
+      "title": "Community Admin غير متاح لحسابك",
+      "description": "خطة مؤسستك أو دورك لا يشمل Community Admin. تواصل مع مسؤول النظام إذا كنت تحتاج إليه."
+    },
+    "signInUnavailable": {
+      "title": "تسجيل الدخول غير متاح الآن",
+      "description": "لا يمكن لـ Community Admin توجيهك إلى صفحة تسجيل الدخول لأنها غير مهيأة. تواصل مع مسؤول النظام."
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "ability-community-admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 9993",
+    "build": "next build",
+    "start": "next start --port 9993",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "docker:prod:build": "bash scripts/docker.sh build",
+    "docker:prod": "bash scripts/docker.sh start",
+    "docker:prod:update": "bash scripts/docker.sh update",
+    "docker:prod:logs": "bash scripts/docker.sh logs",
+    "docker:prod:stop": "bash scripts/docker.sh stop"
+  },
+  "dependencies": {
+    "next": "16.4.3",
+    "next-intl": "^4.14.8",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22.20.4",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.3",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^5.0.3"
+  }
+}

@@ -1,0 +1,525 @@
+{
+  "Metadata": {
+    "title": "Community Admin",
+    "description": "Administration for the community mobile app, by Ability-Tech."
+  },
+  "Home": {
+    "title": "Community Admin",
+    "description": "سارة اشطر dEVELOPER",
+    "switchLocale": "{locale, select, en {English} ar {العربية} other {{locale}}}"
+  },
+  "SideMenu": {
+    "adminPanel": "Admin Panel",
+    "dashboard": "Dashboard",
+    "masterData": "Master Data",
+    "projects": "Projects",
+    "units": "Units",
+    "customers": "Customers",
+    "unitAssignment": "Unit Assignment",
+    "familyMembers": "Family Members",
+    "rentalManagement": "Rental Management",
+    "operations": "Operations",
+    "serviceRequests": "Service Requests",
+    "complaints": "Complaints",
+    "invoicesPayments": "Invoices & Payments",
+    "guestInvitations": "Guest Invitations",
+    "cmsAppBuilder": "CMS / App Builder",
+    "appBuilder": "App Builder",
+    "contentEditor": "Content Editor",
+    "notifications": "Notifications",
+    "eventsContent": "Events & Content",
+    "events": "Events",
+    "aboutUs": "About Us",
+    "phoneDirectory": "Phone Directory",
+    "guidelines": "Guidelines",
+    "newsShops": "News & Shops",
+    "usersPermissions": "Users & Permissions",
+    "users": "Users",
+    "rolesPermissions": "Roles & Permissions",
+    "auditLog": "Audit Log",
+    "settings": "Settings",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
+  },
+  "Navbar": {
+    "allProjects": "All Projects",
+    "unitNumber": "Unit Number",
+    "customerName": "Customer Name",
+    "mobile": "Mobile",
+    "idNumber": "ID Number",
+    "searchPlaceholder_unitNumber": "Enter unit number",
+    "searchPlaceholder_customerName": "Enter customer name",
+    "searchPlaceholder_mobile": "Enter mobile number",
+    "searchPlaceholder_idNumber": "Enter ID number",
+    "notifications": "Notifications",
+    "backToPortal": "Back to Ability Portal"
+  },
+  "PageHeader": {
+    "breadcrumb": "Breadcrumb",
+    "from": "From",
+    "to": "To",
+    "widgets": "Widgets"
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Real-time overview of all projects and operations",
+    "totalProjects": "Total Projects",
+    "totalUnits": "Total Units",
+    "activeCustomers": "Active Customers",
+    "totalOwners": "Total Owners",
+    "totalGuests": "Total Guests",
+    "totalTenants": "Total Tenants",
+    "avgOccupancy": "Avg Occupancy %",
+    "openServiceRequests": "Open Service Requests",
+    "openComplaints": "Open Complaints",
+    "overdueInvoices": "Overdue Invoices",
+    "totalInvoiceValue": "Total Invoice Value",
+    "collectedInvoices": "Collected Invoices",
+    "overdueInvoiceValue": "Overdue Invoice Value",
+    "serviceRequestTrend": "Service Request Trend",
+    "open": "Open",
+    "resolved": "Resolved",
+    "occupancyByProject": "Occupancy by Project",
+    "quickMetrics": "Quick Metrics",
+    "avgOccupancyShort": "Avg Occupancy",
+    "srResolved": "SR Resolved",
+    "slaMet": "SLA Met",
+    "projectsOverview": "Projects Overview",
+    "viewAll": "View All",
+    "units": "units",
+    "residents": "residents",
+    "occupancy": "occupancy",
+    "recentServiceRequests": "Recent Service Requests",
+    "recentServiceRequestsSubtitle": "Showing latest 5 open & in-progress requests",
+    "requestId": "Request ID",
+    "srTitle": "Title",
+    "project": "Project",
+    "customer": "Customer",
+    "priority": "Priority",
+    "status": "Status",
+    "sla": "SLA"
+  },
+  "MasterData": {
+    "title": "Master Data",
+    "subtitle": "Manage projects, units, customers, and assignments",
+    "tabs": {
+      "projects": "Projects",
+      "units": "Units",
+      "customers": "Customers",
+      "unitAssignment": "Unit Assignment",
+      "familyMembers": "Family Members",
+      "rentalMgmt": "Rental Mgmt"
+    },
+    "searchProjects": "Search projects...",
+    "searchUnits": "Search units...",
+    "searchCustomers": "Search customers...",
+    "searchAssignments": "Search assignments...",
+    "searchMembers": "Search family members...",
+    "searchRentals": "Search unit, tenant, or ID...",
+    "exactSearch": "Exact search",
+    "status": "Status",
+    "export": "Export",
+    "import": "Import",
+    "addProject": "Add Project",
+    "addUnit": "Add Unit",
+    "addCustomer": "Add Customer",
+    "addAssignment": "Add Assignment",
+    "addMember": "Add Family Member",
+    "addRental": "Add Rent on Unit",
+    "contract": "Contract",
+    "columns": {
+      "project": "Project",
+      "location": "Location",
+      "type": "Type",
+      "units": "Units",
+      "occupancy": "Occupancy",
+      "manager": "Manager",
+      "actions": "Actions",
+      "unitId": "Unit ID",
+      "unitNumber": "Unit Number",
+      "projectBuilding": "Project / Building",
+      "currentOwner": "Current Owner",
+      "contract": "Contract",
+      "status": "Status",
+      "customer": "Customer",
+      "idPassportType": "ID / Passport Type",
+      "idPassport": "ID / Passport",
+      "contact": "Contact",
+      "unit": "Unit",
+      "nationality": "Nationality",
+      "customerType": "Type",
+      "joinDate": "Join Date",
+      "attachments": "Attachments",
+      "assignmentId": "Assignment ID",
+      "familyMembers": "Family Members",
+      "occupancyType": "Occupancy Type",
+      "startDate": "Start Date"
+    },
+    "filters": {
+      "projects": "Projects",
+      "occupancyType": "Occupancy Type",
+      "relationship": "Relationship",
+      "source": "Source"
+    },
+    "rentalColumns": {
+      "rentalId": "Rental ID",
+      "unit": "Unit",
+      "tenantName": "Tenant Name",
+      "idPassportType": "ID / Passport Type",
+      "idPassport": "ID / Passport",
+      "start": "Start",
+      "end": "End",
+      "annualRent": "Annual Rent",
+      "source": "Source",
+      "printRC": "Print RC"
+    },
+    "rentalDetail": {
+      "tenantsOn": "Tenants on",
+      "showAttachments": "Show Attachments",
+      "attachmentDescription": "Rental contract or identity document attached to this rental."
+    },
+    "familyColumns": {
+      "familyMember": "Family Member",
+      "ownerName": "Owner Name",
+      "idPassportType": "ID / Passport Type",
+      "idPassport": "ID / Passport",
+      "assignedUnit": "Assigned Unit",
+      "relationship": "Relationship",
+      "mobile": "Mobile",
+      "email": "Email",
+      "requestStatus": "Request Status",
+      "approve": "Approve",
+      "reject": "Reject",
+      "statuses": {
+        "pending": "pending",
+        "approved": "approved",
+        "rejected": "rejected"
+      }
+    },
+    "view": "View",
+    "unitAssignment": "Unit Assignment",
+    "assignmentDetail": {
+      "customersAssigned": "Customers Assigned to Unit",
+      "familyMembersTitle": "Family Members",
+      "nationalId": "National ID",
+      "mobile": "Mobile",
+      "email": "Email",
+      "nationality": "Nationality",
+      "assignmentStart": "Assignment Start",
+      "relationship": "Relationship",
+      "attachments": "Attachments",
+      "roles": {
+        "owner": "Owner",
+        "co-owner": "Co-owner",
+        "tenant": "Tenant"
+      },
+      "statuses": {
+        "approved": "Approved",
+        "pending": "Pending"
+      },
+      "attachmentPreview": "Attachment Preview",
+      "attachmentDescription": "Identity or ownership document attached to this unit assignment."
+    },
+    "contractTypes": {
+      "annual": "Annual",
+      "monthly": "Monthly"
+    },
+    "types": {
+      "residential": "Residential",
+      "commercial": "Commercial",
+      "mixed-use": "Mixed Use"
+    },
+    "idTypes": {
+      "id": "ID",
+      "passport": "Passport"
+    },
+    "customerTypes": {
+      "owner": "Owner",
+      "tenant": "Tenant"
+    },
+    "customerProfile": "Customer Profile",
+    "profileFields": {
+      "email": "Email",
+      "phone": "Phone",
+      "nationality": "Nationality",
+      "idType": "ID Type",
+      "idNumber": "ID Number",
+      "unit": "Unit",
+      "joinDate": "Join Date"
+    },
+    "editProfile": "Edit Profile",
+    "deleteCustomer": "Delete Customer",
+    "showAttachments": "Show Attachments",
+    "editCustomer": "Edit Customer",
+    "removeCustomer": "Remove Customer",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "formFields": {
+      "customerName": "Customer Name",
+      "mobileNumber": "Mobile Number",
+      "email": "Email",
+      "idPassportType": "ID / Passport Type",
+      "idPassportNumber": "ID / Passport Number",
+      "nationality": "Nationality",
+      "project": "Project",
+      "assignedUnit": "Assigned Unit",
+      "joinDate": "Join Date",
+      "identityAttachment": "Identity Attachment"
+    },
+    "attachmentsTitle": "Attachments",
+    "open": "Open",
+    "noAttachments": "No attachments found.",
+    "openingFile": "Opening {fileName}",
+    "show": "Show",
+    "edit": "Edit",
+    "active": "Active",
+    "inactive": "Inactive",
+    "showing": "Showing {from}-{to} of {total}",
+    "projectsComingSoon": "Projects module is coming soon.",
+    "unitsComingSoon": "Units module is coming soon.",
+    "customersComingSoon": "Customers module is coming soon.",
+    "unitAssignmentComingSoon": "Unit assignment module is coming soon.",
+    "familyMembersComingSoon": "Family members module is coming soon.",
+    "rentalManagementComingSoon": "Rental management module is coming soon."
+  },
+  "Operations": {
+    "title": "Operations",
+    "subtitle": "Manage service requests, complaints, invoices, and guest invitations",
+    "tabs": {
+      "serviceRequests": "Service Requests",
+      "complaints": "Complaints",
+      "invoicesPayments": "Invoices & Payments",
+      "guestInvitations": "Guest Invitations"
+    },
+    "statusCards": {
+      "open": "Open",
+      "inProgress": "In Progress",
+      "critical": "Critical",
+      "overdueSla": "Overdue SLA"
+    },
+    "searchRequests": "Search requests...",
+    "searchComplaints": "Search complaints...",
+    "searchInvoices": "Search invoices...",
+    "searchGuests": "Search guest, resident, unit, or...",
+    "newRequest": "New Request",
+    "newComplaint": "New Complaint",
+    "exactSearch": "Exact search",
+    "status": "Status",
+    "export": "Export",
+    "columns": {
+      "requestId": "Request ID",
+      "issue": "Issue",
+      "projectUnit": "Project / Unit",
+      "customer": "Customer",
+      "dueDate": "Due Date",
+      "status": "Status"
+    },
+    "statuses": {
+      "open": "Open",
+      "in-progress": "In Progress",
+      "resolved": "Resolved",
+      "delayed": "Delayed"
+    },
+    "detail": {
+      "project": "Project",
+      "unit": "Unit",
+      "customer": "Customer",
+      "type": "Type",
+      "assignedTo": "Assigned To",
+      "created": "Created",
+      "dueDateAndTime": "Due Date & Time",
+      "activityTimeline": "Activity Timeline",
+      "addComment": "Add Comment",
+      "commentPlaceholder": "Write a comment or update..."
+    },
+    "serviceRequest": {
+      "create": {
+        "title": "New Service Request",
+        "issueTitle": "Issue Title",
+        "serviceType": "Service Type",
+        "project": "Project",
+        "unit": "Unit",
+        "customer": "Customer",
+        "dueDate": "Due Date",
+        "dueTimeSlot": "Due Time Slot",
+        "cancel": "Cancel",
+        "submit": "Create Request"
+      }
+    },
+    "showing": "Showing {from}-{to} of {total}",
+    "filters": {
+      "projects": "Projects",
+      "priority": "Priority",
+      "invoiceType": "Invoice Type"
+    },
+    "invoice": {
+      "summary": {
+        "totalOutstanding": "Total Outstanding",
+        "overdueAmount": "Overdue Amount",
+        "collectedThisMonth": "Collected This Month"
+      },
+      "columns": {
+        "invoiceId": "Invoice ID",
+        "project": "Project",
+        "unit": "Unit",
+        "invoiceType": "Invoice Type",
+        "amount": "Amount"
+      },
+      "types": {
+        "annual-rent": "Annual Rent",
+        "monthly-rent": "Monthly Rent",
+        "service-charge": "Service Charge"
+      },
+      "statuses": {
+        "paid": "paid",
+        "pending": "pending",
+        "overdue": "overdue"
+      },
+      "actions": {
+        "view": "View",
+        "markPaid": "Mark Paid",
+        "download": "Download"
+      },
+      "generateInvoice": "Generate Invoice",
+      "maintenanceDeposit": "Maintenance Deposit Difference",
+      "deposit": {
+        "title": "Maintenance Deposit Difference — Bulk Upload",
+        "uploadTitle": "Upload Maintenance Deposit Difference Sheet",
+        "uploadDescription": "Excel or CSV with Unit Number, Current Deposit, Required Deposit, and Difference.",
+        "unitNumber": "Unit Number",
+        "currentDeposit": "Current Deposit",
+        "requiredDeposit": "Required Deposit",
+        "difference": "Difference",
+        "downloadTemplate": "Download Template",
+        "cancel": "Cancel",
+        "uploadSheet": "Upload Sheet"
+      },
+      "generate": {
+        "title": "Generate Invoice",
+        "customerName": "Customer Name",
+        "invoiceType": "Invoice Type",
+        "amount": "Amount per Unit (EGP)",
+        "dueDate": "Due Date",
+        "units": "Units",
+        "selectUnits": "Select one or more units",
+        "unitInfo": "0 units selected. One invoice will be created for each unit.",
+        "cancel": "Cancel"
+      }
+    },
+    "complaint": {
+      "columns": {
+        "complaintId": "Complaint ID",
+        "subject": "Subject",
+        "description": "Description",
+        "submittedBy": "Submitted By",
+        "priority": "Priority",
+        "assignedTo": "Assigned To",
+        "date": "Date"
+      },
+      "create": {
+        "title": "New Complaint",
+        "subject": "Subject",
+        "description": "Description",
+        "project": "Project",
+        "unit": "Unit",
+        "customer": "Customer",
+        "priority": "Priority",
+        "status": "Status",
+        "cancel": "Cancel",
+        "submit": "Create Complaint"
+      },
+      "priorities": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      }
+    },
+    "complaintDetail": {
+      "submittedBy": "Submitted By",
+      "ticketTimeline": "Ticket Timeline",
+      "customerVoiceNote": "Customer voice note",
+      "comments": "Comments",
+      "noComments": "No comments yet.",
+      "writeComment": "Write a comment...",
+      "addComment": "Add Comment"
+    },
+    "serviceRequestsComingSoon": "Service requests module is coming soon.",
+    "complaintsComingSoon": "Complaints module is coming soon.",
+    "invoicesComingSoon": "Invoices & payments module is coming soon.",
+    "guestInvitationsComingSoon": "Guest invitations module is coming soon.",
+    "guest": {
+      "summary": {
+        "activeQrPasses": "Active QR passes",
+        "scheduledVisits": "Scheduled visits",
+        "scannedEntries": "Scanned entries",
+        "outsideGeofence": "Outside geofence",
+        "availableNow": "Available now",
+        "upcoming": "Upcoming",
+        "thisPeriod": "This period",
+        "qrHiddenInApp": "QR hidden in app"
+      },
+      "columns": {
+        "guest": "Guest",
+        "invitedBy": "Invited By",
+        "visitDate": "Visit Date",
+        "qrStatus": "QR Status",
+        "locationRule": "Location Rule",
+        "scans": "Scans"
+      },
+      "qrStatuses": {
+        "active": "active",
+        "scheduled": "scheduled",
+        "expired": "expired",
+        "revoked": "revoked"
+      },
+      "locationRules": {
+        "inside-zone": "Inside zone",
+        "outside-zone": "Outside zone"
+      },
+      "actions": {
+        "view": "View"
+      },
+      "createInvitation": "Create Invitation",
+      "create": {
+        "title": "Create Guest Invitation",
+        "guestName": "Guest Name",
+        "guestPhone": "Guest Phone",
+        "residentName": "Resident Name",
+        "project": "Project",
+        "unit": "Unit",
+        "visitDate": "Visit Date",
+        "cancel": "Cancel"
+      },
+      "detailTitle": "Guest Invitation",
+      "detail": {
+        "invitationId": "Invitation ID",
+        "guest": "Guest",
+        "guestPhone": "Guest Phone",
+        "resident": "Resident",
+        "unit": "Unit",
+        "project": "Project",
+        "visitDate": "Visit Date",
+        "created": "Created",
+        "successfulScans": "Successful Scans",
+        "mobileQrBehavior": "Mobile QR behavior",
+        "mobileQrDescription": "The QR code is only visible on the guest's device when they are within the configured geofence zone. Outside the zone, the QR is hidden in the app.",
+        "resendInvitation": "Resend Invitation",
+        "revoke": "Revoke",
+        "resentSuccess": "Invitation {id} sent again",
+        "revokedSuccess": "Guest invitation revoked"
+      }
+    }
+  },
+  "Access": {
+    "signedInAs": "Signed in as <strong>{name}</strong>",
+    "backToPortal": "Back to Ability Portal",
+    "notAvailable": {
+      "title": "Community Admin isn’t available for your account",
+      "description": "Your organization’s plan or your role doesn’t include Community Admin. Contact your administrator if you need it."
+    },
+    "signInUnavailable": {
+      "title": "Sign-in isn’t available right now",
+      "description": "Community Admin can’t send you to the sign-in page because it isn’t configured. Contact your administrator."
+    }
+  }
+}
