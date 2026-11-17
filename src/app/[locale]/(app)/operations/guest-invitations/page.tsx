@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import GuestSummaryCards from "./components/GuestSummaryCards";
-import GuestInvitationsTable from "./components/GuestInvitationsTable";
-import GuestToolbarWithModal from "./components/GuestToolbarWithModal";
+import GuestInvitationsPageClient from "./components/GuestInvitationsPageClient";
 import { fetchGuestInvitationStats, fetchGuestInvitations } from "@/src/services/guestInvitations";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
@@ -27,7 +26,8 @@ export default async function GuestInvitationsPage({ params }: Props) {
   return (
     <>
       <GuestSummaryCards stats={stats} />
-      <GuestToolbarWithModal
+      <GuestInvitationsPageClient
+        data={invitations}
         labels={{
           searchPlaceholder: t("searchGuests"),
           exactSearch: t("exactSearch"),
@@ -35,7 +35,6 @@ export default async function GuestInvitationsPage({ params }: Props) {
           addLabel: t("guest.createInvitation"),
         }}
       />
-      <GuestInvitationsTable data={invitations} />
     </>
   );
 }

@@ -1,7 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import Toolbar from "@/src/components/Toolbar";
-import ContractFilter from "./components/ContractFilter";
-import UnitsTable from "./components/UnitsTable";
+import UnitsPageClient from "./components/UnitsPageClient";
 import { fetchUnits } from "@/src/services/units";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
@@ -22,21 +20,16 @@ export default async function UnitsPage({ params }: Props) {
   const units = await fetchUnits();
 
   return (
-    <>
-      <Toolbar
-        labels={{
-          searchPlaceholder: t("searchUnits"),
-          exactSearch: t("exactSearch"),
-          status: t("status"),
-          export: t("export"),
-          import: t("import"),
-          addLabel: t("addUnit"),
-        }}
-        extraFilters={<ContractFilter />}
-      />
-      <div className="px-5">
-        <UnitsTable data={units} />
-      </div>
-    </>
+    <UnitsPageClient
+      data={units}
+      labels={{
+        searchPlaceholder: t("searchUnits"),
+        exactSearch: t("exactSearch"),
+        status: t("status"),
+        export: t("export"),
+        import: t("import"),
+        addLabel: t("addUnit"),
+      }}
+    />
   );
 }

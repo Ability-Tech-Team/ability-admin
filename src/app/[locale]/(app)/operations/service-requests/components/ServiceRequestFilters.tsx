@@ -3,7 +3,11 @@
 import { useTranslations } from "next-intl";
 import FilterDropdown from "@/src/components/FilterDropdown";
 
-export default function ServiceRequestFilters() {
+type Props = {
+  onProjectChange?: (selected: Set<string>) => void;
+};
+
+export default function ServiceRequestFilters({ onProjectChange }: Props) {
   const t = useTranslations("Operations");
 
   return (
@@ -15,6 +19,7 @@ export default function ServiceRequestFilters() {
         { value: "palm-residences", label: "Palm Residences" },
         { value: "gouna", label: "Gouna" },
       ]}
+      onChange={onProjectChange}
     />
   );
 }

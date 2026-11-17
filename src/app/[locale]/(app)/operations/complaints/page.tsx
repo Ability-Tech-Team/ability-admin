@@ -1,7 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import ComplaintsTable from "./components/ComplaintsTable";
-import ComplaintFilters from "./components/ComplaintFilters";
-import ComplaintToolbarWithModal from "./components/ComplaintToolbarWithModal";
+import ComplaintsPageClient from "./components/ComplaintsPageClient";
 import { fetchComplaints } from "@/src/services/complaints";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
@@ -22,17 +20,14 @@ export default async function ComplaintsPage({ params }: Props) {
   const complaints = await fetchComplaints();
 
   return (
-    <>
-      <ComplaintToolbarWithModal
-        labels={{
-          searchPlaceholder: t("searchComplaints"),
-          exactSearch: t("exactSearch"),
-          status: t("status"),
-          addLabel: t("newComplaint"),
-        }}
-        extraFilters={<ComplaintFilters />}
-      />
-      <ComplaintsTable data={complaints} />
-    </>
+    <ComplaintsPageClient
+      data={complaints}
+      labels={{
+        searchPlaceholder: t("searchComplaints"),
+        exactSearch: t("exactSearch"),
+        status: t("status"),
+        addLabel: t("newComplaint"),
+      }}
+    />
   );
 }

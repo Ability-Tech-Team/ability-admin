@@ -6,9 +6,10 @@ import { FilterIcon, ChevronDownIcon } from "@/src/components/icons/ToolbarIcons
 type Props = {
   label: string;
   options: { value: string; label: string }[];
+  onChange?: (selected: Set<string>) => void;
 };
 
-export default function FilterDropdown({ label, options }: Props) {
+export default function FilterDropdown({ label, options, onChange }: Props) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const ref = useRef<HTMLDivElement>(null);
@@ -24,12 +25,11 @@ export default function FilterDropdown({ label, options }: Props) {
   }, []);
 
   function toggle(value: string) {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(value)) next.delete(value);
-      else next.add(value);
-      return next;
-    });
+    const next = new Set(selected);
+    if (next.has(value)) next.delete(value);
+    else next.add(value);
+    setSelected(next);
+    onChange?.(next);
   }
 
   return (

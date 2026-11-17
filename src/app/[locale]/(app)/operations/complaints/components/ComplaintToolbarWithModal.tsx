@@ -8,9 +8,11 @@ import FormModal, { type FormField } from "@/src/components/FormModal";
 type Props = {
   labels: ToolbarLabels;
   extraFilters?: React.ReactNode;
+  onStatusChange?: (selected: Set<string>) => void;
+  onSearch?: (query: string) => void;
 };
 
-export default function ComplaintToolbarWithModal({ labels, extraFilters }: Props) {
+export default function ComplaintToolbarWithModal({ labels, extraFilters, onStatusChange, onSearch }: Props) {
   const t = useTranslations("Operations");
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -34,6 +36,8 @@ export default function ComplaintToolbarWithModal({ labels, extraFilters }: Prop
           { value: "resolved", label: t("statuses.resolved") },
         ]}
         extraFilters={extraFilters}
+        onStatusChange={onStatusChange}
+        onSearch={onSearch}
         onAdd={() => setModalOpen(true)}
       />
       {modalOpen && (

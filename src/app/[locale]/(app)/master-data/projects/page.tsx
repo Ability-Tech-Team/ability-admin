@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import Toolbar from "@/src/components/Toolbar";
-import ProjectsTable from "./components/ProjectsTable";
+import ProjectsPageClient from "./components/ProjectsPageClient";
 import { fetchProjects } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
@@ -21,20 +20,16 @@ export default async function ProjectsPage({ params }: Props) {
   const projects = await fetchProjects();
 
   return (
-    <>
-      <Toolbar
-        labels={{
-          searchPlaceholder: t("searchProjects"),
-          exactSearch: t("exactSearch"),
-          status: t("status"),
-          export: t("export"),
-          import: t("import"),
-          addLabel: t("addProject"),
-        }}
-      />
-      <div className="px-5">
-        <ProjectsTable data={projects} />
-      </div>
-    </>
+    <ProjectsPageClient
+      data={projects}
+      labels={{
+        searchPlaceholder: t("searchProjects"),
+        exactSearch: t("exactSearch"),
+        status: t("status"),
+        export: t("export"),
+        import: t("import"),
+        addLabel: t("addProject"),
+      }}
+    />
   );
 }

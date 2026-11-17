@@ -1,7 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import Toolbar from "@/src/components/Toolbar";
-import RentalsTable from "./components/RentalsTable";
-import RentalFilters, { PrintRCButton } from "./components/RentalFilters";
+import RentalManagementPageClient from "./components/RentalManagementPageClient";
 import { fetchRentals } from "@/src/services/rentals";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
@@ -22,22 +20,16 @@ export default async function RentalManagementPage({ params }: Props) {
   const rentals = await fetchRentals();
 
   return (
-    <>
-      <Toolbar
-        labels={{
-          searchPlaceholder: t("searchRentals"),
-          exactSearch: t("exactSearch"),
-          status: t("status"),
-          export: t("export"),
-          import: t("import"),
-          addLabel: t("addRental"),
-        }}
-        leadingContent={<PrintRCButton />}
-        extraFilters={<RentalFilters />}
-      />
-      <div className="px-5">
-        <RentalsTable data={rentals} />
-      </div>
-    </>
+    <RentalManagementPageClient
+      data={rentals}
+      labels={{
+        searchPlaceholder: t("searchRentals"),
+        exactSearch: t("exactSearch"),
+        status: t("status"),
+        export: t("export"),
+        import: t("import"),
+        addLabel: t("addRental"),
+      }}
+    />
   );
 }

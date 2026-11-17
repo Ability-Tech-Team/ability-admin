@@ -8,9 +8,11 @@ import FormModal, { type FormField } from "@/src/components/FormModal";
 type Props = {
   labels: ToolbarLabels;
   extraFilters?: React.ReactNode;
+  onStatusChange?: (selected: Set<string>) => void;
+  onSearch?: (query: string) => void;
 };
 
-export default function ServiceRequestToolbarWithModal({ labels, extraFilters }: Props) {
+export default function ServiceRequestToolbarWithModal({ labels, extraFilters, onStatusChange, onSearch }: Props) {
   const t = useTranslations("Operations");
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -35,6 +37,8 @@ export default function ServiceRequestToolbarWithModal({ labels, extraFilters }:
           { value: "delayed", label: t("statuses.delayed") },
         ]}
         extraFilters={extraFilters}
+        onStatusChange={onStatusChange}
+        onSearch={onSearch}
         onAdd={() => setModalOpen(true)}
       />
       {modalOpen && (

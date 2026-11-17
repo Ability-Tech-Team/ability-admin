@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import FilterDropdown from "@/src/components/FilterDropdown";
 import MaintenanceDepositModal from "./MaintenanceDepositModal";
 
-export function InvoiceProjectsFilter() {
+export function InvoiceProjectsFilter({ onChange }: { onChange?: (selected: Set<string>) => void }) {
   const t = useTranslations("Operations");
 
   return (
@@ -17,11 +17,12 @@ export function InvoiceProjectsFilter() {
         { value: "palm-residences", label: "Palm Residences" },
         { value: "gouna", label: "Gouna" },
       ]}
+      onChange={onChange}
     />
   );
 }
 
-export function InvoiceTypeFilter() {
+export function InvoiceTypeFilter({ onChange }: { onChange?: (selected: Set<string>) => void }) {
   const t = useTranslations("Operations");
 
   return (
@@ -32,6 +33,7 @@ export function InvoiceTypeFilter() {
         { value: "monthly-rent", label: t("invoice.types.monthly-rent") },
         { value: "service-charge", label: t("invoice.types.service-charge") },
       ]}
+      onChange={onChange}
     />
   );
 }

@@ -29,6 +29,7 @@ type ToolbarProps = {
   /** Content rendered before the add button on the right side. */
   trailingContent?: React.ReactNode;
   onSearch?: (query: string) => void;
+  onStatusChange?: (selected: Set<string>) => void;
   onAdd?: () => void;
   onExport?: () => void;
   onImport?: () => void;
@@ -41,6 +42,7 @@ export default function Toolbar({
   extraFilters,
   trailingContent,
   onSearch,
+  onStatusChange,
   onAdd,
   onExport,
   onImport,
@@ -77,7 +79,7 @@ export default function Toolbar({
           <span className="text-[12px] text-gray-500">{labels.exactSearch}</span>
         </label>
 
-        <FilterDropdown label={labels.status} options={statusOptions} />
+        <FilterDropdown label={labels.status} options={statusOptions} onChange={onStatusChange} />
 
         {extraFilters}
       </div>
@@ -104,13 +106,15 @@ export default function Toolbar({
           </button>
         )}
         {trailingContent}
-        <button
-          type="button"
-          onClick={onAdd}
-          className="flex items-center gap-1 rounded-md bg-blue-600 px-3 h-7 text-[10.5px] font-medium text-white hover:bg-blue-700 transition-colors"
-        >
-          {labels.addLabel}
-        </button>
+        {labels.addLabel && (
+          <button
+            type="button"
+            onClick={onAdd}
+            className="flex items-center gap-1 rounded-md bg-blue-600 px-3 h-7 text-[10.5px] font-medium text-white hover:bg-blue-700 transition-colors"
+          >
+            {labels.addLabel}
+          </button>
+        )}
       </div>
     </div>
   );

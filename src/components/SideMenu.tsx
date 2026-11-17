@@ -1,9 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useSyncExternalStore } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/src/i18n/navigation";
+import {
+  parseExpandedKeys,
+  readExpandedServerSnapshot,
+  readExpandedSnapshot,
+  subscribeToExpanded,
+  writeExpandedKeys,
+} from "@/src/lib/sideMenuExpanded";
 import { menuItems } from "@/src/lib/sideMenuItems";
 import { ChevronIcon, CollapseIcon } from "./icons/SideMenuIcons";
 
@@ -35,15 +42,22 @@ export default function SideMenu({ notificationCount = 0 }: SideMenuProps) {
   // Open on a narrow screen, the menu covers the page instead of pushing it
   // sideways; a placeholder keeps the collapsed width in the layout.
   const overlay = isNarrowScreen && !collapsed;
-  const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set());
+  // The open groups, remembered in this browser (src/lib/sideMenuExpanded.ts).
+  const expandedValue = useSyncExternalStore(
+    subscribeToExpanded,
+    readExpandedSnapshot,
+    readExpandedServerSnapshot,
+  );
+  const expandedKeys = useMemo(
+    () => parseExpandedKeys(expandedValue),
+    [expandedValue],
+  );
 
   function toggleExpand(key: string) {
-    setExpandedKeys((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
+    const next = new Set(expandedKeys);
+    if (next.has(key)) next.delete(key);
+    else next.add(key);
+    writeExpandedKeys(next);
   }
 
   function isActive(href: string) {

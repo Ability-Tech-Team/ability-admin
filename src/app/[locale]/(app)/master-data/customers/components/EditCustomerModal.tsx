@@ -45,7 +45,7 @@ export default function EditCustomerModal({ customer, onClose, onSave, onDelete 
       <div className="fixed inset-0 z-60 bg-black/20 backdrop-blur-xs" onClick={onClose} />
 
       {/* Modal */}
-      <div className="fixed inset-0 z-70 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-70 flex items-center justify-center p-4" onClick={onClose}>
         <div className="w-full max-w-[580px] rounded-xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3">

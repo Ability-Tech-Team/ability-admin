@@ -1,7 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import Toolbar from "@/src/components/Toolbar";
-import FamilyMembersTable from "./components/FamilyMembersTable";
-import FamilyMemberFilters from "./components/FamilyMemberFilters";
+import FamilyMembersPageClient from "./components/FamilyMembersPageClient";
 import { fetchFamilyMembers } from "@/src/services/familyMembers";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
@@ -22,21 +20,16 @@ export default async function FamilyMembersPage({ params }: Props) {
   const members = await fetchFamilyMembers();
 
   return (
-    <>
-      <Toolbar
-        labels={{
-          searchPlaceholder: t("searchMembers"),
-          exactSearch: t("exactSearch"),
-          status: t("status"),
-          export: t("export"),
-          import: t("import"),
-          addLabel: t("addMember"),
-        }}
-        extraFilters={<FamilyMemberFilters />}
-      />
-      <div className="px-5">
-        <FamilyMembersTable data={members} />
-      </div>
-    </>
+    <FamilyMembersPageClient
+      data={members}
+      labels={{
+        searchPlaceholder: t("searchMembers"),
+        exactSearch: t("exactSearch"),
+        status: t("status"),
+        export: t("export"),
+        import: t("import"),
+        addLabel: t("addMember"),
+      }}
+    />
   );
 }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { Project } from "@/src/services/projects";
+import EditProjectModal from "./EditProjectModal";
 
 type ProjectsTableProps = {
   data: Project[];
@@ -15,6 +16,7 @@ const avatarClass = "bg-blue-100 text-blue-600";
 export default function ProjectsTable({ data }: ProjectsTableProps) {
   const t = useTranslations("MasterData");
   const [projects, setProjects] = useState(data);
+  const [editProject, setEditProject] = useState<Project | null>(null);
 
   function toggleActive(id: string) {
     setProjects((prev) =>
@@ -23,6 +25,7 @@ export default function ProjectsTable({ data }: ProjectsTableProps) {
   }
 
   return (
+    <>
     <div className="rounded-xl bg-white shadow-sm overflow-hidden">
       <table className="w-full">
         <thead>
@@ -90,6 +93,7 @@ export default function ProjectsTable({ data }: ProjectsTableProps) {
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
+                      onClick={() => setEditProject(project)}
                       className="rounded-md border border-gray-200 bg-white px-3 py-1 text-[10px] font-medium text-gray-600 shadow-[0_3px_6px_-2px_rgba(0,0,0,0.1)] hover:bg-gray-50 transition-colors"
                     >
                       {t("edit")}
@@ -132,6 +136,14 @@ export default function ProjectsTable({ data }: ProjectsTableProps) {
         </div>
       </div>
     </div>
+
+    {editProject && (
+      <EditProjectModal
+        project={editProject}
+        onClose={() => setEditProject(null)}
+      />
+    )}
+  </>
   );
 }
 

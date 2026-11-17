@@ -1,8 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import InvoiceSummaryCards from "./components/InvoiceSummaryCards";
-import InvoicesTable from "./components/InvoicesTable";
-import InvoiceToolbarWithModal from "./components/InvoiceToolbarWithModal";
-import { InvoiceProjectsFilter, InvoiceTypeFilter, MaintenanceDepositButton } from "./components/InvoiceFilters";
+import InvoicesPageClient from "./components/InvoicesPageClient";
 import { fetchInvoiceStats, fetchInvoices } from "@/src/services/invoices";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
@@ -28,7 +26,8 @@ export default async function InvoicesPaymentsPage({ params }: Props) {
   return (
     <>
       <InvoiceSummaryCards stats={stats} />
-      <InvoiceToolbarWithModal
+      <InvoicesPageClient
+        data={invoices}
         labels={{
           searchPlaceholder: t("searchInvoices"),
           exactSearch: t("exactSearch"),
@@ -36,15 +35,7 @@ export default async function InvoicesPaymentsPage({ params }: Props) {
           export: t("export"),
           addLabel: t("invoice.generateInvoice"),
         }}
-        trailingContent={<MaintenanceDepositButton />}
-        extraFilters={
-          <>
-            <InvoiceProjectsFilter />
-            <InvoiceTypeFilter />
-          </>
-        }
       />
-      <InvoicesTable data={invoices} />
     </>
   );
 }

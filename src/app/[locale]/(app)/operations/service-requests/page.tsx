@@ -1,8 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import StatusCards from "../components/StatusCards";
-import ServiceRequestToolbarWithModal from "./components/ServiceRequestToolbarWithModal";
-import ServiceRequestFilters from "./components/ServiceRequestFilters";
-import ServiceRequestsTable from "./components/ServiceRequestsTable";
+import ServiceRequestsPageClient from "./components/ServiceRequestsPageClient";
 import { fetchServiceRequestStats, fetchServiceRequests } from "@/src/services/serviceRequests";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
@@ -28,7 +26,8 @@ export default async function ServiceRequestsPage({ params }: Props) {
   return (
     <>
       <StatusCards stats={stats} />
-      <ServiceRequestToolbarWithModal
+      <ServiceRequestsPageClient
+        data={requests}
         labels={{
           searchPlaceholder: t("searchRequests"),
           exactSearch: t("exactSearch"),
@@ -36,9 +35,7 @@ export default async function ServiceRequestsPage({ params }: Props) {
           export: t("export"),
           addLabel: t("newRequest"),
         }}
-        extraFilters={<ServiceRequestFilters />}
       />
-      <ServiceRequestsTable data={requests} />
     </>
   );
 }

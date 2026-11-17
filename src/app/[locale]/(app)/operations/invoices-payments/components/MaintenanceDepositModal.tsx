@@ -33,8 +33,8 @@ export default function MaintenanceDepositModal({ onClose }: Props) {
       />
 
       {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
-        <div className="w-[560px] rounded-xl bg-white shadow-xl">
+      <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
+        <div className="w-[560px] rounded-xl bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
           {/* Header */}
           <div className="flex items-center justify-between px-6 pt-5 pb-4">
             <h2 className="text-[15px] font-bold text-gray-900">

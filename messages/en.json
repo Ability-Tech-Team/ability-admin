@@ -157,9 +157,24 @@
     },
     "filters": {
       "projects": "Projects",
+      "type": "Type",
       "occupancyType": "Occupancy Type",
       "relationship": "Relationship",
       "source": "Source"
+    },
+    "relationships": {
+      "spouse": "Spouse",
+      "child": "Child",
+      "parent": "Parent",
+      "sibling": "Sibling"
+    },
+    "sources": {
+      "app": "App",
+      "admin": "Admin"
+    },
+    "rentalStatuses": {
+      "pending": "Pending",
+      "approved": "Approved"
     },
     "rentalColumns": {
       "rentalId": "Rental ID",
@@ -272,6 +287,77 @@
     "openingFile": "Opening {fileName}",
     "show": "Show",
     "edit": "Edit",
+    "addRentalModal": {
+      "title": "Add Rent on Unit",
+      "unit": "Unit",
+      "tenantName": "Tenant Name",
+      "idPassportType": "ID / Passport Type",
+      "idPassportNumber": "ID / Passport Number",
+      "tenantAttachments": "Tenant Attachments",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "annualRent": "Annual Rent (EGP)",
+      "saveAndAddAnother": "Save & Add Another Tenant",
+      "submit": "Add Rental"
+    },
+    "addFamilyMemberModal": {
+      "title": "Add Family Member",
+      "fullName": "Full Name",
+      "idPassportType": "ID / Passport Type",
+      "idPassportNumber": "ID / Passport Number",
+      "mobileNumber": "Mobile Number",
+      "email": "Email Address",
+      "assignToUnit": "Assign to Unit",
+      "relationship": "Relationship",
+      "saveAndAddAnother": "Save & Add Another",
+      "submit": "Add Member"
+    },
+    "addUnitModal": {
+      "title": "Add Unit",
+      "project": "Project",
+      "building": "Building",
+      "unitNumber": "Unit Number",
+      "floor": "Floor",
+      "unitType": "Unit Type",
+      "contract": "Contract",
+      "submit": "Add Unit"
+    },
+    "addCustomerModal": {
+      "title": "Add Customer",
+      "customerName": "Customer Name",
+      "mobileNumber": "Mobile Number",
+      "email": "Email",
+      "idPassportType": "ID / Passport Type",
+      "idPassportNumber": "ID / Passport Number",
+      "nationality": "Nationality",
+      "project": "Project",
+      "assignedUnit": "Assigned Unit",
+      "joinDate": "Join Date",
+      "identityAttachment": "Identity Attachment",
+      "saveAndAddAnother": "Save & Add Another",
+      "submit": "Add Customer"
+    },
+    "addProjectModal": {
+      "title": "Add New Project",
+      "nameEnPlaceholder": "e.g. Sunset Towers",
+      "nameArPlaceholder": "مثال: أبراج الغروب",
+      "managerPlaceholder": "Manager name",
+      "submit": "Create Project"
+    },
+    "editProject": {
+      "title": "Edit Project",
+      "nameEn": "Project Name (EN)",
+      "nameAr": "Project Name (AR)",
+      "type": "Type",
+      "location": "Location",
+      "googleMapsLink": "Google Maps Link",
+      "boundaryTitle": "Google Maps Boundary — 4 Points",
+      "point1": "Point 1 (lat, lng)",
+      "point2": "Point 2 (lat, lng)",
+      "point3": "Point 3 (lat, lng)",
+      "point4": "Point 4 (lat, lng)",
+      "manager": "Project Manager"
+    },
     "active": "Active",
     "inactive": "Inactive",
     "showing": "Showing {from}-{to} of {total}",
@@ -521,5 +607,98 @@
       "title": "Sign-in isn’t available right now",
       "description": "Community Admin can’t send you to the sign-in page because it isn’t configured. Contact your administrator."
     }
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "subtitle": "Send announcements, push notifications, and scheduled alerts",
+    "tabs": {
+      "notifications": "Notifications",
+      "templates": "Templates",
+      "deliveryLogs": "Delivery Logs"
+    },
+    "searchPlaceholder": "Search notifications...",
+    "exactSearch": "Exact search",
+    "status": "Status",
+    "newNotification": "New Notification",
+    "columns": {
+      "notification": "Notification",
+      "type": "Type",
+      "project": "Project",
+      "audience": "Audience",
+      "status": "Status",
+      "reach": "Reach",
+      "created": "Created"
+    },
+    "types": {
+      "announcement": "announcement",
+      "push": "push"
+    },
+    "statuses": {
+      "published": "published",
+      "scheduled": "scheduled",
+      "draft": "draft"
+    },
+    "reach": {
+      "sent": "sent",
+      "read": "read",
+      "draft": "Draft"
+    },
+    "actions": {
+      "view": "View",
+      "send": "Send"
+    },
+    "filters": {
+      "type": "Type"
+    },
+    "showing": "Showing {from}-{to} of {total}",
+    "create": {
+      "title": "New Notification",
+      "titleEn": "Title (English)",
+      "titleAr": "Title (Arabic)",
+      "body": "Body",
+      "type": "Type",
+      "project": "Project",
+      "audience": "Audience",
+      "scheduledDate": "Scheduled Date",
+      "cancel": "Cancel",
+      "submit": "Create Notification"
+    },
+    "createModal": {
+      "title": "Create Notification",
+      "english": "English",
+      "arabic": "Arabic",
+      "titleEn": "Title (English)",
+      "titleAr": "Title (Arabic)",
+      "titleEnPlaceholder": "e.g. Scheduled Maintenance Notice",
+      "titleArPlaceholder": "مثال: إشعار الصيانة المجدولة",
+      "bodyEn": "Body (English)",
+      "bodyAr": "Body (Arabic)",
+      "bodyEnPlaceholder": "Write notification body in English...",
+      "bodyArPlaceholder": "اكتب نص الإشعار بالعربية...",
+      "notificationType": "Notification Type",
+      "targetAudience": "Target Audience",
+      "project": "Project",
+      "status": "Status",
+      "cancel": "Cancel",
+      "saveDraft": "Save Draft",
+      "sendNow": "Send Now"
+    },
+    "templates": {
+      "newTemplate": "New Template",
+      "edit": "Edit",
+      "useTemplate": "Use Template",
+      "uses": "uses"
+    },
+    "deliveryLogs": {
+      "notification": "Notification",
+      "sentAt": "Sent At",
+      "recipients": "Recipients",
+      "delivered": "Delivered",
+      "read": "Read",
+      "failed": "Failed",
+      "readRate": "Read Rate"
+    },
+    "templatesComingSoon": "Templates module is coming soon.",
+    "deliveryLogsComingSoon": "Delivery logs module is coming soon."
   }
 }

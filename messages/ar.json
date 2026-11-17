@@ -157,9 +157,24 @@
     },
     "filters": {
       "projects": "المشاريع",
+      "type": "النوع",
       "occupancyType": "نوع الإشغال",
-      "relationship": "العلاقة",
+      "relationship": "صلة القرابة",
       "source": "المصدر"
+    },
+    "relationships": {
+      "spouse": "زوج/زوجة",
+      "child": "ابن/ابنة",
+      "parent": "أب/أم",
+      "sibling": "أخ/أخت"
+    },
+    "sources": {
+      "app": "التطبيق",
+      "admin": "الإدارة"
+    },
+    "rentalStatuses": {
+      "pending": "قيد الانتظار",
+      "approved": "معتمد"
     },
     "rentalColumns": {
       "rentalId": "رقم الإيجار",
@@ -272,6 +287,77 @@
     "openingFile": "جاري فتح {fileName}",
     "show": "عرض",
     "edit": "تعديل",
+    "addRentalModal": {
+      "title": "إضافة إيجار على وحدة",
+      "unit": "الوحدة",
+      "tenantName": "اسم المستأجر",
+      "idPassportType": "نوع الهوية / جواز السفر",
+      "idPassportNumber": "رقم الهوية / جواز السفر",
+      "tenantAttachments": "مرفقات المستأجر",
+      "startDate": "تاريخ البداية",
+      "endDate": "تاريخ النهاية",
+      "annualRent": "الإيجار السنوي (ج.م)",
+      "saveAndAddAnother": "حفظ وإضافة مستأجر آخر",
+      "submit": "إضافة إيجار"
+    },
+    "addFamilyMemberModal": {
+      "title": "إضافة فرد عائلة",
+      "fullName": "الاسم الكامل",
+      "idPassportType": "نوع الهوية / جواز السفر",
+      "idPassportNumber": "رقم الهوية / جواز السفر",
+      "mobileNumber": "رقم الجوال",
+      "email": "البريد الإلكتروني",
+      "assignToUnit": "تعيين للوحدة",
+      "relationship": "صلة القرابة",
+      "saveAndAddAnother": "حفظ وإضافة آخر",
+      "submit": "إضافة فرد"
+    },
+    "addUnitModal": {
+      "title": "إضافة وحدة",
+      "project": "المشروع",
+      "building": "المبنى",
+      "unitNumber": "رقم الوحدة",
+      "floor": "الطابق",
+      "unitType": "نوع الوحدة",
+      "contract": "العقد",
+      "submit": "إضافة وحدة"
+    },
+    "addCustomerModal": {
+      "title": "إضافة عميل",
+      "customerName": "اسم العميل",
+      "mobileNumber": "رقم الجوال",
+      "email": "البريد الإلكتروني",
+      "idPassportType": "نوع الهوية / جواز السفر",
+      "idPassportNumber": "رقم الهوية / جواز السفر",
+      "nationality": "الجنسية",
+      "project": "المشروع",
+      "assignedUnit": "الوحدة المخصصة",
+      "joinDate": "تاريخ الانضمام",
+      "identityAttachment": "مرفق الهوية",
+      "saveAndAddAnother": "حفظ وإضافة آخر",
+      "submit": "إضافة عميل"
+    },
+    "addProjectModal": {
+      "title": "إضافة مشروع جديد",
+      "nameEnPlaceholder": "e.g. Sunset Towers",
+      "nameArPlaceholder": "مثال: أبراج الغروب",
+      "managerPlaceholder": "اسم المدير",
+      "submit": "إنشاء مشروع"
+    },
+    "editProject": {
+      "title": "تعديل المشروع",
+      "nameEn": "اسم المشروع (إنجليزي)",
+      "nameAr": "اسم المشروع (عربي)",
+      "type": "النوع",
+      "location": "الموقع",
+      "googleMapsLink": "رابط خرائط جوجل",
+      "boundaryTitle": "حدود خرائط جوجل — 4 نقاط",
+      "point1": "النقطة 1 (خط العرض، خط الطول)",
+      "point2": "النقطة 2 (خط العرض، خط الطول)",
+      "point3": "النقطة 3 (خط العرض، خط الطول)",
+      "point4": "النقطة 4 (خط العرض، خط الطول)",
+      "manager": "مدير المشروع"
+    },
     "active": "نشط",
     "inactive": "غير نشط",
     "showing": "عرض {from}-{to} من {total}",
@@ -521,5 +607,98 @@
       "title": "تسجيل الدخول غير متاح الآن",
       "description": "لا يمكن لـ Community Admin توجيهك إلى صفحة تسجيل الدخول لأنها غير مهيأة. تواصل مع مسؤول النظام."
     }
+  },
+  "Notifications": {
+    "title": "الإشعارات",
+    "subtitle": "إرسال الإعلانات والإشعارات الفورية والتنبيهات المجدولة",
+    "tabs": {
+      "notifications": "الإشعارات",
+      "templates": "القوالب",
+      "deliveryLogs": "سجلات التسليم"
+    },
+    "searchPlaceholder": "البحث عن إشعارات...",
+    "exactSearch": "بحث دقيق",
+    "status": "الحالة",
+    "newNotification": "إشعار جديد",
+    "columns": {
+      "notification": "الإشعار",
+      "type": "النوع",
+      "project": "المشروع",
+      "audience": "الجمهور",
+      "status": "الحالة",
+      "reach": "الوصول",
+      "created": "تاريخ الإنشاء"
+    },
+    "types": {
+      "announcement": "إعلان",
+      "push": "فوري"
+    },
+    "statuses": {
+      "published": "منشور",
+      "scheduled": "مجدول",
+      "draft": "مسودة"
+    },
+    "reach": {
+      "sent": "مرسل",
+      "read": "مقروء",
+      "draft": "مسودة"
+    },
+    "actions": {
+      "view": "عرض",
+      "send": "إرسال"
+    },
+    "filters": {
+      "type": "النوع"
+    },
+    "showing": "عرض {from}-{to} من {total}",
+    "create": {
+      "title": "إشعار جديد",
+      "titleEn": "العنوان (إنجليزي)",
+      "titleAr": "العنوان (عربي)",
+      "body": "المحتوى",
+      "type": "النوع",
+      "project": "المشروع",
+      "audience": "الجمهور",
+      "scheduledDate": "تاريخ الجدولة",
+      "cancel": "إلغاء",
+      "submit": "إنشاء إشعار"
+    },
+    "createModal": {
+      "title": "إنشاء إشعار",
+      "english": "English",
+      "arabic": "Arabic",
+      "titleEn": "العنوان (إنجليزي)",
+      "titleAr": "العنوان (عربي)",
+      "titleEnPlaceholder": "e.g. Scheduled Maintenance Notice",
+      "titleArPlaceholder": "مثال: إشعار الصيانة المجدولة",
+      "bodyEn": "المحتوى (إنجليزي)",
+      "bodyAr": "المحتوى (عربي)",
+      "bodyEnPlaceholder": "Write notification body in English...",
+      "bodyArPlaceholder": "اكتب نص الإشعار بالعربية...",
+      "notificationType": "نوع الإشعار",
+      "targetAudience": "الجمهور المستهدف",
+      "project": "المشروع",
+      "status": "الحالة",
+      "cancel": "إلغاء",
+      "saveDraft": "حفظ كمسودة",
+      "sendNow": "إرسال الآن"
+    },
+    "templates": {
+      "newTemplate": "قالب جديد",
+      "edit": "تعديل",
+      "useTemplate": "استخدم القالب",
+      "uses": "استخدام"
+    },
+    "deliveryLogs": {
+      "notification": "الإشعار",
+      "sentAt": "وقت الإرسال",
+      "recipients": "المستلمون",
+      "delivered": "تم التسليم",
+      "read": "تمت القراءة",
+      "failed": "فشل",
+      "readRate": "نسبة القراءة"
+    },
+    "templatesComingSoon": "وحدة القوالب قيد الإنشاء.",
+    "deliveryLogsComingSoon": "وحدة سجلات التسليم قيد الإنشاء."
   }
 }

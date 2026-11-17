@@ -9,9 +9,11 @@ type Props = {
   labels: ToolbarLabels;
   extraFilters?: React.ReactNode;
   trailingContent?: React.ReactNode;
+  onStatusChange?: (selected: Set<string>) => void;
+  onSearch?: (query: string) => void;
 };
 
-export default function InvoiceToolbarWithModal({ labels, extraFilters, trailingContent }: Props) {
+export default function InvoiceToolbarWithModal({ labels, extraFilters, trailingContent, onStatusChange, onSearch }: Props) {
   const t = useTranslations("Operations");
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -26,6 +28,8 @@ export default function InvoiceToolbarWithModal({ labels, extraFilters, trailing
         ]}
         extraFilters={extraFilters}
         trailingContent={trailingContent}
+        onStatusChange={onStatusChange}
+        onSearch={onSearch}
         onAdd={() => setModalOpen(true)}
       />
       {modalOpen && <GenerateInvoiceModal onClose={() => setModalOpen(false)} />}

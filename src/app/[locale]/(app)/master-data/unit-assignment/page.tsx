@@ -1,7 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import Toolbar from "@/src/components/Toolbar";
-import UnitAssignmentTable from "./components/UnitAssignmentTable";
-import AssignmentFilters from "./components/AssignmentFilters";
+import UnitAssignmentPageClient from "./components/UnitAssignmentPageClient";
 import { fetchUnitAssignments } from "@/src/services/unitAssignments";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
@@ -22,21 +20,14 @@ export default async function UnitAssignmentPage({ params }: Props) {
   const assignments = await fetchUnitAssignments();
 
   return (
-    <>
-      <Toolbar
-        labels={{
-          searchPlaceholder: t("searchAssignments"),
-          exactSearch: t("exactSearch"),
-          status: t("status"),
-          export: t("export"),
-          import: t("import"),
-          addLabel: t("addAssignment"),
-        }}
-        extraFilters={<AssignmentFilters />}
-      />
-      <div className="px-5">
-        <UnitAssignmentTable data={assignments} />
-      </div>
-    </>
+    <UnitAssignmentPageClient
+      data={assignments}
+      labels={{
+        searchPlaceholder: t("searchAssignments"),
+        exactSearch: t("exactSearch"),
+        status: t("status"),
+        addLabel: "",
+      }}
+    />
   );
 }
