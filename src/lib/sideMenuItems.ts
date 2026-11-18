@@ -80,11 +80,11 @@ export const menuItems: MenuItem[] = [
     href: "#",
     icon: EventsIcon,
     children: [
-      { key: "events", href: "#", icon: EventsSubIcon },
-      { key: "aboutUs", href: "#", icon: AboutUsSubIcon },
-      { key: "phoneDirectory", href: "#", icon: PhoneDirSubIcon },
-      { key: "guidelines", href: "#", icon: GuidelinesSubIcon },
-      { key: "newsShops", href: "#", icon: NewsShopsSubIcon },
+      { key: "events", href: "/events-content/events", icon: EventsSubIcon },
+      { key: "newsShops", href: "/events-content/news-shops", icon: NewsShopsSubIcon },
+      { key: "phoneDirectory", href: "/events-content/phone-directory", icon: PhoneDirSubIcon },
+      { key: "aboutUs", href: "/events-content/about-us", icon: AboutUsSubIcon },
+      { key: "guidelines", href: "/events-content/guidelines", icon: GuidelinesSubIcon },
     ],
   },
   {
@@ -92,10 +92,10 @@ export const menuItems: MenuItem[] = [
     href: "#",
     icon: UsersIcon,
     children: [
-      { key: "users", href: "#", icon: UserSubIcon },
-      { key: "rolesPermissions", href: "#", icon: RolesSubIcon },
-      { key: "auditLog", href: "#", icon: AuditLogSubIcon },
+      { key: "users", href: "/users-permissions/users", icon: UserSubIcon },
+      { key: "rolesPermissions", href: "/users-permissions/roles-permissions", icon: RolesSubIcon },
+      { key: "auditLog", href: "/audit-log", icon: AuditLogSubIcon },
     ],
   },
-  { key: "settings", href: "#", icon: SettingsIcon },
+  { key: "settings", href: "/settings/app-configuration", icon: SettingsIcon },
 ];

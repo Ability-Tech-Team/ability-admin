@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import type { UnitAssignment } from "@/src/services/unitAssignments";
 import UnitAssignmentDetail from "./UnitAssignmentDetail";
@@ -15,13 +15,21 @@ const countBadgeClass = "bg-[#eff6ff] text-[#1447e6]";
 
 export default function UnitAssignmentTable({ data }: UnitAssignmentTableProps) {
   const t = useTranslations("MasterData");
-  const [assignments, setAssignments] = useState(data);
+  const [toggledIds, setToggledIds] = useState<Set<string>>(new Set());
   const [selectedAssignment, setSelectedAssignment] = useState<UnitAssignment | null>(null);
 
+  const assignments = useMemo(() =>
+    data.map((a) => toggledIds.has(a.id) ? { ...a, active: !a.active } : a),
+    [data, toggledIds]
+  );
+
   function toggleActive(id: string) {
-    setAssignments((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, active: !a.active } : a))
-    );
+    setToggledIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   }
 
   return (

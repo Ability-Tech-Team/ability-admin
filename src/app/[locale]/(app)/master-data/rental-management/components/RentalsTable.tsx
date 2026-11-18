@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import type { Rental } from "@/src/services/rentals";
 import RentalDetail from "./RentalDetail";
@@ -19,13 +19,19 @@ const statusClass: Record<string, string> = {
 
 export default function RentalsTable({ data }: RentalsTableProps) {
   const t = useTranslations("MasterData");
-  const [rentals, setRentals] = useState(data);
+  const [statusOverrides, setStatusOverrides] = useState<Map<string, Rental["status"]>>(new Map());
   const [selectedRental, setSelectedRental] = useState<Rental | null>(null);
 
+  const rentals = useMemo(() =>
+    data.map((r) => {
+      const newStatus = statusOverrides.get(r.id);
+      return newStatus ? { ...r, status: newStatus } : r;
+    }),
+    [data, statusOverrides]
+  );
+
   function updateStatus(id: string, status: "approved" | "rejected") {
-    setRentals((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, status } : r))
-    );
+    setStatusOverrides((prev) => new Map(prev).set(id, status));
   }
 
   return (

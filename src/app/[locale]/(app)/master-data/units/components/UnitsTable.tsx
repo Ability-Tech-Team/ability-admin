@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import type { Unit } from "@/src/services/units";
 
@@ -12,12 +12,20 @@ const contractBadgeClass = "border border-[#bedbff] bg-[#eff6ff] text-[#1447e6]"
 
 export default function UnitsTable({ data }: UnitsTableProps) {
   const t = useTranslations("MasterData");
-  const [units, setUnits] = useState(data);
+  const [toggledIds, setToggledIds] = useState<Set<string>>(new Set());
+
+  const units = useMemo(() =>
+    data.map((u) => toggledIds.has(u.id) ? { ...u, active: !u.active } : u),
+    [data, toggledIds]
+  );
 
   function toggleActive(id: string) {
-    setUnits((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, active: !u.active } : u))
-    );
+    setToggledIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   }
 
   return (

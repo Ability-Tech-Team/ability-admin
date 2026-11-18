@@ -21,7 +21,7 @@ const avatarBg = "bg-[#f1f5f9]";
 
 export default function ProjectsOverview({
   data,
-  viewAllHref = "#",
+  viewAllHref = "/master-data/projects",
 }: Props) {
   const t = useTranslations("Dashboard");
 
@@ -64,7 +64,7 @@ export default function ProjectsOverview({
                       : "border-gray-200 bg-gray-50 text-gray-400"
                   }`}
                 >
-                  {p.status}
+                  {p.status === "active" ? t("statusActive") : t("statusInactive")}
                 </span>
               </div>
               <div className="flex items-center gap-2 text-[10px] text-gray-400 mt-0.5">

@@ -9,6 +9,7 @@ import FamilyMembersTable from "./FamilyMembersTable";
 
 type Props = {
   data: FamilyMemberRecord[];
+  projectOptions: { value: string; label: string }[];
   labels: ToolbarLabels;
 };
 
@@ -16,7 +17,7 @@ function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, "-");
 }
 
-export default function FamilyMembersPageClient({ data, labels }: Props) {
+export default function FamilyMembersPageClient({ data, projectOptions, labels }: Props) {
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
   const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
   const [relationshipFilter, setRelationshipFilter] = useState<Set<string>>(new Set());
@@ -63,6 +64,7 @@ export default function FamilyMembersPageClient({ data, labels }: Props) {
         onSearch={setSearch}
         extraFilters={
           <FamilyMemberFilters
+            projectOptions={projectOptions}
             onProjectChange={setProjectFilter}
             onRelationshipChange={setRelationshipFilter}
           />

@@ -9,6 +9,7 @@ import CustomersTable from "./CustomersTable";
 
 type Props = {
   data: Customer[];
+  projectOptions: { value: string; label: string }[];
   labels: ToolbarLabels;
 };
 
@@ -16,7 +17,7 @@ function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, "-");
 }
 
-export default function CustomersPageClient({ data, labels }: Props) {
+export default function CustomersPageClient({ data, projectOptions, labels }: Props) {
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
   const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
   const [typeFilter, setTypeFilter] = useState<Set<string>>(new Set());
@@ -64,6 +65,7 @@ export default function CustomersPageClient({ data, labels }: Props) {
         onSearch={setSearch}
         extraFilters={
           <CustomerFilters
+            projectOptions={projectOptions}
             onProjectChange={setProjectFilter}
             onTypeChange={setTypeFilter}
           />

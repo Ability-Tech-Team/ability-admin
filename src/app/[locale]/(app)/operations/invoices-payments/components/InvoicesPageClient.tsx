@@ -2,13 +2,15 @@
 
 import { useState, useMemo } from "react";
 import type { ToolbarLabels } from "@/src/components/Toolbar";
-import type { Invoice } from "@/src/services/invoices";
+import type { Invoice, MaintenanceDeposit } from "@/src/services/invoices";
 import InvoiceToolbarWithModal from "./InvoiceToolbarWithModal";
 import { InvoiceProjectsFilter, InvoiceTypeFilter, MaintenanceDepositButton } from "./InvoiceFilters";
 import InvoicesTable from "./InvoicesTable";
 
 type Props = {
   data: Invoice[];
+  depositData: MaintenanceDeposit[];
+  projectOptions: { value: string; label: string }[];
   labels: ToolbarLabels;
 };
 
@@ -16,7 +18,7 @@ function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, "-");
 }
 
-export default function InvoicesPageClient({ data, labels }: Props) {
+export default function InvoicesPageClient({ data, depositData, projectOptions, labels }: Props) {
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
   const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
   const [typeFilter, setTypeFilter] = useState<Set<string>>(new Set());
@@ -55,12 +57,12 @@ export default function InvoicesPageClient({ data, labels }: Props) {
     <>
       <InvoiceToolbarWithModal
         labels={labels}
-        trailingContent={<MaintenanceDepositButton />}
+        trailingContent={<MaintenanceDepositButton data={depositData} />}
         onStatusChange={setStatusFilter}
         onSearch={setSearch}
         extraFilters={
           <>
-            <InvoiceProjectsFilter onChange={setProjectFilter} />
+            <InvoiceProjectsFilter projectOptions={projectOptions} onChange={setProjectFilter} />
             <InvoiceTypeFilter onChange={setTypeFilter} />
           </>
         }

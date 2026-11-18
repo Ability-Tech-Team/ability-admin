@@ -41,7 +41,7 @@ const statusBadge: Record<string, string> = {
 };
 
 function formatAmount(n: number) {
-  return n.toLocaleString("en-US");
+  return n.toLocaleString();
 }
 
 export default function InvoicesTable({ data }: Props) {

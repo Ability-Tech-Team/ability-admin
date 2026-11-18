@@ -9,6 +9,7 @@ import UnitsTable from "./UnitsTable";
 
 type Props = {
   data: Unit[];
+  projectOptions: { value: string; label: string }[];
   labels: ToolbarLabels;
 };
 
@@ -16,7 +17,7 @@ function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, "-");
 }
 
-export default function UnitsPageClient({ data, labels }: Props) {
+export default function UnitsPageClient({ data, projectOptions, labels }: Props) {
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
   const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
   const [contractFilter, setContractFilter] = useState<Set<string>>(new Set());
@@ -64,6 +65,7 @@ export default function UnitsPageClient({ data, labels }: Props) {
         onSearch={setSearch}
         extraFilters={
           <ContractFilter
+            projectOptions={projectOptions}
             onProjectChange={setProjectFilter}
             onContractChange={setContractFilter}
           />

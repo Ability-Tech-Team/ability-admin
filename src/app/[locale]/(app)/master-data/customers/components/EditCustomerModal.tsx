@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { Customer } from "@/src/services/customers";
+import SelectWrapper from "@/src/components/SelectWrapper";
+import ModalWrapper from "@/src/components/ModalWrapper";
+import CloseButton from "@/src/components/CloseButton";
 
 type EditCustomerModalProps = {
   customer: Customer;
@@ -40,23 +43,11 @@ export default function EditCustomerModal({ customer, onClose, onSave, onDelete 
   }
 
   return (
-    <>
-      {/* Backdrop */}
-      <div className="fixed inset-0 z-60 bg-black/20 backdrop-blur-xs" onClick={onClose} />
-
-      {/* Modal */}
-      <div className="fixed inset-0 z-70 flex items-center justify-center p-4" onClick={onClose}>
-        <div className="w-full max-w-[580px] rounded-xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <ModalWrapper onClose={onClose} width="max-w-[580px]">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3">
             <h2 className="text-[13px] font-semibold text-gray-900">{t("editCustomer")}</h2>
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex h-7 w-7 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
-            >
-              <CloseIcon className="h-4 w-4" />
-            </button>
+            <CloseButton onClick={onClose} />
           </div>
 
           {/* Form */}
@@ -94,14 +85,16 @@ export default function EditCustomerModal({ customer, onClose, onSave, onDelete 
 
               {/* ID / Passport Type */}
               <Field label={t("formFields.idPassportType")}>
-                <select
-                  value={idType}
-                  onChange={(e) => setIdType(e.target.value as "id" | "passport")}
-                  className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[11px] text-gray-900 outline-none focus:border-blue-400 transition-colors bg-white"
-                >
-                  <option value="id">{t("idTypes.id")}</option>
-                  <option value="passport">{t("idTypes.passport")}</option>
-                </select>
+                <SelectWrapper>
+                  <select
+                    value={idType}
+                    onChange={(e) => setIdType(e.target.value as "id" | "passport")}
+                    className="w-full appearance-none rounded-lg border border-gray-200 ps-3 pe-10 py-1.5 text-[11px] text-gray-900 outline-none focus:border-blue-400 transition-colors bg-white"
+                  >
+                    <option value="id">{t("idTypes.id")}</option>
+                    <option value="passport">{t("idTypes.passport")}</option>
+                  </select>
+                </SelectWrapper>
               </Field>
 
               {/* ID / Passport Number */}
@@ -188,9 +181,7 @@ export default function EditCustomerModal({ customer, onClose, onSave, onDelete 
               {t("saveChanges")}
             </button>
           </div>
-        </div>
-      </div>
-    </>
+    </ModalWrapper>
   );
 }
 
@@ -206,10 +197,3 @@ function Field({ label, required, children }: { label: string; required?: boolea
   );
 }
 
-function CloseIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
-      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-    </svg>
-  );
-}

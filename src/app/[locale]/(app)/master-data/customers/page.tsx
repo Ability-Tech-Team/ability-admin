@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import CustomersPageClient from "./components/CustomersPageClient";
 import { fetchCustomers } from "@/src/services/customers";
+import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
 
@@ -17,11 +18,15 @@ export default async function CustomersPage({ params }: Props) {
   }
 
   const t = await getTranslations("MasterData");
-  const customers = await fetchCustomers();
+  const [customers, projectOptions] = await Promise.all([
+    fetchCustomers(),
+    fetchProjectFilterOptions(),
+  ]);
 
   return (
     <CustomersPageClient
       data={customers}
+      projectOptions={projectOptions}
       labels={{
         searchPlaceholder: t("searchCustomers"),
         exactSearch: t("exactSearch"),

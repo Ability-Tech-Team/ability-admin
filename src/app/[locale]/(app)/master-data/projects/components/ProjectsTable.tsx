@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import type { Project } from "@/src/services/projects";
 import EditProjectModal from "./EditProjectModal";
@@ -15,13 +15,21 @@ const avatarClass = "bg-blue-100 text-blue-600";
 
 export default function ProjectsTable({ data }: ProjectsTableProps) {
   const t = useTranslations("MasterData");
-  const [projects, setProjects] = useState(data);
+  const [toggledIds, setToggledIds] = useState<Set<string>>(new Set());
   const [editProject, setEditProject] = useState<Project | null>(null);
 
+  const projects = useMemo(() =>
+    data.map((p) => toggledIds.has(p.id) ? { ...p, active: !p.active } : p),
+    [data, toggledIds]
+  );
+
   function toggleActive(id: string) {
-    setProjects((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, active: !p.active } : p))
-    );
+    setToggledIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   }
 
   return (
@@ -70,7 +78,7 @@ export default function ProjectsTable({ data }: ProjectsTableProps) {
                 </td>
 
                 {/* Units */}
-                <td className="px-4 py-3 text-[11px] font-bold text-gray-900">{project.units.toLocaleString("en-US")}</td>
+                <td className="px-4 py-3 text-[11px] font-bold text-gray-900">{project.units.toLocaleString()}</td>
 
                 {/* Occupancy */}
                 <td className="px-4 py-3">

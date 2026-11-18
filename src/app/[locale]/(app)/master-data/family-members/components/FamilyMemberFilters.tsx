@@ -4,24 +4,19 @@ import { useTranslations } from "next-intl";
 import FilterDropdown from "@/src/components/FilterDropdown";
 
 type Props = {
+  projectOptions: { value: string; label: string }[];
   onProjectChange?: (selected: Set<string>) => void;
   onRelationshipChange?: (selected: Set<string>) => void;
 };
 
-export default function FamilyMemberFilters({ onProjectChange, onRelationshipChange }: Props) {
+export default function FamilyMemberFilters({ projectOptions, onProjectChange, onRelationshipChange }: Props) {
   const t = useTranslations("MasterData");
 
   return (
     <>
       <FilterDropdown
         label={t("filters.projects")}
-        options={[
-          { value: "marina-heights", label: "Marina Heights" },
-          { value: "palm-residences", label: "Palm Residences" },
-          { value: "corniche-gardens", label: "Corniche Gardens" },
-          { value: "downtown-towers", label: "Downtown Towers" },
-          { value: "business-bay", label: "Business Bay Complex" },
-        ]}
+        options={projectOptions}
         onChange={onProjectChange}
       />
       <FilterDropdown

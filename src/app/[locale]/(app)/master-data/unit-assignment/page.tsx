@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import UnitAssignmentPageClient from "./components/UnitAssignmentPageClient";
 import { fetchUnitAssignments } from "@/src/services/unitAssignments";
+import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
 
@@ -17,11 +18,15 @@ export default async function UnitAssignmentPage({ params }: Props) {
   }
 
   const t = await getTranslations("MasterData");
-  const assignments = await fetchUnitAssignments();
+  const [assignments, projectOptions] = await Promise.all([
+    fetchUnitAssignments(),
+    fetchProjectFilterOptions(),
+  ]);
 
   return (
     <UnitAssignmentPageClient
       data={assignments}
+      projectOptions={projectOptions}
       labels={{
         searchPlaceholder: t("searchAssignments"),
         exactSearch: t("exactSearch"),

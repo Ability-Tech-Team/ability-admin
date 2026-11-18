@@ -28,6 +28,8 @@ type ToolbarProps = {
   extraFilters?: React.ReactNode;
   /** Content rendered before the add button on the right side. */
   trailingContent?: React.ReactNode;
+  /** Hide the Status filter button entirely. */
+  hideStatus?: boolean;
   onSearch?: (query: string) => void;
   onStatusChange?: (selected: Set<string>) => void;
   onAdd?: () => void;
@@ -41,6 +43,7 @@ export default function Toolbar({
   leadingContent,
   extraFilters,
   trailingContent,
+  hideStatus,
   onSearch,
   onStatusChange,
   onAdd,
@@ -79,7 +82,7 @@ export default function Toolbar({
           <span className="text-[12px] text-gray-500">{labels.exactSearch}</span>
         </label>
 
-        <FilterDropdown label={labels.status} options={statusOptions} onChange={onStatusChange} />
+        {!hideStatus && <FilterDropdown label={labels.status} options={statusOptions} onChange={onStatusChange} />}
 
         {extraFilters}
       </div>

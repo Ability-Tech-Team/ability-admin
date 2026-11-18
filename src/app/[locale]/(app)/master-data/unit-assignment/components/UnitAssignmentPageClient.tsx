@@ -8,6 +8,7 @@ import UnitAssignmentTable from "./UnitAssignmentTable";
 
 type Props = {
   data: UnitAssignment[];
+  projectOptions: { value: string; label: string }[];
   labels: ToolbarLabels;
 };
 
@@ -15,7 +16,7 @@ function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, "-");
 }
 
-export default function UnitAssignmentPageClient({ data, labels }: Props) {
+export default function UnitAssignmentPageClient({ data, projectOptions, labels }: Props) {
   const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
   const [occupancyFilter, setOccupancyFilter] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
@@ -52,6 +53,7 @@ export default function UnitAssignmentPageClient({ data, labels }: Props) {
         onSearch={setSearch}
         extraFilters={
           <AssignmentFilters
+            projectOptions={projectOptions}
             onProjectChange={setProjectFilter}
             onOccupancyChange={setOccupancyFilter}
           />

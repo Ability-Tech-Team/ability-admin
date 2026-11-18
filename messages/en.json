@@ -77,6 +77,15 @@
     "totalInvoiceValue": "Total Invoice Value",
     "collectedInvoices": "Collected Invoices",
     "overdueInvoiceValue": "Overdue Invoice Value",
+    "widgetManager": "Widget Manager",
+    "widgetManagerSubtitle": "Drag to reorder. Toggle to show/hide widgets on the dashboard.",
+    "done": "Done",
+    "widget_kpiCards": "KPI Cards",
+    "widget_srTrendChart": "SR Trend Chart",
+    "widget_occupancyRates": "Occupancy Rates",
+    "widget_quickMetrics": "Quick Metrics",
+    "widget_recentServiceRequests": "Recent Service Requests",
+    "widget_projectsOverview": "Projects Overview",
     "serviceRequestTrend": "Service Request Trend",
     "open": "Open",
     "resolved": "Resolved",
@@ -98,7 +107,21 @@
     "customer": "Customer",
     "priority": "Priority",
     "status": "Status",
-    "sla": "SLA"
+    "sla": "SLA",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "priorities": {
+      "Critical": "Critical",
+      "High": "High",
+      "Medium": "Medium",
+      "Low": "Low"
+    },
+    "srStatuses": {
+      "open": "Open",
+      "in progress": "In Progress",
+      "resolved": "Resolved",
+      "pending": "Pending"
+    }
   },
   "MasterData": {
     "title": "Master Data",
@@ -701,6 +724,464 @@
     },
     "templatesComingSoon": "Templates module is coming soon.",
     "deliveryLogsComingSoon": "Delivery logs module is coming soon."
+  },
+  "EventsContent": {
+    "title": "Events & Content",
+    "subtitle": "Manage community events, news, and directory listings",
+    "tabs": {
+      "events": "Events",
+      "newsShops": "News & Shops",
+      "phoneDirectory": "Phone Directory",
+      "aboutUs": "About Us",
+      "guidelines": "Guidelines"
+    },
+    "searchPlaceholder": "Search events...",
+    "exactSearch": "Exact search",
+    "status": "Status",
+    "newEvent": "New Event",
+    "grid": "Grid",
+    "list": "List",
+    "statuses": {
+      "published": "published",
+      "draft": "draft"
+    },
+    "filters": {
+      "projects": "Projects"
+    },
+    "listColumns": {
+      "event": "Event",
+      "project": "Project",
+      "dateTime": "Date & Time",
+      "location": "Location",
+      "rsvps": "RSVPs",
+      "status": "Status"
+    },
+    "rsvps": "RSVPs",
+    "edit": "Edit",
+    "publish": "Publish",
+    "addEvent": "Add Event",
+    "createModal": {
+      "title": "Create New Event",
+      "titleEn": "Event Title (EN)",
+      "titleAr": "Event Title (AR)",
+      "titleEnPlaceholder": "Community BBQ Night",
+      "titleArPlaceholder": "ليلة الشواء المجتمعية",
+      "description": "Description",
+      "descriptionPlaceholder": "Event description...",
+      "date": "Date",
+      "time": "Time",
+      "capacity": "Capacity",
+      "location": "Location",
+      "locationPlaceholder": "Pool Deck",
+      "project": "Project",
+      "allProjects": "All Projects",
+      "cancel": "Cancel",
+      "saveDraft": "Save Draft",
+      "publishEvent": "Publish Event",
+      "savedAsDraft": "Event saved as draft",
+      "eventPublished": "Event published"
+    },
+    "newsShops": {
+      "searchPlaceholder": "Search news...",
+      "exactSearch": "Exact search",
+      "newArticle": "New Article",
+      "columns": {
+        "article": "Article",
+        "category": "Category",
+        "project": "Project",
+        "status": "Status",
+        "date": "Date"
+      },
+      "categories": {
+        "facilities": "Facilities",
+        "announcement": "Announcement",
+        "maintenance": "Maintenance"
+      },
+      "statuses": {
+        "published": "published",
+        "draft": "draft"
+      },
+      "edit": "Edit"
+    },
+    "phoneDir": {
+      "searchPlaceholder": "Search directory...",
+      "exactSearch": "Exact search",
+      "addContact": "Add Contact",
+      "categories": {
+        "emergency": "Emergency",
+        "main": "Main",
+        "project": "Project",
+        "direct": "Direct",
+        "security": "Security",
+        "operations": "Operations"
+      },
+      "edit": "Edit"
+    },
+    "newsShopsComingSoon": "News & Shops module is coming soon.",
+    "phoneDirectoryComingSoon": "Phone Directory module is coming soon.",
+    "aboutUs": {
+      "title": "About Us Content",
+      "labelEn": "About Us (English)",
+      "labelAr": "About Us (Arabic)",
+      "savePublish": "Save & Publish",
+      "saved": "About Us content saved"
+    },
+    "aboutUsComingSoon": "About Us module is coming soon.",
+    "guidelinesComingSoon": "Guidelines module is coming soon.",
+    "guidelines": {
+      "newGuideline": "New Guideline",
+      "stats": {
+        "published": "Published Guides",
+        "publishedSub": "Live guidelines available to residents",
+        "draft": "Draft Guides",
+        "draftSub": "Pending review or approval",
+        "sections": "Content Sections",
+        "sectionsSub": "Total sections across all guides"
+      },
+      "columns": {
+        "guideline": "Guideline",
+        "category": "Category",
+        "project": "Project",
+        "format": "Format",
+        "sections": "Sections",
+        "status": "Status",
+        "updated": "Updated"
+      },
+      "categories": {
+        "community-guide": "Community Guide",
+        "resident-guide": "Resident Guide",
+        "facility-rules": "Facility Rules"
+      },
+      "statuses": {
+        "published": "Published",
+        "draft": "Draft"
+      },
+      "edit": "Edit",
+      "newModal": {
+        "title": "New Guideline",
+        "titleEn": "Title (English)",
+        "titleAr": "Title (Arabic)",
+        "category": "Category",
+        "project": "Project",
+        "allProjects": "All Projects",
+        "categories": {
+          "community-guide": "Community Guide",
+          "resident-guide": "Resident Guide",
+          "facility-rules": "Facility Rules"
+        },
+        "mobileSummary": "Mobile Summary",
+        "mobileSummaryPlaceholder": "Short description shown in the information menu",
+        "guidelineContent": "Guideline Content",
+        "writeText": "Write Text",
+        "uploadPdf": "Upload PDF",
+        "guidelineText": "Guideline Text",
+        "guidelineTextPlaceholder": "Add guideline sections and instructions...",
+        "pdfDocument": "PDF Document",
+        "pdfPlaceholder": "Drop a PDF here or click to browse",
+        "pdfHint": "PDF only · Maximum recommended size 10 MB",
+        "remove": "Remove",
+        "publishingStatus": "Publishing Status",
+        "statuses": {
+          "published": "Published",
+          "draft": "Draft"
+        },
+        "cancel": "Cancel",
+        "saveDraft": "Save Draft",
+        "savedAsDraft": "Guideline saved as draft"
+      },
+      "editModal": {
+        "title": "Edit Guideline",
+        "titleEn": "Title (English)",
+        "titleAr": "Title (Arabic)",
+        "category": "Category",
+        "project": "Project",
+        "categories": {
+          "community-guide": "Community Guide",
+          "resident-guide": "Resident Guide",
+          "facility-rules": "Facility Rules"
+        },
+        "mobileSummary": "Mobile Summary",
+        "mobileSummaryPlaceholder": "Arrival, community access, facilities, and resident information.",
+        "guidelineContent": "Guideline Content",
+        "writeText": "Write Text",
+        "uploadPdf": "Upload PDF",
+        "guidelineText": "Guideline Text",
+        "guidelineTextPlaceholder": "Add guideline sections and instructions...",
+        "pdfDocument": "PDF Document",
+        "pdfPlaceholder": "Drop a PDF here or click to browse",
+        "pdfHint": "PDF only · Maximum recommended size 10 MB",
+        "remove": "Remove",
+        "publishingStatus": "Publishing Status",
+        "statuses": {
+          "published": "Published",
+          "draft": "Draft"
+        },
+        "cancel": "Cancel",
+        "savePublish": "Save & Publish",
+        "guidelinePublished": "Guideline published"
+      }
+    }
+  },
+  "UsersPermissions": {
+    "title": "Users & Permissions",
+    "subtitle": "Manage admin users, roles, and access control",
+    "tabs": {
+      "users": "Users",
+      "rolesPermissions": "Roles & Permissions"
+    },
+    "searchPlaceholder": "Search users...",
+    "exactSearch": "Exact search",
+    "status": "Status",
+    "inviteUser": "Invite User",
+    "filters": {
+      "roles": "Roles",
+      "status": "Status",
+      "projectAccess": "Project Access"
+    },
+    "columns": {
+      "user": "User",
+      "role": "Role",
+      "projectAccess": "Project Access",
+      "lastLogin": "Last Login",
+      "status": "Status"
+    },
+    "roles": {
+      "super-admin": "Super Admin",
+      "fm-manager": "FM Manager",
+      "cms-editor": "CMS Editor",
+      "operations-staff": "Operations Staff",
+      "finance-manager": "Finance Manager"
+    },
+    "statuses": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "edit": "Edit",
+    "showing": "Showing {from}-{to} of {total}",
+    "rolesComingSoon": "Roles & Permissions module is coming soon.",
+    "rolesPage": {
+      "rolesTitle": "Roles",
+      "addRole": "Add Role",
+      "permissionMatrix": "Permission Matrix",
+      "usersWithRole": "users",
+      "saveChanges": "Save Changes",
+      "permissionsSaved": "Permissions saved",
+      "columns": {
+        "module": "Module",
+        "view": "View",
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete",
+        "approve": "Approve"
+      }
+    },
+    "addRoleModal": {
+      "title": "Add Role",
+      "roleName": "Role Name",
+      "roleNamePlaceholder": "e.g. Community Manager",
+      "accessLevel": "Access Level",
+      "accessLevels": {
+        "custom": "Custom Access",
+        "full": "Full Access",
+        "readonly": "Read Only"
+      },
+      "modulesDescription": "Modules Description",
+      "modules": {
+        "selected": "Selected Modules",
+        "all": "All Modules"
+      },
+      "cancel": "Cancel",
+      "addRole": "Add Role",
+      "roleAdded": "Role added"
+    },
+    "inviteModal": {
+      "title": "Invite User",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Full Name",
+      "email": "Email",
+      "emailPlaceholder": "user@ability.ae",
+      "role": "Role",
+      "projectAccess": "Project Access",
+      "allProjects": "All Projects",
+      "roles": {
+        "super-admin": "Super Admin",
+        "fm-manager": "FM Manager",
+        "cms-editor": "CMS Editor",
+        "operations-staff": "Operations Staff",
+        "finance-manager": "Finance Manager"
+      },
+      "cancel": "Cancel",
+      "sendInvitation": "Send Invitation",
+      "invitationSent": "Invitation sent"
+    },
+    "editModal": {
+      "title": "Edit User",
+      "fullName": "Full Name",
+      "email": "Email",
+      "role": "Role",
+      "projectAccess": "Project Access",
+      "allProjects": "All Projects",
+      "roles": {
+        "super-admin": "Super Admin",
+        "fm-manager": "FM Manager",
+        "cms-editor": "CMS Editor",
+        "operations-staff": "Operations Staff",
+        "finance-manager": "Finance Manager"
+      },
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "userUpdated": "User updated"
+    }
+  },
+  "AuditLog": {
+    "title": "Audit Log",
+    "subtitle": "Complete activity trail for all admin actions and changes",
+    "exportLog": "Export Log",
+    "searchPlaceholder": "Search actions, users...",
+    "exactSearch": "Exact search",
+    "table": "Table",
+    "timeline": "Timeline",
+    "from": "From",
+    "to": "to",
+    "filters": {
+      "modules": "Modules"
+    },
+    "stats": {
+      "actionsToday": "Actions Today",
+      "thisWeek": "This Week",
+      "activeAdminsToday": "Active Admins Today",
+      "contentPublished": "Content Published"
+    },
+    "columns": {
+      "timestamp": "Timestamp",
+      "action": "Action",
+      "module": "Module",
+      "user": "User",
+      "detail": "Detail",
+      "ipAddress": "IP Address"
+    },
+    "showing": "Showing {from}-{to} of {total}"
+  },
+  "Settings": {
+    "title": "Settings",
+    "subtitle": "Configure platform-wide settings, departments, and rules",
+    "tabs": {
+      "appConfiguration": "App Configuration",
+      "departments": "Departments",
+      "serviceCatalog": "Service Catalog",
+      "slotsManagement": "Slots Management",
+      "unitTypes": "Unit Types",
+      "slaRules": "SLA Rules"
+    },
+    "appConfig": {
+      "appIdentity": "App Identity",
+      "appNameEn": "App Name (English)",
+      "appNameAr": "App Name (Arabic)",
+      "supportEmail": "Support Email",
+      "supportPhone": "Support Phone",
+      "langLocalization": "Language & Localization",
+      "defaultLanguage": "Default Language",
+      "dateFormat": "Date Format",
+      "currency": "Currency",
+      "timezone": "Timezone",
+      "featureToggles": "Feature Toggles",
+      "maintenanceMode": "Maintenance Mode",
+      "maintenanceModeDesc": "Put the app into maintenance mode for all users",
+      "guestGatePass": "Guest Gate Pass",
+      "guestGatePassDesc": "Allow residents to create guest gate passes",
+      "serviceRatings": "Service Ratings",
+      "serviceRatingsDesc": "Allow residents to rate completed service requests",
+      "saveConfig": "Save Configuration",
+      "saved": "Settings saved"
+    },
+    "departments": {
+      "addDepartment": "Add Department",
+      "head": "Head",
+      "staff": "Staff",
+      "active": "Active",
+      "inactive": "Inactive",
+      "added": "Department added",
+      "nameEn": "Department Name (English)",
+      "nameAr": "Department Name (Arabic)",
+      "headLabel": "Department Head",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "serviceCatalog": {
+      "searchPlaceholder": "Search services or department...",
+      "exactSearch": "Exact search",
+      "departments": "Departments",
+      "status": "Status",
+      "addService": "Add Service",
+      "baseCost": "Base Cost",
+      "serviceName": "Service Name",
+      "department": "Department",
+      "description": "Description",
+      "baseCostLabel": "Base Cost (EGP)",
+      "save": "Save",
+      "cancel": "Cancel",
+      "added": "Service added"
+    },
+    "slotsManagement": {
+      "slotConfig": "Slot Configuration",
+      "slotConfigDesc": "Configure capacity and working rules for a service.",
+      "department": "Department",
+      "assignedService": "Assigned Service",
+      "duration": "Duration (minutes)",
+      "slotInterval": "Slot Interval (minutes)",
+      "requiredManpower": "Required Manpower",
+      "availableEmployees": "Available Employees",
+      "shiftStart": "Shift Start",
+      "shiftEnd": "Shift End",
+      "breakStart": "Break Start",
+      "breakEnd": "Break End",
+      "buffer": "Buffer (minutes)",
+      "maxBookings": "Max Bookings / Slot",
+      "saveConfig": "Save Configuration",
+      "saved": "Configuration saved",
+      "availabilityCalendar": "Availability Calendar",
+      "open": "open",
+      "available": "Available",
+      "limited": "Limited",
+      "fullyBooked": "Fully Booked",
+      "unavailable": "Unavailable",
+      "selectedSlot": "Selected slot",
+      "availableManpower": "Available manpower",
+      "currentBookings": "Current bookings"
+    },
+    "unitTypes": {
+      "addUnitType": "Add Unit Type",
+      "unitType": "Unit Type",
+      "arabicName": "Arabic Name",
+      "defaultAnnualRent": "Default Annual Rent",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "nameEn": "Unit Type Name (English)",
+      "nameAr": "Unit Type Name (Arabic)",
+      "rent": "Default Annual Rent (EGP)",
+      "save": "Save",
+      "cancel": "Cancel",
+      "added": "Unit type added"
+    },
+    "slaRules": {
+      "addSlaRule": "Add SLA Rule",
+      "service": "Service",
+      "priority": "Priority",
+      "sla": "SLA",
+      "escalationTo": "Escalation To",
+      "actions": "Actions",
+      "edit": "Edit",
+      "hrs": "hrs",
+      "serviceName": "Service Name",
+      "priorityLabel": "Priority",
+      "slaHours": "SLA (hours)",
+      "escalationLabel": "Escalation To",
+      "save": "Save",
+      "cancel": "Cancel",
+      "added": "SLA rule added",
+      "updated": "SLA rule updated"
+    }
   },
   "Support": {
     "title": "Contact support",

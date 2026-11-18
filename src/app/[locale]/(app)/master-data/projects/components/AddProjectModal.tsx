@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
 import { useTranslations } from "next-intl";
+import ModalWrapper from "@/src/components/ModalWrapper";
+import CloseButton from "@/src/components/CloseButton";
+import FormField from "@/src/components/FormField";
 
 type Props = {
   onClose: () => void;
@@ -10,94 +12,66 @@ type Props = {
 export default function AddProjectModal({ onClose }: Props) {
   const t = useTranslations("MasterData");
 
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
-  }, []);
-
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-40 bg-black/20 backdrop-blur-xs"
-        onClick={onClose}
-      />
-
-      {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
-        <div className="w-[520px] max-h-[90vh] overflow-y-auto rounded-xl bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+    <ModalWrapper onClose={onClose} width="max-w-[520px]">
           {/* Header */}
           <div className="flex items-center justify-between px-6 pt-5 pb-4">
             <h2 className="text-[15px] font-bold text-gray-900">{t("addProjectModal.title")}</h2>
-            <button
-              onClick={onClose}
-              className="flex h-7 w-7 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
-            >
-              <XIcon className="h-4 w-4" />
-            </button>
+            <CloseButton onClick={onClose} />
           </div>
 
           {/* Fields */}
-          <div className="grid grid-cols-2 gap-x-4 gap-y-4 px-6">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-4 px-6 overflow-y-auto flex-1">
             {/* Project Name (EN) */}
-            <div>
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("editProject.nameEn")} <span className="text-red-500">*</span>
-              </label>
+            <FormField label={t("editProject.nameEn")} required>
               <input
                 type="text"
                 placeholder={t("addProjectModal.nameEnPlaceholder")}
                 className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
               />
-            </div>
+            </FormField>
 
             {/* Project Name (AR) */}
-            <div>
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("editProject.nameAr")} <span className="text-red-500">*</span>
-              </label>
+            <FormField label={t("editProject.nameAr")} required>
               <input
                 type="text"
                 dir="rtl"
                 placeholder={t("addProjectModal.nameArPlaceholder")}
                 className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
               />
-            </div>
+            </FormField>
 
             {/* Type */}
             <div className="col-span-2">
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("editProject.type")}
-              </label>
-              <input
-                type="text"
-                defaultValue="Residential"
-                className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
-              />
+              <FormField label={t("editProject.type")}>
+                <input
+                  type="text"
+                  placeholder={t("editProject.type")}
+                  className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
+                />
+              </FormField>
             </div>
 
             {/* Location */}
             <div className="col-span-2">
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("editProject.location")}
-              </label>
-              <input
-                type="text"
-                defaultValue="Dubai Marina"
-                className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
-              />
+              <FormField label={t("editProject.location")}>
+                <input
+                  type="text"
+                  placeholder={t("editProject.location")}
+                  className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
+                />
+              </FormField>
             </div>
 
             {/* Google Maps Link */}
             <div className="col-span-2">
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("editProject.googleMapsLink")}
-              </label>
-              <input
-                type="text"
-                placeholder="https://maps.google.com/..."
-                className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
-              />
+              <FormField label={t("editProject.googleMapsLink")}>
+                <input
+                  type="text"
+                  placeholder="https://maps.google.com/..."
+                  className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
+                />
+              </FormField>
             </div>
 
             {/* Google Maps Boundary — 4 Points */}
@@ -112,7 +86,7 @@ export default function AddProjectModal({ onClose }: Props) {
                   </label>
                   <input
                     type="text"
-                    defaultValue="30.0444, 31.2357"
+                    placeholder="30.0444, 31.2357"
                     className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
                   />
                 </div>
@@ -122,7 +96,7 @@ export default function AddProjectModal({ onClose }: Props) {
                   </label>
                   <input
                     type="text"
-                    defaultValue="30.0450, 31.2370"
+                    placeholder="30.0450, 31.2370"
                     className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
                   />
                 </div>
@@ -132,7 +106,7 @@ export default function AddProjectModal({ onClose }: Props) {
                   </label>
                   <input
                     type="text"
-                    defaultValue="30.0435, 31.2374"
+                    placeholder="30.0435, 31.2374"
                     className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
                   />
                 </div>
@@ -142,7 +116,7 @@ export default function AddProjectModal({ onClose }: Props) {
                   </label>
                   <input
                     type="text"
-                    defaultValue="30.0430, 31.2360"
+                    placeholder="30.0430, 31.2360"
                     className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
                   />
                 </div>
@@ -151,14 +125,13 @@ export default function AddProjectModal({ onClose }: Props) {
 
             {/* Project Manager */}
             <div className="col-span-2">
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("editProject.manager")}
-              </label>
-              <input
-                type="text"
-                placeholder={t("addProjectModal.managerPlaceholder")}
-                className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
-              />
+              <FormField label={t("editProject.manager")}>
+                <input
+                  type="text"
+                  placeholder={t("addProjectModal.managerPlaceholder")}
+                  className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
+                />
+              </FormField>
             </div>
           </div>
 
@@ -176,16 +149,6 @@ export default function AddProjectModal({ onClose }: Props) {
               {t("addProjectModal.submit")}
             </button>
           </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
-      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-    </svg>
+    </ModalWrapper>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import type { Customer } from "@/src/services/customers";
 import CustomerProfile from "./CustomerProfile";
@@ -15,15 +15,31 @@ const badgeClass = "border border-[#bedbff] bg-[#eff6ff] text-[#1447e6]";
 
 export default function CustomersTable({ data }: CustomersTableProps) {
   const t = useTranslations("MasterData");
-  const [customers, setCustomers] = useState(data);
+  const [toggledIds, setToggledIds] = useState<Set<string>>(new Set());
+  const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set());
+  const [updatedMap, setUpdatedMap] = useState<Map<string, Customer>>(new Map());
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
   const [attachmentsCustomer, setAttachmentsCustomer] = useState<Customer | null>(null);
 
+  const customers = useMemo(() =>
+    data
+      .filter((c) => !deletedIds.has(c.id))
+      .map((c) => {
+        const updated = updatedMap.get(c.id);
+        const base = updated ?? c;
+        return toggledIds.has(c.id) ? { ...base, active: !base.active } : base;
+      }),
+    [data, toggledIds, deletedIds, updatedMap]
+  );
+
   function toggleActive(id: string) {
-    setCustomers((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, active: !c.active } : c))
-    );
+    setToggledIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   }
 
   return (
@@ -65,6 +81,8 @@ export default function CustomersTable({ data }: CustomersTableProps) {
               <tr
                 key={customer.id}
                 onClick={() => setSelectedCustomer(customer)}
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelectedCustomer(customer); } }}
                 className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors cursor-pointer"
               >
                 {/* Customer */}
@@ -186,7 +204,7 @@ export default function CustomersTable({ data }: CustomersTableProps) {
             setSelectedCustomer(null);
           }}
           onDelete={() => {
-            setCustomers((prev) => prev.filter((c) => c.id !== selectedCustomer.id));
+            setDeletedIds((prev) => new Set(prev).add(selectedCustomer.id));
             setSelectedCustomer(null);
           }}
           onShowAttachments={() => {
@@ -201,9 +219,12 @@ export default function CustomersTable({ data }: CustomersTableProps) {
         <EditCustomerModal
           customer={editingCustomer}
           onClose={() => setEditingCustomer(null)}
-          onSave={() => setEditingCustomer(null)}
+          onSave={(updated) => {
+            setUpdatedMap((prev) => new Map(prev).set(updated.id, updated));
+            setEditingCustomer(null);
+          }}
           onDelete={() => {
-            setCustomers((prev) => prev.filter((c) => c.id !== editingCustomer.id));
+            setDeletedIds((prev) => new Set(prev).add(editingCustomer.id));
             setEditingCustomer(null);
           }}
         />

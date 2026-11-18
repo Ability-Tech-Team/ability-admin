@@ -22,6 +22,21 @@ export async function fetchInvoiceStats(): Promise<InvoiceStats> {
   return { totalOutstanding: 118000, overdueAmount: 100000, collectedThisMonth: 125000 };
 }
 
+export type MaintenanceDeposit = {
+  unit: string;
+  current: number;
+  required: number;
+  difference: number;
+};
+
+// TODO: replace with real API call
+export async function fetchMaintenanceDeposits(): Promise<MaintenanceDeposit[]> {
+  return [
+    { unit: "301", current: 20000, required: 25000, difference: 5000 },
+    { unit: "502", current: 15000, required: 20000, difference: 5000 },
+  ];
+}
+
 // TODO: replace with real API call
 export async function fetchInvoices(): Promise<Invoice[]> {
   return [

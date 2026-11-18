@@ -10,6 +10,11 @@ export type Project = {
   active: boolean;
 };
 
+export async function fetchProjectFilterOptions(): Promise<{ value: string; label: string }[]> {
+  const projects = await fetchProjects();
+  return projects.map((p) => ({ value: p.name.toLowerCase().replace(/\s+/g, "-"), label: p.name }));
+}
+
 // TODO: replace with real API call
 export async function fetchProjects(): Promise<Project[]> {
   return [

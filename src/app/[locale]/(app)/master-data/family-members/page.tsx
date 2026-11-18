@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import FamilyMembersPageClient from "./components/FamilyMembersPageClient";
 import { fetchFamilyMembers } from "@/src/services/familyMembers";
+import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
 
@@ -17,11 +18,15 @@ export default async function FamilyMembersPage({ params }: Props) {
   }
 
   const t = await getTranslations("MasterData");
-  const members = await fetchFamilyMembers();
+  const [members, projectOptions] = await Promise.all([
+    fetchFamilyMembers(),
+    fetchProjectFilterOptions(),
+  ]);
 
   return (
     <FamilyMembersPageClient
       data={members}
+      projectOptions={projectOptions}
       labels={{
         searchPlaceholder: t("searchMembers"),
         exactSearch: t("exactSearch"),

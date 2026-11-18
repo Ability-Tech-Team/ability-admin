@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import RentalManagementPageClient from "./components/RentalManagementPageClient";
 import { fetchRentals } from "@/src/services/rentals";
+import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
 
@@ -17,11 +18,15 @@ export default async function RentalManagementPage({ params }: Props) {
   }
 
   const t = await getTranslations("MasterData");
-  const rentals = await fetchRentals();
+  const [rentals, projectOptions] = await Promise.all([
+    fetchRentals(),
+    fetchProjectFilterOptions(),
+  ]);
 
   return (
     <RentalManagementPageClient
       data={rentals}
+      projectOptions={projectOptions}
       labels={{
         searchPlaceholder: t("searchRentals"),
         exactSearch: t("exactSearch"),

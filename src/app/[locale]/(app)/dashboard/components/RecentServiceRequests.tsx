@@ -104,14 +104,14 @@ export default function RecentServiceRequests({
                 <td className="py-3 pe-4">
                   <span className="flex items-center gap-1.5 text-[11px] text-gray-500">
                     <span className={`h-2 w-2 rounded-full ${priorityDot[r.priority]}`} />
-                    {r.priority}
+                    {t(`priorities.${r.priority}` as Parameters<typeof t>[0])}
                   </span>
                 </td>
                 <td className="py-3 pe-4">
                   <span
                     className={`inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-semibold ${statusStyle[r.status]}`}
                   >
-                    {r.status}
+                    {t(`srStatuses.${r.status}` as Parameters<typeof t>[0])}
                   </span>
                 </td>
                 <td className="py-3 text-[11px] font-mono text-gray-500">

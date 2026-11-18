@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import type { FamilyMemberRecord } from "@/src/services/familyMembers";
 
@@ -18,13 +18,19 @@ const statusClass: Record<string, string> = {
 
 export default function FamilyMembersTable({ data }: FamilyMembersTableProps) {
   const t = useTranslations("MasterData");
-  const [members, setMembers] = useState(data);
+  const [statusOverrides, setStatusOverrides] = useState<Map<string, FamilyMemberRecord["requestStatus"]>>(new Map());
   const [previewFile, setPreviewFile] = useState<string | null>(null);
 
+  const members = useMemo(() =>
+    data.map((m) => {
+      const newStatus = statusOverrides.get(m.id);
+      return newStatus ? { ...m, requestStatus: newStatus } : m;
+    }),
+    [data, statusOverrides]
+  );
+
   function updateStatus(id: string, status: "approved" | "rejected") {
-    setMembers((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, requestStatus: status } : m))
-    );
+    setStatusOverrides((prev) => new Map(prev).set(id, status));
   }
 
   return (

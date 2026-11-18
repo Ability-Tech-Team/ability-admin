@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import UnitsPageClient from "./components/UnitsPageClient";
 import { fetchUnits } from "@/src/services/units";
+import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
 
@@ -17,11 +18,15 @@ export default async function UnitsPage({ params }: Props) {
   }
 
   const t = await getTranslations("MasterData");
-  const units = await fetchUnits();
+  const [units, projectOptions] = await Promise.all([
+    fetchUnits(),
+    fetchProjectFilterOptions(),
+  ]);
 
   return (
     <UnitsPageClient
       data={units}
+      projectOptions={projectOptions}
       labels={{
         searchPlaceholder: t("searchUnits"),
         exactSearch: t("exactSearch"),

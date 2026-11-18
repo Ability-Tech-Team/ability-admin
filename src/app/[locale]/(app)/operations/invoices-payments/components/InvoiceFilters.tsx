@@ -4,19 +4,15 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import FilterDropdown from "@/src/components/FilterDropdown";
 import MaintenanceDepositModal from "./MaintenanceDepositModal";
+import type { MaintenanceDeposit } from "@/src/services/invoices";
 
-export function InvoiceProjectsFilter({ onChange }: { onChange?: (selected: Set<string>) => void }) {
+export function InvoiceProjectsFilter({ projectOptions, onChange }: { projectOptions: { value: string; label: string }[]; onChange?: (selected: Set<string>) => void }) {
   const t = useTranslations("Operations");
 
   return (
     <FilterDropdown
       label={t("filters.projects")}
-      options={[
-        { value: "marina-heights", label: "Marina Heights" },
-        { value: "downtown-towers", label: "Downtown Towers" },
-        { value: "palm-residences", label: "Palm Residences" },
-        { value: "gouna", label: "Gouna" },
-      ]}
+      options={projectOptions}
       onChange={onChange}
     />
   );
@@ -38,7 +34,7 @@ export function InvoiceTypeFilter({ onChange }: { onChange?: (selected: Set<stri
   );
 }
 
-export function MaintenanceDepositButton() {
+export function MaintenanceDepositButton({ data }: { data: MaintenanceDeposit[] }) {
   const t = useTranslations("Operations");
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -51,7 +47,7 @@ export function MaintenanceDepositButton() {
       >
         {t("invoice.maintenanceDeposit")}
       </button>
-      {modalOpen && <MaintenanceDepositModal onClose={() => setModalOpen(false)} />}
+      {modalOpen && <MaintenanceDepositModal data={data} onClose={() => setModalOpen(false)} />}
     </>
   );
 }

@@ -44,7 +44,7 @@ export default function OperationsTabs() {
                     : "bg-[#e2e8f0] text-gray-400"
                 }`}
               >
-                {tab.count.toLocaleString("en-US")}
+                {tab.count.toLocaleString()}
               </span>
             )}
           </Link>

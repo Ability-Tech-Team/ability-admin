@@ -6,7 +6,7 @@ import type { InvoiceStats } from "@/src/services/invoices";
 type Props = { stats: InvoiceStats };
 
 function formatAmount(n: number) {
-  return n.toLocaleString("en-US");
+  return n.toLocaleString();
 }
 
 const cards = [

@@ -9,6 +9,7 @@ import ServiceRequestsTable from "./ServiceRequestsTable";
 
 type Props = {
   data: ServiceRequest[];
+  projectOptions: { value: string; label: string }[];
   labels: ToolbarLabels;
 };
 
@@ -16,7 +17,7 @@ function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, "-");
 }
 
-export default function ServiceRequestsPageClient({ data, labels }: Props) {
+export default function ServiceRequestsPageClient({ data, projectOptions, labels }: Props) {
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
   const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
@@ -55,7 +56,7 @@ export default function ServiceRequestsPageClient({ data, labels }: Props) {
         onStatusChange={setStatusFilter}
         onSearch={setSearch}
         extraFilters={
-          <ServiceRequestFilters onProjectChange={setProjectFilter} />
+          <ServiceRequestFilters projectOptions={projectOptions} onProjectChange={setProjectFilter} />
         }
       />
       <ServiceRequestsTable data={filtered} />

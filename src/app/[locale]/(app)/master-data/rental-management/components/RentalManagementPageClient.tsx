@@ -9,6 +9,7 @@ import RentalsTable from "./RentalsTable";
 
 type Props = {
   data: Rental[];
+  projectOptions: { value: string; label: string }[];
   labels: ToolbarLabels;
 };
 
@@ -16,7 +17,7 @@ function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, "-");
 }
 
-export default function RentalManagementPageClient({ data, labels }: Props) {
+export default function RentalManagementPageClient({ data, projectOptions, labels }: Props) {
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
   const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
   const [sourceFilter, setSourceFilter] = useState<Set<string>>(new Set());
@@ -62,6 +63,7 @@ export default function RentalManagementPageClient({ data, labels }: Props) {
         onSearch={setSearch}
         extraFilters={
           <RentalFilters
+            projectOptions={projectOptions}
             onProjectChange={setProjectFilter}
             onSourceChange={setSourceFilter}
           />

@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import StatusCards from "../components/StatusCards";
 import ServiceRequestsPageClient from "./components/ServiceRequestsPageClient";
 import { fetchServiceRequestStats, fetchServiceRequests } from "@/src/services/serviceRequests";
+import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
 
@@ -18,9 +19,10 @@ export default async function ServiceRequestsPage({ params }: Props) {
   }
 
   const t = await getTranslations("Operations");
-  const [stats, requests] = await Promise.all([
+  const [stats, requests, projectOptions] = await Promise.all([
     fetchServiceRequestStats(),
     fetchServiceRequests(),
+    fetchProjectFilterOptions(),
   ]);
 
   return (
@@ -28,6 +30,7 @@ export default async function ServiceRequestsPage({ params }: Props) {
       <StatusCards stats={stats} />
       <ServiceRequestsPageClient
         data={requests}
+        projectOptions={projectOptions}
         labels={{
           searchPlaceholder: t("searchRequests"),
           exactSearch: t("exactSearch"),

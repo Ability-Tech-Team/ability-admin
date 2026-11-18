@@ -77,6 +77,15 @@
     "totalInvoiceValue": "إجمالي قيمة الفواتير",
     "collectedInvoices": "الفواتير المحصّلة",
     "overdueInvoiceValue": "قيمة الفواتير المتأخرة",
+    "widgetManager": "مدير الودجات",
+    "widgetManagerSubtitle": "اسحب لإعادة الترتيب. فعّل أو عطّل لإظهار/إخفاء الودجات على لوحة المعلومات.",
+    "done": "تم",
+    "widget_kpiCards": "بطاقات المؤشرات",
+    "widget_srTrendChart": "مخطط اتجاه الطلبات",
+    "widget_occupancyRates": "معدلات الإشغال",
+    "widget_quickMetrics": "مقاييس سريعة",
+    "widget_recentServiceRequests": "طلبات الخدمة الأخيرة",
+    "widget_projectsOverview": "نظرة عامة على المشاريع",
     "serviceRequestTrend": "اتجاه طلبات الخدمة",
     "open": "مفتوح",
     "resolved": "تم الحل",
@@ -98,7 +107,21 @@
     "customer": "العميل",
     "priority": "الأولوية",
     "status": "الحالة",
-    "sla": "مستوى الخدمة"
+    "sla": "مستوى الخدمة",
+    "statusActive": "نشط",
+    "statusInactive": "غير نشط",
+    "priorities": {
+      "Critical": "حرج",
+      "High": "عالي",
+      "Medium": "متوسط",
+      "Low": "منخفض"
+    },
+    "srStatuses": {
+      "open": "مفتوح",
+      "in progress": "قيد التنفيذ",
+      "resolved": "تم الحل",
+      "pending": "معلق"
+    }
   },
   "MasterData": {
     "title": "البيانات الرئيسية",
@@ -701,6 +724,464 @@
     },
     "templatesComingSoon": "وحدة القوالب قيد الإنشاء.",
     "deliveryLogsComingSoon": "وحدة سجلات التسليم قيد الإنشاء."
+  },
+  "EventsContent": {
+    "title": "الفعاليات والمحتوى",
+    "subtitle": "إدارة فعاليات المجتمع والأخبار ودليل الهاتف",
+    "tabs": {
+      "events": "الفعاليات",
+      "newsShops": "الأخبار والمتاجر",
+      "phoneDirectory": "دليل الهاتف",
+      "aboutUs": "من نحن",
+      "guidelines": "الإرشادات"
+    },
+    "searchPlaceholder": "البحث عن فعاليات...",
+    "exactSearch": "بحث دقيق",
+    "status": "الحالة",
+    "newEvent": "فعالية جديدة",
+    "grid": "شبكة",
+    "list": "قائمة",
+    "statuses": {
+      "published": "منشور",
+      "draft": "مسودة"
+    },
+    "filters": {
+      "projects": "المشاريع"
+    },
+    "listColumns": {
+      "event": "الفعالية",
+      "project": "المشروع",
+      "dateTime": "التاريخ والوقت",
+      "location": "الموقع",
+      "rsvps": "الحضور",
+      "status": "الحالة"
+    },
+    "rsvps": "حضور",
+    "edit": "تعديل",
+    "publish": "نشر",
+    "addEvent": "إضافة فعالية",
+    "createModal": {
+      "title": "إنشاء فعالية جديدة",
+      "titleEn": "عنوان الفعالية (EN)",
+      "titleAr": "عنوان الفعالية (AR)",
+      "titleEnPlaceholder": "ليلة الشواء المجتمعية",
+      "titleArPlaceholder": "ليلة الشواء المجتمعية",
+      "description": "الوصف",
+      "descriptionPlaceholder": "وصف الفعالية...",
+      "date": "التاريخ",
+      "time": "الوقت",
+      "capacity": "السعة",
+      "location": "الموقع",
+      "locationPlaceholder": "منطقة المسبح",
+      "project": "المشروع",
+      "allProjects": "جميع المشاريع",
+      "cancel": "إلغاء",
+      "saveDraft": "حفظ كمسودة",
+      "publishEvent": "نشر الفعالية",
+      "savedAsDraft": "تم حفظ الحدث كمسودة",
+      "eventPublished": "تم نشر الحدث"
+    },
+    "newsShops": {
+      "searchPlaceholder": "البحث عن أخبار...",
+      "exactSearch": "بحث دقيق",
+      "newArticle": "مقال جديد",
+      "columns": {
+        "article": "المقال",
+        "category": "الفئة",
+        "project": "المشروع",
+        "status": "الحالة",
+        "date": "التاريخ"
+      },
+      "categories": {
+        "facilities": "مرافق",
+        "announcement": "إعلان",
+        "maintenance": "صيانة"
+      },
+      "statuses": {
+        "published": "منشور",
+        "draft": "مسودة"
+      },
+      "edit": "تعديل"
+    },
+    "phoneDir": {
+      "searchPlaceholder": "البحث في الدليل...",
+      "exactSearch": "بحث دقيق",
+      "addContact": "إضافة جهة اتصال",
+      "categories": {
+        "emergency": "طوارئ",
+        "main": "رئيسي",
+        "project": "مشروع",
+        "direct": "مباشر",
+        "security": "أمن",
+        "operations": "عمليات"
+      },
+      "edit": "تعديل"
+    },
+    "newsShopsComingSoon": "وحدة الأخبار والمتاجر قيد الإنشاء.",
+    "phoneDirectoryComingSoon": "وحدة دليل الهاتف قيد الإنشاء.",
+    "aboutUs": {
+      "title": "محتوى من نحن",
+      "labelEn": "من نحن (الإنجليزية)",
+      "labelAr": "من نحن (العربية)",
+      "savePublish": "حفظ ونشر",
+      "saved": "تم حفظ محتوى من نحن"
+    },
+    "aboutUsComingSoon": "وحدة من نحن قيد الإنشاء.",
+    "guidelinesComingSoon": "وحدة الإرشادات قيد الإنشاء.",
+    "guidelines": {
+      "newGuideline": "إرشاد جديد",
+      "stats": {
+        "published": "الإرشادات المنشورة",
+        "publishedSub": "إرشادات متاحة للسكان",
+        "draft": "إرشادات مسودة",
+        "draftSub": "بانتظار المراجعة أو الموافقة",
+        "sections": "أقسام المحتوى",
+        "sectionsSub": "إجمالي الأقسام في جميع الإرشادات"
+      },
+      "columns": {
+        "guideline": "الإرشاد",
+        "category": "الفئة",
+        "project": "المشروع",
+        "format": "التنسيق",
+        "sections": "الأقسام",
+        "status": "الحالة",
+        "updated": "آخر تحديث"
+      },
+      "categories": {
+        "community-guide": "دليل المجتمع",
+        "resident-guide": "دليل المقيم",
+        "facility-rules": "قواعد المرافق"
+      },
+      "statuses": {
+        "published": "منشور",
+        "draft": "مسودة"
+      },
+      "edit": "تعديل",
+      "newModal": {
+        "title": "إرشاد جديد",
+        "titleEn": "العنوان (الإنجليزية)",
+        "titleAr": "العنوان (العربية)",
+        "category": "الفئة",
+        "project": "المشروع",
+        "allProjects": "جميع المشاريع",
+        "categories": {
+          "community-guide": "دليل المجتمع",
+          "resident-guide": "دليل المقيم",
+          "facility-rules": "قواعد المرافق"
+        },
+        "mobileSummary": "ملخص التطبيق",
+        "mobileSummaryPlaceholder": "وصف مختصر يظهر في قائمة المعلومات",
+        "guidelineContent": "محتوى الإرشاد",
+        "writeText": "كتابة نص",
+        "uploadPdf": "رفع PDF",
+        "guidelineText": "نص الإرشاد",
+        "guidelineTextPlaceholder": "أضف أقسام وتعليمات الإرشاد...",
+        "pdfDocument": "مستند PDF",
+        "pdfPlaceholder": "اسحب ملف PDF هنا أو انقر للتصفح",
+        "pdfHint": "PDF فقط · الحجم الأقصى الموصى به 10 ميجابايت",
+        "remove": "إزالة",
+        "publishingStatus": "حالة النشر",
+        "statuses": {
+          "published": "منشور",
+          "draft": "مسودة"
+        },
+        "cancel": "إلغاء",
+        "saveDraft": "حفظ كمسودة",
+        "savedAsDraft": "تم حفظ الدليل كمسودة"
+      },
+      "editModal": {
+        "title": "تعديل الإرشاد",
+        "titleEn": "العنوان (الإنجليزية)",
+        "titleAr": "العنوان (العربية)",
+        "category": "الفئة",
+        "project": "المشروع",
+        "categories": {
+          "community-guide": "دليل المجتمع",
+          "resident-guide": "دليل المقيم",
+          "facility-rules": "قواعد المرافق"
+        },
+        "mobileSummary": "ملخص التطبيق",
+        "mobileSummaryPlaceholder": "الوصول والمرافق ومعلومات السكان.",
+        "guidelineContent": "محتوى الإرشاد",
+        "writeText": "كتابة نص",
+        "uploadPdf": "رفع PDF",
+        "guidelineText": "نص الإرشاد",
+        "guidelineTextPlaceholder": "أضف أقسام وتعليمات الإرشاد...",
+        "pdfDocument": "مستند PDF",
+        "pdfPlaceholder": "اسحب ملف PDF هنا أو انقر للتصفح",
+        "pdfHint": "PDF فقط · الحجم الأقصى الموصى به 10 ميجابايت",
+        "remove": "إزالة",
+        "publishingStatus": "حالة النشر",
+        "statuses": {
+          "published": "منشور",
+          "draft": "مسودة"
+        },
+        "cancel": "إلغاء",
+        "savePublish": "حفظ ونشر",
+        "guidelinePublished": "تم نشر الدليل"
+      }
+    }
+  },
+  "UsersPermissions": {
+    "title": "المستخدمون والصلاحيات",
+    "subtitle": "إدارة المستخدمين والأدوار والتحكم في الوصول",
+    "tabs": {
+      "users": "المستخدمون",
+      "rolesPermissions": "الأدوار والصلاحيات"
+    },
+    "searchPlaceholder": "البحث عن مستخدمين...",
+    "exactSearch": "بحث دقيق",
+    "status": "الحالة",
+    "inviteUser": "دعوة مستخدم",
+    "filters": {
+      "roles": "الأدوار",
+      "status": "الحالة",
+      "projectAccess": "الوصول للمشاريع"
+    },
+    "columns": {
+      "user": "المستخدم",
+      "role": "الدور",
+      "projectAccess": "الوصول للمشاريع",
+      "lastLogin": "آخر تسجيل دخول",
+      "status": "الحالة"
+    },
+    "roles": {
+      "super-admin": "مدير عام",
+      "fm-manager": "مدير المرافق",
+      "cms-editor": "محرر المحتوى",
+      "operations-staff": "موظف عمليات",
+      "finance-manager": "مدير مالي"
+    },
+    "statuses": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "edit": "تعديل",
+    "showing": "عرض {from}-{to} من {total}",
+    "rolesComingSoon": "وحدة الأدوار والصلاحيات قيد الإنشاء.",
+    "rolesPage": {
+      "rolesTitle": "الأدوار",
+      "addRole": "إضافة دور",
+      "permissionMatrix": "مصفوفة الصلاحيات",
+      "usersWithRole": "مستخدمين",
+      "saveChanges": "حفظ التغييرات",
+      "permissionsSaved": "تم حفظ الصلاحيات",
+      "columns": {
+        "module": "الوحدة",
+        "view": "عرض",
+        "create": "إنشاء",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "approve": "موافقة"
+      }
+    },
+    "addRoleModal": {
+      "title": "إضافة دور",
+      "roleName": "اسم الدور",
+      "roleNamePlaceholder": "مثال: مدير المجتمع",
+      "accessLevel": "مستوى الوصول",
+      "accessLevels": {
+        "custom": "وصول مخصص",
+        "full": "وصول كامل",
+        "readonly": "قراءة فقط"
+      },
+      "modulesDescription": "وصف الوحدات",
+      "modules": {
+        "selected": "وحدات محددة",
+        "all": "جميع الوحدات"
+      },
+      "cancel": "إلغاء",
+      "addRole": "إضافة دور",
+      "roleAdded": "تمت إضافة الدور"
+    },
+    "inviteModal": {
+      "title": "دعوة مستخدم",
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "user@ability.ae",
+      "role": "الدور",
+      "projectAccess": "الوصول للمشاريع",
+      "allProjects": "جميع المشاريع",
+      "roles": {
+        "super-admin": "مدير عام",
+        "fm-manager": "مدير المرافق",
+        "cms-editor": "محرر المحتوى",
+        "operations-staff": "موظف عمليات",
+        "finance-manager": "مدير مالي"
+      },
+      "cancel": "إلغاء",
+      "sendInvitation": "إرسال الدعوة",
+      "invitationSent": "تم إرسال الدعوة"
+    },
+    "editModal": {
+      "title": "تعديل المستخدم",
+      "fullName": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "role": "الدور",
+      "projectAccess": "الوصول للمشاريع",
+      "allProjects": "جميع المشاريع",
+      "roles": {
+        "super-admin": "مدير عام",
+        "fm-manager": "مدير المرافق",
+        "cms-editor": "محرر المحتوى",
+        "operations-staff": "موظف عمليات",
+        "finance-manager": "مدير مالي"
+      },
+      "cancel": "إلغاء",
+      "saveChanges": "حفظ التغييرات",
+      "userUpdated": "تم تحديث المستخدم"
+    }
+  },
+  "AuditLog": {
+    "title": "سجل المراجعة",
+    "subtitle": "سجل كامل لجميع إجراءات وتغييرات المسؤولين",
+    "exportLog": "تصدير السجل",
+    "searchPlaceholder": "البحث عن إجراءات، مستخدمين...",
+    "exactSearch": "بحث دقيق",
+    "table": "جدول",
+    "timeline": "خط زمني",
+    "from": "من",
+    "to": "إلى",
+    "filters": {
+      "modules": "الوحدات"
+    },
+    "stats": {
+      "actionsToday": "إجراءات اليوم",
+      "thisWeek": "هذا الأسبوع",
+      "activeAdminsToday": "المسؤولون النشطون اليوم",
+      "contentPublished": "المحتوى المنشور"
+    },
+    "columns": {
+      "timestamp": "الوقت",
+      "action": "الإجراء",
+      "module": "الوحدة",
+      "user": "المستخدم",
+      "detail": "التفاصيل",
+      "ipAddress": "عنوان IP"
+    },
+    "showing": "عرض {from}-{to} من {total}"
+  },
+  "Settings": {
+    "title": "الإعدادات",
+    "subtitle": "تكوين الإعدادات العامة للمنصة والأقسام والقواعد",
+    "tabs": {
+      "appConfiguration": "إعدادات التطبيق",
+      "departments": "الأقسام",
+      "serviceCatalog": "كتالوج الخدمات",
+      "slotsManagement": "إدارة المواعيد",
+      "unitTypes": "أنواع الوحدات",
+      "slaRules": "قواعد SLA"
+    },
+    "appConfig": {
+      "appIdentity": "هوية التطبيق",
+      "appNameEn": "اسم التطبيق (إنجليزي)",
+      "appNameAr": "اسم التطبيق (عربي)",
+      "supportEmail": "بريد الدعم",
+      "supportPhone": "هاتف الدعم",
+      "langLocalization": "اللغة والتوطين",
+      "defaultLanguage": "اللغة الافتراضية",
+      "dateFormat": "تنسيق التاريخ",
+      "currency": "العملة",
+      "timezone": "المنطقة الزمنية",
+      "featureToggles": "تبديل الميزات",
+      "maintenanceMode": "وضع الصيانة",
+      "maintenanceModeDesc": "وضع التطبيق في وضع الصيانة لجميع المستخدمين",
+      "guestGatePass": "تصريح بوابة الضيوف",
+      "guestGatePassDesc": "السماح للسكان بإنشاء تصاريح بوابة الضيوف",
+      "serviceRatings": "تقييم الخدمات",
+      "serviceRatingsDesc": "السماح للسكان بتقييم طلبات الخدمة المكتملة",
+      "saveConfig": "حفظ الإعدادات",
+      "saved": "تم حفظ الإعدادات"
+    },
+    "departments": {
+      "addDepartment": "إضافة قسم",
+      "head": "الرئيس",
+      "staff": "الموظفون",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "added": "تمت إضافة القسم",
+      "nameEn": "اسم القسم (إنجليزي)",
+      "nameAr": "اسم القسم (عربي)",
+      "headLabel": "رئيس القسم",
+      "save": "حفظ",
+      "cancel": "إلغاء"
+    },
+    "serviceCatalog": {
+      "searchPlaceholder": "بحث عن خدمات أو قسم...",
+      "exactSearch": "بحث دقيق",
+      "departments": "الأقسام",
+      "status": "الحالة",
+      "addService": "إضافة خدمة",
+      "baseCost": "التكلفة الأساسية",
+      "serviceName": "اسم الخدمة",
+      "department": "القسم",
+      "description": "الوصف",
+      "baseCostLabel": "التكلفة الأساسية (ج.م)",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "added": "تمت إضافة الخدمة"
+    },
+    "slotsManagement": {
+      "slotConfig": "إعدادات المواعيد",
+      "slotConfigDesc": "تكوين السعة وقواعد العمل للخدمة.",
+      "department": "القسم",
+      "assignedService": "الخدمة المعينة",
+      "duration": "المدة (دقائق)",
+      "slotInterval": "فترة الموعد (دقائق)",
+      "requiredManpower": "القوى العاملة المطلوبة",
+      "availableEmployees": "الموظفون المتاحون",
+      "shiftStart": "بداية الوردية",
+      "shiftEnd": "نهاية الوردية",
+      "breakStart": "بداية الاستراحة",
+      "breakEnd": "نهاية الاستراحة",
+      "buffer": "وقت الفاصل (دقائق)",
+      "maxBookings": "أقصى حجوزات / موعد",
+      "saveConfig": "حفظ الإعدادات",
+      "saved": "تم حفظ الإعدادات",
+      "availabilityCalendar": "تقويم التوفر",
+      "open": "متاح",
+      "available": "متاح",
+      "limited": "محدود",
+      "fullyBooked": "محجوز بالكامل",
+      "unavailable": "غير متاح",
+      "selectedSlot": "الموعد المحدد",
+      "availableManpower": "القوى العاملة المتاحة",
+      "currentBookings": "الحجوزات الحالية"
+    },
+    "unitTypes": {
+      "addUnitType": "إضافة نوع وحدة",
+      "unitType": "نوع الوحدة",
+      "arabicName": "الاسم بالعربية",
+      "defaultAnnualRent": "الإيجار السنوي الافتراضي",
+      "status": "الحالة",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "nameEn": "اسم نوع الوحدة (إنجليزي)",
+      "nameAr": "اسم نوع الوحدة (عربي)",
+      "rent": "الإيجار السنوي الافتراضي (ج.م)",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "added": "تمت إضافة نوع الوحدة"
+    },
+    "slaRules": {
+      "addSlaRule": "إضافة قاعدة SLA",
+      "service": "الخدمة",
+      "priority": "الأولوية",
+      "sla": "SLA",
+      "escalationTo": "التصعيد إلى",
+      "actions": "الإجراءات",
+      "edit": "تعديل",
+      "hrs": "ساعات",
+      "serviceName": "اسم الخدمة",
+      "priorityLabel": "الأولوية",
+      "slaHours": "SLA (ساعات)",
+      "escalationLabel": "التصعيد إلى",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "added": "تمت إضافة قاعدة SLA",
+      "updated": "تم تحديث قاعدة SLA"
+    }
   },
   "Support": {
     "title": "التواصل مع الدعم",

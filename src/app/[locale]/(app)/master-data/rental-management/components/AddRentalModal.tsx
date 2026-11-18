@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
 import { useTranslations } from "next-intl";
+import ModalWrapper from "@/src/components/ModalWrapper";
+import CloseButton from "@/src/components/CloseButton";
+import FormField from "@/src/components/FormField";
 
 type Props = {
   onClose: () => void;
@@ -10,123 +12,80 @@ type Props = {
 export default function AddRentalModal({ onClose }: Props) {
   const t = useTranslations("MasterData");
 
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
-  }, []);
-
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-40 bg-black/20 backdrop-blur-xs"
-        onClick={onClose}
-      />
-
-      {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
-        <div className="w-[520px] max-h-[90vh] overflow-y-auto rounded-xl bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+    <ModalWrapper onClose={onClose} width="max-w-[520px]">
           {/* Header */}
           <div className="flex items-center justify-between px-6 pt-5 pb-4">
             <h2 className="text-[15px] font-bold text-gray-900">{t("addRentalModal.title")}</h2>
-            <button
-              onClick={onClose}
-              className="flex h-7 w-7 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
-            >
-              <XIcon className="h-4 w-4" />
-            </button>
+            <CloseButton onClick={onClose} />
           </div>
 
           {/* Fields */}
-          <div className="grid grid-cols-2 gap-x-4 gap-y-4 px-6">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-4 px-6 overflow-y-auto flex-1">
             {/* Unit */}
-            <div>
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("addRentalModal.unit")} <span className="text-red-500">*</span>
-              </label>
+            <FormField label={t("addRentalModal.unit")} required>
               <input
                 type="text"
                 className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
               />
-            </div>
+            </FormField>
 
             {/* Tenant Name */}
-            <div>
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("addRentalModal.tenantName")} <span className="text-red-500">*</span>
-              </label>
+            <FormField label={t("addRentalModal.tenantName")} required>
               <input
                 type="text"
                 className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
               />
-            </div>
+            </FormField>
 
             {/* ID / Passport Type */}
-            <div>
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("addRentalModal.idPassportType")} <span className="text-red-500">*</span>
-              </label>
+            <FormField label={t("addRentalModal.idPassportType")} required>
               <input
                 type="text"
-                defaultValue="ID"
+                placeholder={t("addRentalModal.idPassportType")}
                 className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
               />
-            </div>
+            </FormField>
 
             {/* ID / Passport Number */}
-            <div>
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("addRentalModal.idPassportNumber")} <span className="text-red-500">*</span>
-              </label>
+            <FormField label={t("addRentalModal.idPassportNumber")} required>
               <input
                 type="text"
                 className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
               />
-            </div>
+            </FormField>
 
             {/* Tenant Attachments */}
-            <div>
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("addRentalModal.tenantAttachments")}
-              </label>
+            <FormField label={t("addRentalModal.tenantAttachments")}>
               <input
                 type="file"
                 className="w-full text-[12px] text-gray-700 file:mr-2 file:rounded-md file:border file:border-gray-200 file:bg-white file:px-3 file:py-1 file:text-[11px] file:font-medium file:text-gray-600 hover:file:bg-gray-50"
               />
-            </div>
+            </FormField>
 
             {/* Start Date */}
-            <div>
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("addRentalModal.startDate")}
-              </label>
+            <FormField label={t("addRentalModal.startDate")}>
               <input
                 type="date"
                 className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
               />
-            </div>
+            </FormField>
 
             {/* End Date */}
-            <div>
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("addRentalModal.endDate")}
-              </label>
+            <FormField label={t("addRentalModal.endDate")}>
               <input
                 type="date"
                 className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
               />
-            </div>
+            </FormField>
 
             {/* Annual Rent (EGP) */}
-            <div>
-              <label className="mb-1 block text-[11px] font-medium text-gray-700">
-                {t("addRentalModal.annualRent")}
-              </label>
+            <FormField label={t("addRentalModal.annualRent")}>
               <input
                 type="text"
                 className="h-9 w-full rounded-lg border border-gray-200 px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors"
               />
-            </div>
+            </FormField>
           </div>
 
           {/* Footer */}
@@ -148,16 +107,6 @@ export default function AddRentalModal({ onClose }: Props) {
               {t("addRentalModal.submit")}
             </button>
           </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
-      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-    </svg>
+    </ModalWrapper>
   );
 }

@@ -1,7 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import InvoiceSummaryCards from "./components/InvoiceSummaryCards";
 import InvoicesPageClient from "./components/InvoicesPageClient";
-import { fetchInvoiceStats, fetchInvoices } from "@/src/services/invoices";
+import { fetchInvoiceStats, fetchInvoices, fetchMaintenanceDeposits } from "@/src/services/invoices";
+import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
 
@@ -18,9 +19,11 @@ export default async function InvoicesPaymentsPage({ params }: Props) {
   }
 
   const t = await getTranslations("Operations");
-  const [stats, invoices] = await Promise.all([
+  const [stats, invoices, depositData, projectOptions] = await Promise.all([
     fetchInvoiceStats(),
     fetchInvoices(),
+    fetchMaintenanceDeposits(),
+    fetchProjectFilterOptions(),
   ]);
 
   return (
@@ -28,6 +31,8 @@ export default async function InvoicesPaymentsPage({ params }: Props) {
       <InvoiceSummaryCards stats={stats} />
       <InvoicesPageClient
         data={invoices}
+        depositData={depositData}
+        projectOptions={projectOptions}
         labels={{
           searchPlaceholder: t("searchInvoices"),
           exactSearch: t("exactSearch"),

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Cairo } from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { getLocaleDirection, routing } from "@/src/i18n/routing";
+import { Toaster } from "sonner";
 import "../globals.css";
 
-const inter = Inter({ subsets: ["latin"], display: "swap" });
+const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
+const cairo = Cairo({ subsets: ["arabic"], display: "swap", variable: "--font-cairo" });
 
 type Props = {
   children: React.ReactNode;
@@ -35,8 +37,11 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <html lang={locale} dir={getLocaleDirection(locale)}>
-      <body className={inter.className}>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+      <body className={`${inter.variable} ${cairo.variable} ${locale === "ar" ? cairo.className : inter.className}`}>
+        <NextIntlClientProvider>
+          {children}
+          <Toaster position="bottom-center" richColors />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

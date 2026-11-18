@@ -78,6 +78,8 @@ export default function ServiceRequestsTable({ data }: Props) {
                 <tr
                   key={row.id}
                   onClick={() => setSelected(row)}
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelected(row); } }}
                   className="border-b border-gray-50 last:border-b-0 cursor-pointer hover:bg-gray-50/50 transition-colors"
                 >
                   {/* Request ID */}

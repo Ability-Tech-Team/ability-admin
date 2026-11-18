@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { Customer } from "@/src/services/customers";
+import DetailPanel from "@/src/components/DetailPanel";
 
 type CustomerProfileProps = {
   customer: Customer;
@@ -17,26 +18,7 @@ export default function CustomerProfile({ customer, onClose, onEdit, onDelete, o
   const t = useTranslations("MasterData");
 
   return (
-    <>
-      {/* Backdrop */}
-      <div className="fixed inset-0 z-40 bg-black/20 backdrop-blur-xs" onClick={onClose} />
-
-      {/* Panel */}
-      <div className="fixed inset-y-0 end-0 z-50 flex w-[400px] flex-col bg-white shadow-[-4px_0_24px_rgba(0,0,0,0.08)]">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4">
-          <h2 className="text-[13px] font-semibold text-gray-900">{t("customerProfile")}</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
-          >
-            <CloseIcon className="h-4 w-4" />
-          </button>
-        </div>
-
-        <div className="mx-6 border-t border-gray-100" />
-
+    <DetailPanel title={t("customerProfile")} onClose={onClose} width="w-[400px]">
         {/* Content */}
         <div className="flex-1 overflow-y-auto px-6 py-5">
           {/* Customer identity */}
@@ -97,9 +79,7 @@ export default function CustomerProfile({ customer, onClose, onEdit, onDelete, o
             </button>
           </div>
         </div>
-      </div>
-
-    </>
+    </DetailPanel>
   );
 }
 
@@ -112,10 +92,3 @@ function DetailRow({ label, value, last }: { label: string; value: string; last?
   );
 }
 
-function CloseIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
-      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-    </svg>
-  );
-}

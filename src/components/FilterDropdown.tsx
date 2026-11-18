@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { FilterIcon, ChevronDownIcon } from "@/src/components/icons/ToolbarIcons";
 
 type Props = {
@@ -24,6 +24,12 @@ export default function FilterDropdown({ label, options, onChange }: Props) {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setOpen(false);
+    }
+  }, []);
+
   function toggle(value: string) {
     const next = new Set(selected);
     if (next.has(value)) next.delete(value);
@@ -33,10 +39,12 @@ export default function FilterDropdown({ label, options, onChange }: Props) {
   }
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative" ref={ref} onKeyDown={handleKeyDown}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
         className="flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2 h-7 text-[10.5px] text-gray-600 hover:bg-gray-50 transition-colors"
       >
         <FilterIcon className="h-2.5 w-2.5 text-gray-400" />
@@ -50,11 +58,13 @@ export default function FilterDropdown({ label, options, onChange }: Props) {
       </button>
 
       {open && (
-        <div className="absolute top-full mt-1 z-20 min-w-[160px] rounded-lg border border-gray-200 bg-white py-2 shadow-lg start-0">
+        <div role="listbox" aria-label={label} className="absolute top-full mt-1 z-20 min-w-[160px] rounded-lg border border-gray-200 bg-white py-2 shadow-lg start-0">
           <p className="px-3 pb-2 text-[11px] font-semibold text-gray-900">{label}</p>
           {options.map((opt) => (
             <label
               key={opt.value}
+              role="option"
+              aria-selected={selected.has(opt.value)}
               className="flex items-center gap-2.5 px-3 py-1.5 text-[12px] text-gray-700 hover:bg-gray-50 cursor-pointer"
             >
               <input

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { UnitAssignment } from "@/src/services/unitAssignments";
+import DetailPanel from "@/src/components/DetailPanel";
+import CloseButton from "@/src/components/CloseButton";
 
 type UnitAssignmentDetailProps = {
   assignment: UnitAssignment;
@@ -21,22 +23,10 @@ export default function UnitAssignmentDetail({ assignment, onClose }: UnitAssign
   const [previewFile, setPreviewFile] = useState<string | null>(null);
 
   return (
-    <>
-      {/* Backdrop */}
-      <div className="fixed inset-0 z-50 bg-black/20 backdrop-blur-xs" onClick={onClose} />
-
-      {/* Panel */}
-      <div className="fixed inset-y-0 end-0 z-50 w-[480px] overflow-y-auto bg-white shadow-xl">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-          <h2 className="text-[13px] font-bold text-gray-900">
-            {t("unitAssignment")} · {assignment.project} · Unit {assignment.unitNumber}
-          </h2>
-          <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <CloseIcon className="h-4 w-4" />
-          </button>
-        </div>
-
+    <DetailPanel
+      title={`${t("unitAssignment")} · ${assignment.project} · Unit ${assignment.unitNumber}`}
+      onClose={onClose}
+    >
         <div className="p-5 space-y-6">
           {/* Customers Assigned to Unit */}
           <div>
@@ -169,7 +159,6 @@ export default function UnitAssignmentDetail({ assignment, onClose }: UnitAssign
             </div>
           )}
         </div>
-      </div>
 
       {/* Attachment Preview Modal */}
       {previewFile && (
@@ -178,9 +167,7 @@ export default function UnitAssignmentDetail({ assignment, onClose }: UnitAssign
           <div className="fixed z-70 top-1/2 start-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] rounded-xl bg-white p-5 shadow-xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-[13px] font-semibold text-gray-900">{t("assignmentDetail.attachmentPreview")}</h3>
-              <button type="button" onClick={() => setPreviewFile(null)} className="text-gray-400 hover:text-gray-600">
-                <CloseIcon className="h-4 w-4" />
-              </button>
+              <CloseButton onClick={() => setPreviewFile(null)} />
             </div>
             <div className="rounded-lg border border-gray-200 p-5 text-center">
               <p className="text-[12px] font-semibold text-gray-900">{previewFile}</p>
@@ -191,14 +178,6 @@ export default function UnitAssignmentDetail({ assignment, onClose }: UnitAssign
           </div>
         </>
       )}
-    </>
-  );
-}
-
-function CloseIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
-      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-    </svg>
+    </DetailPanel>
   );
 }
