@@ -52,7 +52,8 @@
     "searchPlaceholder_mobile": "Enter mobile number",
     "searchPlaceholder_idNumber": "Enter ID number",
     "notifications": "Notifications",
-    "backToPortal": "Back to Ability Portal"
+    "backToPortal": "Back to Ability Portal",
+    "contactSupport": "Contact support"
   },
   "PageHeader": {
     "breadcrumb": "Breadcrumb",
@@ -700,5 +701,48 @@
     },
     "templatesComingSoon": "Templates module is coming soon.",
     "deliveryLogsComingSoon": "Delivery logs module is coming soon."
+  },
+  "Support": {
+    "title": "Contact support",
+    "intro": "Send a message to Ability-Tech's support team. They will answer by email.",
+    "category": "Category",
+    "categoryPlaceholder": "Choose a category",
+    "categories": {
+      "technical_issue": "Technical issue",
+      "account_access": "Account and access",
+      "billing": "Billing and subscription",
+      "feature_request": "Feature request",
+      "other": "Other"
+    },
+    "subject": "Subject",
+    "subjectPlaceholder": "A short summary",
+    "message": "Message",
+    "messagePlaceholder": "What happened, what you expected, and the steps that lead to it.",
+    "messageCounter": "{count} / {max}",
+    "send": "Send",
+    "sending": "Sending…",
+    "cancel": "Cancel",
+    "close": "Close",
+    "validation": {
+      "categoryRequired": "Choose a category.",
+      "subjectLength": "Write a subject of {min} to {max} characters.",
+      "subjectSingleLine": "Keep the subject on one line.",
+      "messageLength": "Write a message of {min} to {max} characters."
+    },
+    "errors": {
+      "notConfigured": "Contact support isn't available for your account yet.",
+      "notSent": "Your request couldn't be sent. Please try again in a few minutes.",
+      "invalid": "Some of the request isn't valid. Check the fields and try again.",
+      "tooManyRequests": "You have sent several requests in the last hour. Please wait before sending another.",
+      "sessionEnded": "Your session ended. Sign in again, then send your request.",
+      "unreachable": "We couldn't reach the server. Check your connection and try again.",
+      "generic": "Something went wrong. Please try again."
+    },
+    "signInAgain": "Sign in again",
+    "unavailable": "Contact support isn't available: this app can't reach its server for your account. Contact your administrator.",
+    "sentTitle": "Request sent",
+    "sentReference": "Your reference is <strong>{reference}</strong>. Quote it if you write to support about this again.",
+    "sentReplyTo": "Ability-Tech's support team will answer at <strong>{email}</strong>.",
+    "sentNoEmail": "Your account has no email address, so the team can't answer by email. Ask your administrator to add one to your account."
   }
 }

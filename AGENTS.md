@@ -35,8 +35,10 @@ the workspace instead of assuming it exists.
   do not add a stub, bypass, or demo mode.
 - **Backend:** this app's API is `../ability-crm-api/apps/community-admin`
   (prefix `/admin`, port 5556), with shared modules in its `libs/domain` and
-  `libs/core`; nothing here calls it yet. Read a route's controller, DTOs, and
-  guards before building its API client. The mobile app's API is the separate
+  `libs/core`. Only Contact support calls it so far, through
+  `src/lib/apiClient.ts` (`fetch`, the envelope, `ApiError`) and
+  `src/services/support.ts`. Read a route's controller, DTOs, and guards
+  before calling it. The mobile app's API is the separate
   `community-api` (`/app`). Rules for changing the backend are in
   `../AGENTS.md` ("The backend repository").
 - **Sign-in and access** (decided 2026-11-01; rules in `../AGENTS.md`): users
@@ -58,8 +60,8 @@ the workspace instead of assuming it exists.
     signed-out users to the Portal and returns `available` when the sign-in's
     `platforms` lists `community-admin`, `denied` otherwise, or
     `sign-in-unavailable` when `PORTAL_URL` isn't set. Every protected page and
-    data request calls it first, not only a layout. Until this app calls its
-    API, the cookie is its only check. That API checks the backend's
+    data request calls it first, not only a layout. The pages don't call the
+    API yet (only Contact support does), so the cookie is their only check. That API checks the backend's
     `access_token` on every call, but on 2026-11-19 it checked the role only
     on its Super Admin routes (dashboard, projects, sub-projects). Its
     privilege check (`PermissionsGuard`) was commented out, and it didn't
@@ -109,7 +111,8 @@ the workspace instead of assuming it exists.
   running them; Docker isn't installed on the development Mac.
 - **Tests:** `npm test` runs Vitest (`vitest.config.mts`) on
   `src/**/*.test.ts`; `test/server-only.ts` stands in for `server-only`. The
-  tests cover the session cookie, the Portal URLs, and the request origin.
+  tests cover the session cookie, the Portal URLs, the request origin, the
+  API client's envelope handling, and the support request rules.
 
 Commands, from this directory (details in `README.md`):
 

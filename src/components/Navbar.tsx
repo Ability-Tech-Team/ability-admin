@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/src/i18n/navigation";
 import { routing } from "@/src/i18n/routing";
@@ -8,8 +9,10 @@ import {
   BellIcon,
   CalendarIcon,
   ChevronDownIcon,
+  LifeBuoyIcon,
   SearchIcon,
 } from "./icons/NavbarIcons";
+import ContactSupportModal from "./ContactSupportModal";
 
 type SearchTab = "unitNumber" | "customerName" | "mobile" | "idNumber";
 
@@ -21,6 +24,10 @@ type NavbarProps = {
   notificationCount?: number;
   /** Ability Portal home URL, to go back to the portal. */
   portalHomeUrl?: string | null;
+  /** Ability Portal itself, for signing in again when the API says the session ended. */
+  portalBaseUrl?: string | null;
+  /** Where the browser calls the Community Admin API (`browserApiBaseUrl`), or null when the sign-in names none this app trusts. */
+  apiBaseUrl?: string | null;
 };
 
 const searchTabs: SearchTab[] = ["unitNumber", "customerName", "mobile", "idNumber"];
@@ -41,12 +48,15 @@ export default function Navbar({
   userRole,
   notificationCount = 0,
   portalHomeUrl,
+  portalBaseUrl = null,
+  apiBaseUrl = null,
 }: NavbarProps) {
   const t = useTranslations("Navbar");
   const locale = useLocale();
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState<SearchTab>("unitNumber");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
 
   const otherLocales = routing.locales.filter((l) => l !== locale);
 
@@ -131,6 +141,19 @@ export default function Navbar({
           ))}
         </div>
 
+        {/* Contact support */}
+        <button
+          type="button"
+          onClick={() => setIsSupportOpen(true)}
+          aria-haspopup="dialog"
+          title={t("contactSupport")}
+          className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-[11px] font-medium text-gray-500 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-600 transition-colors"
+        >
+          <LifeBuoyIcon className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline whitespace-nowrap">{t("contactSupport")}</span>
+          <span className="sr-only sm:hidden">{t("contactSupport")}</span>
+        </button>
+
         {/* Notifications */}
         <button
           type="button"
@@ -172,6 +195,18 @@ export default function Navbar({
           <ChevronDownIcon className="h-3 w-3 text-gray-400" />
         </button>
       </div>
+
+      {/* In <body>: the sticky header's stacking context would put the menu above it. */}
+      {isSupportOpen
+        ? createPortal(
+            <ContactSupportModal
+              onClose={() => setIsSupportOpen(false)}
+              apiBaseUrl={apiBaseUrl}
+              portalBaseUrl={portalBaseUrl}
+            />,
+            document.body,
+          )
+        : null}
     </header>
   );
 }

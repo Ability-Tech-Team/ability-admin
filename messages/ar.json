@@ -52,7 +52,8 @@
     "searchPlaceholder_mobile": "أدخل رقم الجوال",
     "searchPlaceholder_idNumber": "أدخل رقم الهوية",
     "notifications": "الإشعارات",
-    "backToPortal": "العودة إلى البوابة"
+    "backToPortal": "العودة إلى البوابة",
+    "contactSupport": "التواصل مع الدعم"
   },
   "PageHeader": {
     "breadcrumb": "مسار التنقل",
@@ -700,5 +701,48 @@
     },
     "templatesComingSoon": "وحدة القوالب قيد الإنشاء.",
     "deliveryLogsComingSoon": "وحدة سجلات التسليم قيد الإنشاء."
+  },
+  "Support": {
+    "title": "التواصل مع الدعم",
+    "intro": "أرسل رسالة إلى فريق دعم Ability-Tech، وسيرد عليك عبر البريد الإلكتروني.",
+    "category": "الفئة",
+    "categoryPlaceholder": "اختر فئة",
+    "categories": {
+      "technical_issue": "مشكلة تقنية",
+      "account_access": "الحساب والدخول",
+      "billing": "الفواتير والاشتراك",
+      "feature_request": "طلب ميزة",
+      "other": "أخرى"
+    },
+    "subject": "الموضوع",
+    "subjectPlaceholder": "ملخص قصير",
+    "message": "الرسالة",
+    "messagePlaceholder": "ماذا حدث، وما الذي كنت تتوقعه، والخطوات التي أدت إلى ذلك.",
+    "messageCounter": "{count} / {max}",
+    "send": "إرسال",
+    "sending": "جارٍ الإرسال…",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "validation": {
+      "categoryRequired": "اختر فئة.",
+      "subjectLength": "اكتب موضوعًا من {min} إلى {max} حرفًا.",
+      "subjectSingleLine": "اكتب الموضوع في سطر واحد.",
+      "messageLength": "اكتب رسالة من {min} إلى {max} حرفًا."
+    },
+    "errors": {
+      "notConfigured": "التواصل مع الدعم غير متاح لحسابك بعد.",
+      "notSent": "تعذر إرسال طلبك. يرجى المحاولة مرة أخرى بعد بضع دقائق.",
+      "invalid": "بعض بيانات الطلب غير صحيحة. راجع الحقول وحاول مرة أخرى.",
+      "tooManyRequests": "أرسلت عدة طلبات خلال الساعة الأخيرة. يرجى الانتظار قبل إرسال طلب آخر.",
+      "sessionEnded": "انتهت جلستك. سجّل الدخول مرة أخرى، ثم أرسل طلبك.",
+      "unreachable": "تعذر الوصول إلى الخادم. تحقق من اتصالك وحاول مرة أخرى.",
+      "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+    },
+    "signInAgain": "سجّل الدخول مرة أخرى",
+    "unavailable": "التواصل مع الدعم غير متاح: لا يستطيع هذا التطبيق الوصول إلى خادمه لحسابك. تواصل مع المسؤول.",
+    "sentTitle": "تم إرسال الطلب",
+    "sentReference": "رقمك المرجعي هو <strong>{reference}</strong>. اذكره إذا راسلت الدعم بشأن هذا الطلب مرة أخرى.",
+    "sentReplyTo": "سيرد فريق دعم Ability-Tech على <strong>{email}</strong>.",
+    "sentNoEmail": "لا يوجد بريد إلكتروني في حسابك، لذلك لا يستطيع الفريق الرد عبر البريد. اطلب من المسؤول إضافة بريد إلكتروني إلى حسابك."
   }
 }
