@@ -2,11 +2,13 @@
 
 Community Admin is Ability-Tech's administration product for the community
 mobile app. Client organizations buy it separately from, or together with,
-Ability CRM. Its page is still a placeholder behind the sign-in: users sign
-in on Ability Portal through the portal backend, and this app opens only when
-the sign-in lists `community-admin` for the user. It has no business module or
-business API client yet. Mobile resident and
-guest access is separate and not part of this sign-in.
+Ability CRM. Users sign in on Ability Portal through the portal backend, and
+this app opens only when the sign-in lists `community-admin` for the user. Its
+dashboard, master-data, operations, and notifications screens show sample data
+for now. Its API is the backend's `community-admin` service
+(`../ability-crm-api/apps/community-admin`, prefix `/admin`), which no screen
+calls yet. Mobile resident and guest access is separate and not part of this
+sign-in.
 
 Read `../AGENTS.md` (shared project instructions) and `../docs/MIGRATION.md`
 (recorded state, decisions, and the Community Admin tracker) before working
@@ -153,6 +155,9 @@ Imports use the root-based alias `@/src/...` (`"@/*": ["./*"]`).
 
 ## Repository
 
-This directory is its own Git repository, with its own `origin` remote on
-GitHub (`Ability-Tech-Team`). It shares no history or remote with Amer CRM or
-the other apps.
+Since 2026-11-12 the `CRM/` monorepo (`Ability-Tech-Team/ability-mono-repo`)
+tracks this directory, with Ability CRM and Ability Portal. Since 2026-11-17
+it also contains its own repository (`origin` `Ability-Tech-Team/ability-admin`,
+the same files), so Git commands run here resolve to that one. Both hold
+this app (the user's arrangement, 2026-11-19). Run Git from `CRM/` and say
+which repository you mean (`../README.md`, Repositories).

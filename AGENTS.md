@@ -17,17 +17,28 @@ the workspace instead of assuming it exists.
   its own agreed contracts. Mobile resident/guest access is separate from the
   client's web access through the Portal.
 - **Independence:** this app has its own manifest, lockfile, environment files,
-  build output, and local Git repository. Never import runtime code from
-  `../Amer-CRM`, `../Ability-CRM`, or `../Ability-Portal`. Copy and adapt
+  and build output. Never import runtime code from `../Amer-CRM`,
+  `../Ability-CRM`, `../Ability-Portal`, or `../ability-crm-api`. Copy and adapt
   reference code when useful, and record its source in `../docs/MIGRATION.md`.
-- **Status (2026-11-01):** the placeholder page sits behind the Portal's
-  session cookie; there is no business module or API client yet. Since
-  2026-11-11 it reads its API address from the sign-in and has the local dev
-  proxy (below), ready for the team's API client, and the admin shell (side
-  menu and navbar, from the team's `issue/1-side-menu`) whose entries link
-  nowhere yet. Checked end
-  to end against contract stand-ins. Do not expose protected features without
-  the check, and do not add a stub, bypass, or demo mode.
+- **Repositories (the user's arrangement, 2026-11-19):** this folder is in
+  both the `CRM/` monorepo and its own repository (`origin`
+  `Ability-Tech-Team/ability-admin`, nested here since 2026-11-17, with the
+  same files). Git run here resolves to the nested one; `git status` from
+  `CRM/` shows the monorepo's view. The user commits and pushes in both;
+  leave changes uncommitted (`../AGENTS.md`, Read first).
+- **Status:** the admin shell (side menu and navbar, 2026-11-11) and the
+  team's dashboard, master-data, operations, and notifications screens
+  (merged 2026-11-16) are behind the Portal's session cookie. They show sample
+  data from `src/services/`, accepted as a placeholder until the API client
+  exists. The app reads its API address from the sign-in and has the local
+  dev proxy (below). Do not expose protected features without the check, and
+  do not add a stub, bypass, or demo mode.
+- **Backend:** this app's API is `../ability-crm-api/apps/community-admin`
+  (prefix `/admin`, port 5556), with shared modules in its `libs/domain` and
+  `libs/core`; nothing here calls it yet. Read a route's controller, DTOs, and
+  guards before building its API client. The mobile app's API is the separate
+  `community-api` (`/app`). Rules for changing the backend are in
+  `../AGENTS.md` ("The backend repository").
 - **Sign-in and access** (decided 2026-11-01; rules in `../AGENTS.md`): users
   sign in once, on Ability Portal, through the portal backend; this app has
   no password form and keeps no passwords. It reads the Portal's
@@ -47,9 +58,12 @@ the workspace instead of assuming it exists.
     signed-out users to the Portal and returns `available` when the sign-in's
     `platforms` lists `community-admin`, `denied` otherwise, or
     `sign-in-unavailable` when `PORTAL_URL` isn't set. Every protected page and
-    data request calls it first, not only a layout. Until this app has an API,
-    the cookie is its only check; that API must check the backend's
-    `access_token` on every call.
+    data request calls it first, not only a layout. Until this app calls its
+    API, the cookie is its only check. That API checks the backend's
+    `access_token` on every call, but on 2026-11-19 it checked the role only
+    on its Super Admin routes (dashboard, projects, sub-projects). Its
+    privilege check (`PermissionsGuard`) was commented out, and it didn't
+    check the `community-admin` platform (`../docs/MIGRATION.md`).
   - **The API address** (2026-11-11): `readApiBaseUrl()` in
     `src/lib/session.ts` returns the sign-in's
     `platforms[community-admin].apiUrl` only when `API_ALLOWED_URLS` lists it.
