@@ -1,4 +1,6 @@
 import { getTranslations } from "next-intl/server";
+import ProductAccessNotice from "@/src/components/ProductAccessNotice";
+import { requireProductAccess } from "@/src/lib/access";
 import {
   fetchSlotConfig,
   fetchDepartmentOptions,
@@ -6,7 +8,18 @@ import {
 } from "@/src/services/slotsManagement";
 import SlotsManagementPageClient from "./components/SlotsManagementPageClient";
 
-export default async function SlotsManagementPage() {
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function SlotsManagementPage({ params }: Props) {
+  const { locale } = await params;
+  const access = await requireProductAccess(locale);
+
+  if (access.status !== "available") {
+    return <ProductAccessNotice access={access} locale={locale} />;
+  }
+
   const t = await getTranslations("Settings.slotsManagement");
   const [config, departmentOptions, serviceOptions] = await Promise.all([
     fetchSlotConfig(),

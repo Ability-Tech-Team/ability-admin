@@ -1,8 +1,21 @@
 import { getTranslations } from "next-intl/server";
+import ProductAccessNotice from "@/src/components/ProductAccessNotice";
+import { requireProductAccess } from "@/src/lib/access";
 import { fetchServiceCatalog, fetchServiceCatalogDepartmentOptions, fetchServiceCatalogStatusOptions } from "@/src/services/serviceCatalog";
 import ServiceCatalogPageClient from "./components/ServiceCatalogPageClient";
 
-export default async function ServiceCatalogPage() {
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function ServiceCatalogPage({ params }: Props) {
+  const { locale } = await params;
+  const access = await requireProductAccess(locale);
+
+  if (access.status !== "available") {
+    return <ProductAccessNotice access={access} locale={locale} />;
+  }
+
   const t = await getTranslations("Settings.serviceCatalog");
   const [data, departmentOptions, statusOptions] = await Promise.all([
     fetchServiceCatalog(),
