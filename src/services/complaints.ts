@@ -1,62 +1,238 @@
-export type ComplaintTimelineEntry = {
-  action: string;
-  detail: string;
-  date: string;
+import { z } from "zod";
+import { apiGet, apiPost, type ApiQuery } from "@/src/lib/apiClient";
+
+/**
+ * Complaints (`/admin/orders/complains...`, ability-crm-api/libs/domain/src/orders: controller,
+ * `dtos/get-complains.dto.ts`, and `OrdersService.getComplains`, whose rows come from
+ * `formatComplainRecord`). There is no route for one complaint: the list carries each one's
+ * responses and log. Each call resolves with the adapted answer or throws: `ApiError` when
+ * the API refuses or can't be reached, `ComplaintsAnswerError` when an answer doesn't have the
+ * expected shape.
+ */
+
+export class ComplaintsAnswerError extends Error {
+  constructor(route: string) {
+    super(`The complaints' ${route} answer doesn't have the expected shape`);
+    this.name = "ComplaintsAnswerError";
+  }
+}
+
+function parse<S extends z.ZodType>(schema: S, result: unknown, route: string): z.infer<S> {
+  const parsed = schema.safeParse(result);
+  if (!parsed.success) throw new ComplaintsAnswerError(route);
+  return parsed.data;
+}
+
+/** The backend's `complainStatusEnums` (libs/core/src/common/enums/shared.enum.ts). */
+export const COMPLAINT_STATUS = {
+  open: 1,
+  inProgress: 2,
+  resolved: 3,
+  rejected: 4,
+} as const;
+
+export const COMPLAINT_STATUS_IDS = Object.values(COMPLAINT_STATUS);
+
+/**
+ * The statuses a complaint can move to: `changeComplainStatus` only moves forward (a higher
+ * id). Resolving needs a response first; the API says so when there is none.
+ */
+export function nextComplaintStatusIds(currentStatusId: number): number[] {
+  return COMPLAINT_STATUS_IDS.filter((id) => id > currentStatusId);
+}
+
+export type ComplaintFilters = {
+  /** A complaint number, or part of the customer's name. */
+  search: string;
+  statusId: number | null;
+};
+
+/**
+ * The list route has no free-text search: a number looks for that complaint
+ * (`complain_id`), anything else for the customer's name (`customer_name`, contains).
+ */
+export function complaintFiltersQuery({ search, statusId }: ComplaintFilters): ApiQuery {
+  const term = search.trim();
+  const isId = /^\d{1,9}$/.test(term);
+  return {
+    complain_id: isId ? term : undefined,
+    customer_name: term && !isId ? term : undefined,
+    status_id: statusId ?? undefined,
+  };
+}
+
+const name = z.string().nullish().transform((value) => value ?? null);
+
+const complaintSchema = z.object({
+  id: z.number().int(),
+  title: name,
+  unit_number: z.string(),
+  customer_name: z.string(),
+  mobile_number: name,
+  details: z.string(),
+  department_name: name,
+  status_id: z.number().int(),
+  status_name: name,
+  type_name: name,
+  /** The request source's name (CRM, Community App, ...). */
+  request_sources: name,
+  /** The employee who recorded it, if one did. */
+  created_by: name,
+  /** When it was recorded (the service writes `created_at` here), `YYYY-MM-DD, HH:mm`. */
+  complain_date: z.string(),
+  complain_responses: z.array(
+    z.object({
+      response_id: z.number().int(),
+      response: z.string(),
+      status_name: name,
+      created_by: name,
+      Date: z.string(),
+    }),
+  ),
+  complain_logs: z.array(
+    z.object({
+      log_id: z.number().int(),
+      action_name: name,
+      description: name,
+      created_by: name,
+      Date: z.string(),
+    }),
+  ),
+});
+
+export type ComplaintResponse = {
+  id: number;
+  text: string;
+  /** The complaint's status when the response was written. */
+  statusName: string | null;
+  author: string | null;
+  at: string;
+};
+
+export type ComplaintLog = {
+  id: number;
+  actionName: string | null;
+  /** In the request's language, e.g. "Complain status changed to Resolved by ...". */
+  description: string | null;
+  actor: string | null;
+  at: string;
 };
 
 export type Complaint = {
-  id: string;
-  complaintId: string;
-  subject: string;
-  description: string;
-  fullDescription: string;
-  project: string;
-  unit: string;
-  submittedBy: string;
-  assignedTo: string;
-  priority: "low" | "medium" | "high";
-  status: "open" | "in-progress" | "resolved";
-  date: string;
-  hasVoiceNote: boolean;
-  voiceNoteDuration: string;
-  timeline: ComplaintTimelineEntry[];
+  id: number;
+  title: string | null;
+  typeName: string | null;
+  details: string;
+  unitNumber: string;
+  customerName: string;
+  mobileNumber: string | null;
+  departmentName: string | null;
+  statusId: number;
+  statusName: string | null;
+  sourceName: string | null;
+  createdBy: string | null;
+  /** `YYYY-MM-DD, HH:mm`, Cairo time. */
+  createdAt: string;
+  /** In the order the API gives them (oldest first). */
+  responses: ComplaintResponse[];
+  /** Newest first. */
+  logs: ComplaintLog[];
 };
 
-// TODO: replace with real API call
-export async function fetchComplaints(): Promise<Complaint[]> {
-  return [
-    {
-      id: "1", complaintId: "CMP-2024-0412", subject: "Noise from neighbors above", description: "Persistent noise after community quiet h...", fullDescription: "Persistent noise after community quiet hours from the unit above.", project: "Marina Heights", unit: "301", submittedBy: "Ahmed Al Rashidi", assignedTo: "Community Manager", priority: "medium", status: "in-progress", date: "2024-11-27", hasVoiceNote: false, voiceNoteDuration: "",
-      timeline: [
-        { action: "Complaint Submitted From Ability App", detail: "Ahmed Al Rashidi", date: "2024-11-27 · 08:15" },
-        { action: "Assigned To Community Manager", detail: "Operations workflow", date: "2024-11-27 · 08:30" },
-        { action: "Status: In Progress", detail: "Latest update", date: "2024-11-27 · 09:00" },
-      ],
-    },
-    {
-      id: "2", complaintId: "CMP-2024-0411", subject: "Parking space occupied", description: "Assigned parking bay is used by an una...", fullDescription: "Assigned parking bay is used by an unauthorized vehicle.", project: "Palm Residences", unit: "V12", submittedBy: "James Mitchell", assignedTo: "Unassigned", priority: "high", status: "open", date: "2024-11-26", hasVoiceNote: true, voiceNoteDuration: "00:21",
-      timeline: [
-        { action: "Complaint Submitted From Ability App", detail: "James Mitchell", date: "2024-11-26 · 09:20" },
-        { action: "Voice Note Attached By Customer", detail: "Customer voice message", date: "2024-11-26 · 09:21" },
-        { action: "Waiting For Assignment", detail: "Operations workflow", date: "2024-11-26 · 09:35" },
-        { action: "Status: Open", detail: "Latest update", date: "Today · 10:15" },
-      ],
-    },
-    {
-      id: "3", complaintId: "CMP-2024-0410", subject: "Pool maintenance quality", description: "Pool cleaning quality requires review.", fullDescription: "Pool cleaning quality requires review.", project: "Corniche Gardens", unit: "801", submittedBy: "Mohammed Al Zaabi", assignedTo: "Facilities Team", priority: "low", status: "resolved", date: "2024-11-20", hasVoiceNote: false, voiceNoteDuration: "",
-      timeline: [
-        { action: "Complaint Submitted From Ability App", detail: "Mohammed Al Zaabi", date: "2024-11-20 · 11:00" },
-        { action: "Assigned To Facilities Team", detail: "Operations workflow", date: "2024-11-20 · 11:15" },
-        { action: "Status: Resolved", detail: "Latest update", date: "2024-11-22 · 14:00" },
-      ],
-    },
-    {
-      id: "4", complaintId: "CMP-2024-0409", subject: "Security guard misconduct", description: "Resident reported an inappropriate inter...", fullDescription: "Resident reported an inappropriate interaction with security personnel.", project: "Downtown Towers", unit: "2201", submittedBy: "Priya Sharma", assignedTo: "HR Department", priority: "high", status: "in-progress", date: "2024-11-25", hasVoiceNote: false, voiceNoteDuration: "",
-      timeline: [
-        { action: "Complaint Submitted From Ability App", detail: "Priya Sharma", date: "2024-11-25 · 16:00" },
-        { action: "Assigned To HR Department", detail: "Operations workflow", date: "2024-11-25 · 16:20" },
-        { action: "Status: In Progress", detail: "Latest update", date: "2024-11-25 · 17:00" },
-      ],
-    },
-  ];
+function toComplaint(record: z.infer<typeof complaintSchema>): Complaint {
+  return {
+    id: record.id,
+    title: record.title,
+    typeName: record.type_name,
+    details: record.details,
+    unitNumber: record.unit_number,
+    customerName: record.customer_name,
+    mobileNumber: record.mobile_number,
+    departmentName: record.department_name,
+    statusId: record.status_id,
+    statusName: record.status_name,
+    sourceName: record.request_sources,
+    createdBy: record.created_by,
+    createdAt: record.complain_date,
+    responses: record.complain_responses.map((response) => ({
+      id: response.response_id,
+      text: response.response,
+      statusName: response.status_name,
+      author: response.created_by,
+      at: response.Date,
+    })),
+    logs: record.complain_logs.map((log) => ({
+      id: log.log_id,
+      actionName: log.action_name,
+      description: log.description,
+      actor: log.created_by,
+      at: log.Date,
+    })),
+  };
+}
+
+// GET /orders/complains
+
+export type ComplaintPage = {
+  complaints: Complaint[];
+  totalCount: number;
+  totalPages: number;
+};
+
+const complaintsSchema = z.object({
+  total_count: z.number().int().nonnegative(),
+  total_pages: z.number().int().nonnegative(),
+  complains: z.array(complaintSchema),
+});
+
+export function toComplaintPage(result: unknown): ComplaintPage {
+  const data = parse(complaintsSchema, result, "complains");
+  return {
+    complaints: data.complains.map(toComplaint),
+    totalCount: data.total_count,
+    totalPages: data.total_pages,
+  };
+}
+
+export const COMPLAINTS_PAGE_SIZE = 10;
+
+/** One page of complaints, newest first. */
+export async function fetchComplaints(
+  apiBaseUrl: string,
+  filters: ComplaintFilters,
+  page: number,
+  locale: string,
+): Promise<ComplaintPage> {
+  const result = await apiGet(
+    apiBaseUrl,
+    "/orders/complains",
+    { ...complaintFiltersQuery(filters), page, limit: COMPLAINTS_PAGE_SIZE },
+    { locale },
+  );
+  return toComplaintPage(result);
+}
+
+// POST /orders/complains/:id/response
+
+/** The DTO's limit for a response. */
+export const COMPLAINT_RESPONSE_MAX_LENGTH = 1000;
+
+export async function addComplaintResponse(
+  apiBaseUrl: string,
+  id: number,
+  response: string,
+  locale: string,
+): Promise<void> {
+  await apiPost(apiBaseUrl, `/orders/complains/${id}/response`, { response: response.trim() }, { locale });
+}
+
+// POST /orders/complains/:id/change-status
+
+export async function changeComplaintStatus(
+  apiBaseUrl: string,
+  id: number,
+  statusId: number,
+  locale: string,
+): Promise<void> {
+  await apiPost(apiBaseUrl, `/orders/complains/${id}/change-status`, { status_id: statusId }, { locale });
 }

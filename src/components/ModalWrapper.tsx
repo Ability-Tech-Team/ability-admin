@@ -6,10 +6,12 @@ type Props = {
   onClose: () => void;
   /** Tailwind max-width class, e.g. "max-w-md", "max-w-[560px]". Default: "max-w-md" */
   width?: string;
+  /** The id of the dialog's title, which names it for screen readers. */
+  labelledBy?: string;
   children: React.ReactNode;
 };
 
-export default function ModalWrapper({ onClose, width = "max-w-md", children }: Props) {
+export default function ModalWrapper({ onClose, width = "max-w-md", labelledBy, children }: Props) {
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") onClose();
   }, [onClose]);
@@ -31,6 +33,7 @@ export default function ModalWrapper({ onClose, width = "max-w-md", children }: 
       <div
         role="dialog"
         aria-modal="true"
+        aria-labelledby={labelledBy}
         className={`w-full ${width} rounded-xl bg-white shadow-xl max-h-[90vh] flex flex-col`}
         onClick={(e) => e.stopPropagation()}
       >

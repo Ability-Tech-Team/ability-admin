@@ -1,31 +1,29 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import Toolbar, { type ToolbarLabels } from "@/src/components/Toolbar";
-import CreateEventModal from "./CreateEventModal";
 
 type Props = {
   labels: ToolbarLabels;
-  projectOptions: { value: string; label: string }[];
   extraFilters?: React.ReactNode;
   onStatusChange?: (selected: Set<string>) => void;
   onSearch?: (query: string) => void;
+  /** Opens the event form (drawn by the page). */
+  onAdd: () => void;
   view: "grid" | "list";
   onViewChange: (view: "grid" | "list") => void;
 };
 
 export default function EventToolbarWithModal({
   labels,
-  projectOptions,
   extraFilters,
   onStatusChange,
   onSearch,
+  onAdd,
   view,
   onViewChange,
 }: Props) {
   const t = useTranslations("EventsContent");
-  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <>
@@ -38,7 +36,7 @@ export default function EventToolbarWithModal({
       extraFilters={extraFilters}
       onStatusChange={onStatusChange}
       onSearch={onSearch}
-      onAdd={() => setModalOpen(true)}
+      onAdd={onAdd}
       trailingContent={
         <div className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white p-0.5">
           <button
@@ -77,7 +75,6 @@ export default function EventToolbarWithModal({
         </div>
       }
     />
-    {modalOpen && <CreateEventModal projectOptions={projectOptions} onClose={() => setModalOpen(false)} />}
     </>
   );
 }

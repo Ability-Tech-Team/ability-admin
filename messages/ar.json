@@ -73,10 +73,8 @@
     "avgOccupancy": "متوسط نسبة الإشغال",
     "openServiceRequests": "طلبات الخدمة المفتوحة",
     "openComplaints": "الشكاوى المفتوحة",
-    "overdueInvoices": "الفواتير المتأخرة",
     "totalInvoiceValue": "إجمالي قيمة الفواتير",
     "collectedInvoices": "الفواتير المحصّلة",
-    "overdueInvoiceValue": "قيمة الفواتير المتأخرة",
     "widgetManager": "مدير الودجات",
     "widgetManagerSubtitle": "اسحب لإعادة الترتيب. فعّل أو عطّل لإظهار/إخفاء الودجات على لوحة المعلومات.",
     "done": "تم",
@@ -86,28 +84,18 @@
     "widget_quickMetrics": "مقاييس سريعة",
     "widget_recentServiceRequests": "طلبات الخدمة الأخيرة",
     "widget_projectsOverview": "نظرة عامة على المشاريع",
-    "serviceRequestTrend": "اتجاه طلبات الخدمة",
-    "open": "مفتوح",
-    "resolved": "تم الحل",
     "occupancyByProject": "الإشغال حسب المشروع",
-    "quickMetrics": "مقاييس سريعة",
-    "avgOccupancyShort": "متوسط الإشغال",
-    "srResolved": "طلبات محلولة",
-    "slaMet": "مستوى الخدمة",
     "projectsOverview": "نظرة عامة على المشاريع",
     "viewAll": "عرض الكل",
     "units": "وحدات",
     "residents": "سكان",
     "occupancy": "إشغال",
     "recentServiceRequests": "طلبات الخدمة الأخيرة",
-    "recentServiceRequestsSubtitle": "أحدث 5 طلبات مفتوحة وقيد التنفيذ",
+    "recentServiceRequestsSubtitle": "أحدث 5 طلبات، أياً كانت حالتها",
     "requestId": "رقم الطلب",
-    "srTitle": "العنوان",
     "project": "المشروع",
     "customer": "العميل",
-    "priority": "الأولوية",
     "status": "الحالة",
-    "sla": "مستوى الخدمة",
     "statusActive": "نشط",
     "statusInactive": "غير نشط",
     "priorities": {
@@ -121,6 +109,29 @@
       "in progress": "قيد التنفيذ",
       "resolved": "تم الحل",
       "pending": "معلق"
+    },
+    "topServices": "الخدمات الأكثر طلباً",
+    "requests": "طلبات",
+    "unnamedService": "خدمة بدون اسم",
+    "unnamedProject": "مشروع بدون اسم",
+    "noServiceRequests": "لا توجد طلبات خدمة في هذه الفترة",
+    "noProjects": "لا توجد مشاريع نشطة",
+    "occupiedUnits": "مشغولة",
+    "services": "الخدمات",
+    "unit": "الوحدة",
+    "createdAt": "تاريخ الإنشاء",
+    "loading": "جارٍ تحميل لوحة التحكم…",
+    "allTimeHint": "يتم عرض كل الفترات. اختر تواريخ لعرض ما أُضيف خلال فترة.",
+    "periodHint": "يتم عرض ما أُضيف خلال الفترة المختارة. امسح التاريخين لعرض كل الفترات.",
+    "errors": {
+      "sessionEnded": "انتهت جلستك. سجّل الدخول مرة أخرى لعرض لوحة التحكم.",
+      "signInAgain": "تسجيل الدخول مرة أخرى",
+      "forbidden": "لوحة التحكم متاحة لدور المسؤول الأعلى (Super Admin) فقط.",
+      "unreachable": "تعذّر وصول لوحة التحكم إلى الخادم. تحقّق من اتصالك وحاول مرة أخرى.",
+      "failed": "تعذّر تحميل لوحة التحكم. حاول مرة أخرى.",
+      "noApi": "تسجيل الدخول هذا لا يحدد واجهة برمجة لـ Community Admin يثق بها التطبيق، لذا لا يمكن تحميل لوحة التحكم.",
+      "invalidPeriod": "تاريخ نهاية الفترة قبل تاريخ بدايتها.",
+      "retry": "حاول مرة أخرى"
     }
   },
   "MasterData": {
@@ -139,7 +150,6 @@
     "searchCustomers": "البحث عن عملاء...",
     "searchAssignments": "البحث عن تخصيصات...",
     "searchMembers": "البحث عن أفراد العائلة...",
-    "searchRentals": "البحث عن وحدة أو مستأجر أو هوية...",
     "exactSearch": "بحث دقيق",
     "status": "الحالة",
     "export": "تصدير",
@@ -183,39 +193,21 @@
       "projects": "المشاريع",
       "type": "النوع",
       "occupancyType": "نوع الإشغال",
-      "relationship": "صلة القرابة",
       "source": "المصدر"
     },
-    "relationships": {
-      "spouse": "زوج/زوجة",
-      "child": "ابن/ابنة",
-      "parent": "أب/أم",
-      "sibling": "أخ/أخت"
-    },
-    "sources": {
-      "app": "التطبيق",
-      "admin": "الإدارة"
-    },
-    "rentalStatuses": {
-      "pending": "قيد الانتظار",
-      "approved": "معتمد"
-    },
+    "relationships": {},
     "rentalColumns": {
       "rentalId": "رقم الإيجار",
       "unit": "الوحدة",
       "tenantName": "اسم المستأجر",
-      "idPassportType": "نوع الهوية / جواز السفر",
       "idPassport": "الهوية / جواز السفر",
       "start": "البداية",
       "end": "النهاية",
-      "annualRent": "الإيجار السنوي",
       "source": "المصدر",
       "printRC": "طباعة عقد"
     },
     "rentalDetail": {
-      "tenantsOn": "المستأجرون في",
-      "showAttachments": "عرض المرفقات",
-      "attachmentDescription": "عقد إيجار أو مستند هوية مرفق بهذا الإيجار."
+      "tenantsOn": "المستأجرون في"
     },
     "familyColumns": {
       "familyMember": "فرد العائلة",
@@ -240,22 +232,9 @@
     "assignmentDetail": {
       "customersAssigned": "العملاء المخصصون للوحدة",
       "familyMembersTitle": "أفراد العائلة",
-      "nationalId": "الرقم الوطني",
-      "mobile": "الجوال",
-      "email": "البريد الإلكتروني",
-      "nationality": "الجنسية",
       "assignmentStart": "تاريخ بدء التخصيص",
       "relationship": "العلاقة",
       "attachments": "المرفقات",
-      "roles": {
-        "owner": "مالك",
-        "co-owner": "مالك مشارك",
-        "tenant": "مستأجر"
-      },
-      "statuses": {
-        "approved": "معتمد",
-        "pending": "قيد الانتظار"
-      },
       "attachmentPreview": "معاينة المرفق",
       "attachmentDescription": "مستند هوية أو ملكية مرفق بتخصيص الوحدة."
     },
@@ -301,14 +280,11 @@
       "idPassportNumber": "رقم الهوية / جواز السفر",
       "nationality": "الجنسية",
       "project": "المشروع",
-      "assignedUnit": "الوحدة المخصصة",
-      "joinDate": "تاريخ الانضمام",
       "identityAttachment": "مرفق الهوية"
     },
     "attachmentsTitle": "المرفقات",
     "open": "فتح",
     "noAttachments": "لا توجد مرفقات.",
-    "openingFile": "جاري فتح {fileName}",
     "show": "عرض",
     "edit": "تعديل",
     "addRentalModal": {
@@ -320,7 +296,6 @@
       "tenantAttachments": "مرفقات المستأجر",
       "startDate": "تاريخ البداية",
       "endDate": "تاريخ النهاية",
-      "annualRent": "الإيجار السنوي (ج.م)",
       "saveAndAddAnother": "حفظ وإضافة مستأجر آخر",
       "submit": "إضافة إيجار"
     },
@@ -343,7 +318,6 @@
       "unitNumber": "رقم الوحدة",
       "floor": "الطابق",
       "unitType": "نوع الوحدة",
-      "contract": "العقد",
       "submit": "إضافة وحدة"
     },
     "addCustomerModal": {
@@ -355,8 +329,6 @@
       "idPassportNumber": "رقم الهوية / جواز السفر",
       "nationality": "الجنسية",
       "project": "المشروع",
-      "assignedUnit": "الوحدة المخصصة",
-      "joinDate": "تاريخ الانضمام",
       "identityAttachment": "مرفق الهوية",
       "saveAndAddAnother": "حفظ وإضافة آخر",
       "submit": "إضافة عميل"
@@ -419,48 +391,23 @@
     "columns": {
       "requestId": "رقم الطلب",
       "issue": "المشكلة",
-      "projectUnit": "المشروع / الوحدة",
       "customer": "العميل",
       "dueDate": "تاريخ الاستحقاق",
       "status": "الحالة"
     },
-    "statuses": {
-      "open": "مفتوح",
-      "in-progress": "قيد التنفيذ",
-      "resolved": "تم الحل",
-      "delayed": "متأخر"
-    },
     "detail": {
-      "project": "المشروع",
       "unit": "الوحدة",
       "customer": "العميل",
       "type": "النوع",
-      "assignedTo": "مخصص إلى",
       "created": "تاريخ الإنشاء",
       "dueDateAndTime": "تاريخ ووقت الاستحقاق",
       "activityTimeline": "سجل النشاط",
       "addComment": "إضافة تعليق",
       "commentPlaceholder": "اكتب تعليقاً أو تحديثاً..."
     },
-    "serviceRequest": {
-      "create": {
-        "title": "طلب خدمة جديد",
-        "issueTitle": "عنوان المشكلة",
-        "serviceType": "نوع الخدمة",
-        "project": "المشروع",
-        "unit": "الوحدة",
-        "customer": "العميل",
-        "dueDate": "تاريخ الاستحقاق",
-        "dueTimeSlot": "وقت الاستحقاق",
-        "cancel": "إلغاء",
-        "submit": "إنشاء طلب"
-      }
-    },
     "showing": "عرض {from}-{to} من {total}",
     "filters": {
-      "projects": "المشاريع",
-      "priority": "الأولوية",
-      "invoiceType": "نوع الفاتورة"
+      "projects": "المشاريع"
     },
     "invoice": {
       "summary": {
@@ -475,46 +422,13 @@
         "invoiceType": "نوع الفاتورة",
         "amount": "المبلغ"
       },
-      "types": {
-        "annual-rent": "إيجار سنوي",
-        "monthly-rent": "إيجار شهري",
-        "service-charge": "رسوم خدمة"
-      },
-      "statuses": {
-        "paid": "مدفوع",
-        "pending": "قيد الانتظار",
-        "overdue": "متأخر"
-      },
       "actions": {
         "view": "عرض",
         "markPaid": "تحديد كمدفوع",
         "download": "تحميل"
       },
       "generateInvoice": "إنشاء فاتورة",
-      "maintenanceDeposit": "فرق وديعة الصيانة",
-      "deposit": {
-        "title": "فرق وديعة الصيانة — رفع جماعي",
-        "uploadTitle": "رفع ملف فرق وديعة الصيانة",
-        "uploadDescription": "ملف Excel أو CSV يحتوي على رقم الوحدة والوديعة الحالية والوديعة المطلوبة والفرق.",
-        "unitNumber": "رقم الوحدة",
-        "currentDeposit": "الوديعة الحالية",
-        "requiredDeposit": "الوديعة المطلوبة",
-        "difference": "الفرق",
-        "downloadTemplate": "تحميل القالب",
-        "cancel": "إلغاء",
-        "uploadSheet": "رفع الملف"
-      },
-      "generate": {
-        "title": "إنشاء فاتورة",
-        "customerName": "اسم العميل",
-        "invoiceType": "نوع الفاتورة",
-        "amount": "المبلغ لكل وحدة (ج.م)",
-        "dueDate": "تاريخ الاستحقاق",
-        "units": "الوحدات",
-        "selectUnits": "اختر وحدة واحدة أو أكثر",
-        "unitInfo": "0 وحدات محددة. سيتم إنشاء فاتورة واحدة لكل وحدة.",
-        "cancel": "إلغاء"
-      }
+      "maintenanceDeposit": "فرق وديعة الصيانة"
     },
     "complaint": {
       "columns": {
@@ -522,36 +436,12 @@
         "subject": "الموضوع",
         "description": "الوصف",
         "submittedBy": "مقدم من",
-        "priority": "الأولوية",
-        "assignedTo": "مخصص إلى",
         "date": "التاريخ"
-      },
-      "create": {
-        "title": "شكوى جديدة",
-        "subject": "الموضوع",
-        "description": "الوصف",
-        "project": "المشروع",
-        "unit": "الوحدة",
-        "customer": "العميل",
-        "priority": "الأولوية",
-        "status": "الحالة",
-        "cancel": "إلغاء",
-        "submit": "إنشاء شكوى"
-      },
-      "priorities": {
-        "low": "منخفض",
-        "medium": "متوسط",
-        "high": "مرتفع"
       }
     },
     "complaintDetail": {
       "submittedBy": "مقدم من",
-      "ticketTimeline": "سجل التذكرة",
-      "customerVoiceNote": "ملاحظة صوتية من العميل",
-      "comments": "التعليقات",
-      "noComments": "لا توجد تعليقات بعد.",
-      "writeComment": "اكتب تعليقاً...",
-      "addComment": "إضافة تعليق"
+      "ticketTimeline": "سجل التذكرة"
     },
     "serviceRequestsComingSoon": "وحدة طلبات الخدمة قيد الإنشاء.",
     "complaintsComingSoon": "وحدة الشكاوى قيد الإنشاء.",
@@ -561,20 +451,14 @@
       "summary": {
         "activeQrPasses": "تصاريح QR النشطة",
         "scheduledVisits": "الزيارات المجدولة",
-        "scannedEntries": "عمليات المسح",
-        "outsideGeofence": "خارج النطاق الجغرافي",
         "availableNow": "متاح الآن",
-        "upcoming": "قادمة",
-        "thisPeriod": "هذه الفترة",
-        "qrHiddenInApp": "QR مخفي في التطبيق"
+        "upcoming": "قادمة"
       },
       "columns": {
         "guest": "الضيف",
         "invitedBy": "دعوة من",
         "visitDate": "تاريخ الزيارة",
-        "qrStatus": "حالة QR",
-        "locationRule": "قاعدة الموقع",
-        "scans": "عمليات المسح"
+        "qrStatus": "حالة QR"
       },
       "qrStatuses": {
         "active": "نشط",
@@ -582,10 +466,7 @@
         "expired": "منتهي",
         "revoked": "ملغى"
       },
-      "locationRules": {
-        "inside-zone": "داخل النطاق",
-        "outside-zone": "خارج النطاق"
-      },
+      "locationRules": {},
       "actions": {
         "view": "عرض"
       },
@@ -597,7 +478,6 @@
         "residentName": "اسم المقيم",
         "project": "المشروع",
         "unit": "الوحدة",
-        "visitDate": "تاريخ الزيارة",
         "cancel": "إلغاء"
       },
       "detailTitle": "دعوة ضيف",
@@ -608,14 +488,9 @@
         "resident": "المقيم",
         "unit": "الوحدة",
         "project": "المشروع",
-        "visitDate": "تاريخ الزيارة",
         "created": "تاريخ الإنشاء",
-        "successfulScans": "عمليات المسح الناجحة",
-        "mobileQrBehavior": "سلوك QR على الهاتف",
-        "mobileQrDescription": "يظهر رمز QR فقط على جهاز الضيف عندما يكون داخل نطاق السياج الجغرافي المحدد. خارج النطاق، يكون رمز QR مخفياً في التطبيق.",
         "resendInvitation": "إعادة إرسال الدعوة",
         "revoke": "إلغاء",
-        "resentSuccess": "تم إعادة إرسال الدعوة {id}",
         "revokedSuccess": "تم إلغاء دعوة الضيف"
       }
     }
@@ -675,22 +550,8 @@
       "type": "النوع"
     },
     "showing": "عرض {from}-{to} من {total}",
-    "create": {
-      "title": "إشعار جديد",
-      "titleEn": "العنوان (إنجليزي)",
-      "titleAr": "العنوان (عربي)",
-      "body": "المحتوى",
-      "type": "النوع",
-      "project": "المشروع",
-      "audience": "الجمهور",
-      "scheduledDate": "تاريخ الجدولة",
-      "cancel": "إلغاء",
-      "submit": "إنشاء إشعار"
-    },
     "createModal": {
       "title": "إنشاء إشعار",
-      "english": "English",
-      "arabic": "Arabic",
       "titleEn": "العنوان (إنجليزي)",
       "titleAr": "العنوان (عربي)",
       "titleEnPlaceholder": "e.g. Scheduled Maintenance Notice",
@@ -699,10 +560,8 @@
       "bodyAr": "المحتوى (عربي)",
       "bodyEnPlaceholder": "Write notification body in English...",
       "bodyArPlaceholder": "اكتب نص الإشعار بالعربية...",
-      "notificationType": "نوع الإشعار",
       "targetAudience": "الجمهور المستهدف",
       "project": "المشروع",
-      "status": "الحالة",
       "cancel": "إلغاء",
       "saveDraft": "حفظ كمسودة",
       "sendNow": "إرسال الآن"
@@ -801,7 +660,9 @@
         "published": "منشور",
         "draft": "مسودة"
       },
-      "edit": "تعديل"
+      "edit": "تعديل",
+      "loading": "جارٍ تحميل الأخبار…",
+      "empty": "لا توجد أخبار مطابقة لهذه الفلاتر."
     },
     "phoneDir": {
       "searchPlaceholder": "البحث في الدليل...",
@@ -1225,5 +1086,521 @@
     "sentReference": "رقمك المرجعي هو <strong>{reference}</strong>. اذكره إذا راسلت الدعم بشأن هذا الطلب مرة أخرى.",
     "sentReplyTo": "سيرد فريق دعم Ability-Tech على <strong>{email}</strong>.",
     "sentNoEmail": "لا يوجد بريد إلكتروني في حسابك، لذلك لا يستطيع الفريق الرد عبر البريد. اطلب من المسؤول إضافة بريد إلكتروني إلى حسابك."
+  },
+  "ApiErrors": {
+    "sessionEnded": "انتهت جلستك. سجّل الدخول مرة أخرى للمتابعة.",
+    "signInAgain": "تسجيل الدخول مرة أخرى",
+    "forbidden": "دورك لا يسمح بعرض هذا أو تغييره.",
+    "passwordChange": "غيّر كلمة المرور في Ability CRM قبل المتابعة.",
+    "tooMany": "محاولات كثيرة جداً. انتظر دقيقة ثم حاول مرة أخرى.",
+    "unreachable": "تعذّر الوصول إلى الخادم. تحقّق من اتصالك وحاول مرة أخرى.",
+    "failed": "حدث خطأ أثناء التحميل. حاول مرة أخرى.",
+    "rejected": "رفض الخادم هذا الطلب.",
+    "noApi": "تسجيل الدخول هذا لا يحدد واجهة برمجة لـ Community Admin يثق بها التطبيق، لذا لا يمكن تحميل شيء.",
+    "retry": "حاول مرة أخرى"
+  },
+  "Pagination": {
+    "label": "الصفحات",
+    "previous": "السابق",
+    "next": "التالي",
+    "pageOf": "صفحة {page} من {totalPages}",
+    "total": "{count, plural, zero {لا سجلات} one {سجل واحد} two {سجلان} few {# سجلات} many {# سجلاً} other {# سجل}}"
+  },
+  "ServiceRequestsScreen": {
+    "allStatuses": "كل الحالات",
+    "allProjects": "كل المشروعات",
+    "statuses": {
+      "created": "تم الإنشاء",
+      "paid": "تم الدفع",
+      "confirmed": "تم التأكيد",
+      "inProgress": "قيد التنفيذ",
+      "fulfilled": "تم التنفيذ",
+      "done": "مكتمل",
+      "rejected": "مرفوض"
+    },
+    "notAvailableYet": "غير متاح بعد",
+    "loading": "جارٍ تحميل طلبات الخدمة…",
+    "empty": "لا توجد طلبات خدمة تطابق هذه الفلاتر.",
+    "urgent": "عاجل",
+    "close": "إغلاق",
+    "loadingDetail": "جارٍ تحميل الطلب…",
+    "detail": {
+      "requester": "مقدّم الطلب",
+      "createdBy": "أنشأه",
+      "total": "الإجمالي",
+      "notes": "ملاحظات",
+      "rejectReason": "سبب الرفض",
+      "noActivity": "لا يوجد نشاط بعد.",
+      "comments": "التعليقات",
+      "noComments": "لا توجد تعليقات بعد.",
+      "statusFinal": "لم يعد من الممكن تغيير حالة هذا الطلب.",
+      "chooseStatus": "اختر حالة جديدة",
+      "updateStatus": "تحديث الحالة"
+    }
+  },
+  "ComplaintsScreen": {
+    "allStatuses": "كل الحالات",
+    "statuses": {
+      "open": "مفتوحة",
+      "inProgress": "قيد المعالجة",
+      "resolved": "تم الحل",
+      "rejected": "مرفوضة"
+    },
+    "notAvailableYet": "غير متاح بعد",
+    "department": "القسم",
+    "loading": "جارٍ تحميل الشكاوى…",
+    "empty": "لا توجد شكاوى تطابق هذه الفلاتر.",
+    "close": "إغلاق",
+    "mobile": "الجوال",
+    "source": "المصدر",
+    "recordedBy": "سجّلها",
+    "noActivity": "لا يوجد نشاط بعد.",
+    "responses": "الردود",
+    "responsesHint": "يتلقى العميل إشعاراً بكل رد.",
+    "noResponses": "لا توجد ردود بعد.",
+    "writeResponse": "اكتب رداً للعميل...",
+    "addResponse": "إرسال الرد",
+    "statusFinal": "لم يعد من الممكن تغيير حالة هذه الشكوى.",
+    "chooseStatus": "اختر حالة جديدة",
+    "updateStatus": "تحديث الحالة"
+  },
+  "InvoicesScreen": {
+    "notAvailable": "غير متاح بعد",
+    "allStatuses": "كل الحالات",
+    "allProjects": "كل المشروعات",
+    "loading": "جارٍ تحميل الفواتير…",
+    "empty": "لا توجد فواتير تطابق عوامل التصفية هذه.",
+    "exporting": "جارٍ التصدير…",
+    "dismiss": "إغلاق",
+    "columns": {
+      "invoiceDate": "تاريخ الفاتورة",
+      "actions": "الإجراءات"
+    },
+    "statuses": {
+      "pending": "قيد الانتظار",
+      "collected": "محصّلة",
+      "void": "ملغاة",
+      "underPaymentProcess": "قيد الدفع",
+      "voidRequested": "طُلب إلغاؤها",
+      "partiallyCollected": "محصّلة جزئياً",
+      "refunded": "مستردّة",
+      "refundRequested": "طُلب استردادها",
+      "partiallyRefunded": "مستردّة جزئياً"
+    },
+    "payment": {
+      "title": "تسجيل دفعة",
+      "close": "إغلاق",
+      "invoice": "الفاتورة",
+      "customer": "العميل",
+      "amountDue": "المبلغ المستحق",
+      "method": "طريقة الدفع",
+      "methods": {
+        "cash": "نقداً",
+        "visa": "فيزا",
+        "cheque": "شيك",
+        "instapay": "إنستاباي"
+      },
+      "reference": "الرقم المرجعي (اختياري)",
+      "description": "يُسجَّل المبلغ المستحق كاملاً كدفعة واحدة، وتُعلَّم الفاتورة كمحصّلة.",
+      "cancel": "إلغاء",
+      "submit": "تسجيل الدفعة",
+      "submitting": "جارٍ الحفظ…",
+      "success": "تم تسجيل الدفعة للفاتورة {number}."
+    },
+    "invoiceType": "نوع الفاتورة",
+    "allTypes": "كل الأنواع"
+  },
+  "RentalsScreen": {
+    "viewsLabel": "قوائم الإيجارات",
+    "views": {
+      "reservations": "الحجوزات",
+      "walkIns": "طلبات الإيجار المباشرة"
+    },
+    "searchBy": "البحث حسب",
+    "searchPlaceholder": "ابحث…",
+    "searchFields": {
+      "customer_name": "اسم المستأجر",
+      "unit_number": "رقم الوحدة",
+      "id_number": "رقم الهوية / جواز السفر",
+      "mobile_number": "رقم الجوال"
+    },
+    "allStatuses": "كل الحالات",
+    "allProjects": "كل المشروعات",
+    "allSources": "كل المصادر",
+    "projectsUnavailable": "تعذّر تحميل المشروعات، لذا لا يمكن اختيار مشروع.",
+    "notAvailableYet": "غير متاح بعد",
+    "reservationStatuses": {
+      "1": "في انتظار تحصيل الرسوم",
+      "2": "نشط",
+      "3": "منتهٍ",
+      "4": "ملغى",
+      "5": "مُنهى قبل موعده"
+    },
+    "walkInStatuses": {
+      "1": "قيد الانتظار",
+      "2": "مقبول",
+      "3": "مرفوض",
+      "4": "الوحدة محجوزة"
+    },
+    "walkInSources": {
+      "1": "وسيط",
+      "2": "مستأجر",
+      "3": "تطبيق المجتمع"
+    },
+    "idTypes": {
+      "1": "جواز سفر",
+      "2": "بطاقة الرقم القومي"
+    },
+    "columns": {
+      "mobile": "الجوال",
+      "requestId": "رقم الطلب"
+    },
+    "loading": "جارٍ تحميل الإيجارات…",
+    "emptyReservations": "لا توجد حجوزات مطابقة.",
+    "emptyWalkIns": "لا توجد طلبات مباشرة مطابقة.",
+    "actions": {
+      "checkIn": "تسجيل الدخول",
+      "checkOut": "تسجيل الخروج",
+      "extend": "تمديد",
+      "terminate": "إنهاء",
+      "cancel": "إلغاء الإيجار"
+    },
+    "dialogs": {
+      "checkIn": "تسجيل دخول {tenant} في الوحدة {unit}؟ يصبح الإيجار نشطًا.",
+      "cancel": "إلغاء إيجار {tenant} للوحدة {unit}؟ لا يمكن التراجع عن ذلك.",
+      "extend": "اختر تاريخ الانتهاء الجديد لإيجار {tenant} للوحدة {unit}. يجب أن يكون بعد تاريخ الانتهاء الحالي.",
+      "checkOut": "تسجيل خروج {tenant} من الوحدة {unit}. ينتهي الإيجار.",
+      "terminate": "إنهاء إيجار {tenant} للوحدة {unit} قبل موعده. لا يمكن التراجع عن ذلك.",
+      "accept": "قبول طلب {tenant}؟ يصبح حجزًا على الوحدة {unit}.",
+      "reject": "رفض طلب {tenant} للوحدة {unit}؟",
+      "rating": "تقييم المستأجر (من 1 إلى 5)",
+      "penalty": "مبلغ الغرامة (اختياري)",
+      "newEndDate": "تاريخ الانتهاء الجديد",
+      "reason": "السبب",
+      "back": "رجوع",
+      "confirm": "تأكيد",
+      "sending": "جارٍ الإرسال…",
+      "problems": {
+        "rating": "اختر تقييمًا من 1 إلى 5.",
+        "penalty": "أدخل غرامة قيمتها 0 أو أكثر، أو اتركها فارغة.",
+        "newEndDate": "اختر تاريخ الانتهاء الجديد.",
+        "reason": "أدخل السبب."
+      }
+    },
+    "detail": {
+      "close": "إغلاق",
+      "loading": "جارٍ التحميل…",
+      "period": "من {start} إلى {end}",
+      "rentalCompany": "شركة التأجير",
+      "signDate": "تاريخ التوقيع",
+      "accessCard": "بطاقة الدخول",
+      "totalTenants": "عدد المستأجرين",
+      "rating": "تقييم المستأجر",
+      "terminationReason": "سبب الإنهاء",
+      "penalty": "الغرامة",
+      "notes": "ملاحظات",
+      "delegate": "المندوب",
+      "rejectReason": "سبب الرفض",
+      "relatives": "الأقارب"
+    },
+    "add": {
+      "chooseProject": "اختر مشروعًا",
+      "chooseUnit": "اختر وحدة",
+      "unitsLoading": "جارٍ تحميل الوحدات…",
+      "noUnits": "لا توجد في هذا المشروع وحدة يمكن تأجيرها الآن.",
+      "saved": "{count, plural, zero {لم يُضف أي إيجار.} one {أُضيف الإيجار.} two {أُضيف إيجاران.} few {أُضيفت # إيجارات.} many {أُضيف # إيجارًا.} other {أُضيف # إيجار.}}",
+      "problems": {
+        "required": "املأ الحقول المطلوبة.",
+        "idNumberLength": "يجب أن يتكون رقم الهوية / جواز السفر من 8 إلى 14 حرفًا.",
+        "endBeforeStart": "يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء.",
+        "noRentalCompany": "لا توجد شركة تأجير لهذه الوحدة، لذا لا يمكن تأجيرها من هنا."
+      }
+    }
+  },
+  "UnitsScreen": {
+    "allProjects": "كل المشروعات",
+    "projectsUnavailable": "تعذّر تحميل المشروعات، لذا لا يمكن اختيار مشروع.",
+    "notAvailableYet": "غير متاح بعد",
+    "loading": "جارٍ تحميل الوحدات…",
+    "empty": "لا توجد وحدات مطابقة.",
+    "floor": "الطابق {floor}",
+    "import": {
+      "title": "استيراد الوحدات",
+      "chooseProject": "اختر مشروعًا",
+      "file": "جدول البيانات",
+      "fileHint": "ملف بصيغة xlsx أو xlsm أو csv لا يتجاوز 5 ميجابايت.",
+      "columns": "الأعمدة المطلوبة: {required}. الاختيارية: {optional}.",
+      "submit": "رفع",
+      "uploading": "جارٍ الرفع…",
+      "refresh": "تحقّق مرة أخرى",
+      "another": "استيراد ملف آخر",
+      "close": "إغلاق",
+      "errorReport": "تنزيل الصفوف المرفوضة",
+      "summary": "أُضيف {inserted}، وتُخطّي {skipped}، ورُفض {failed}، من أصل {total} صفًا.",
+      "statuses": {
+        "PENDING": "في انتظار البدء",
+        "PROCESSING": "جارٍ الاستيراد…",
+        "COMPLETED": "تم الاستيراد",
+        "COMPLETED_WITH_ERRORS": "تم الاستيراد مع رفض بعض الصفوف",
+        "FAILED": "فشل الاستيراد"
+      },
+      "problems": {
+        "project": "اختر مشروعًا.",
+        "file": "اختر ملفًا.",
+        "type": "اختر ملفًا بصيغة xlsx أو xlsm أو csv.",
+        "size": "حجم الملف أكبر من 5 ميجابايت."
+      }
+    },
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية",
+    "form": {
+      "chooseProject": "اختر مشروعًا",
+      "choose": "اختر",
+      "noBuilding": "بدون مبنى",
+      "buildingsUnavailable": "تعذّر تحميل المباني.",
+      "location": "الموقع",
+      "locationsUnavailable": "المواقع غير متاحة من النظام بعد.",
+      "totalArea": "المساحة الإجمالية (م²)",
+      "address": "العنوان",
+      "rooms": "غرف النوم",
+      "bathrooms": "الحمّامات",
+      "livingRooms": "غرف المعيشة",
+      "balconies": "الشرفات",
+      "deliveryDate": "تاريخ التسليم",
+      "contractingDate": "تاريخ التعاقد",
+      "notes": "ملاحظات",
+      "furnished": "مفروشة",
+      "eligibleForRent": "متاحة للإيجار",
+      "broker": "وحدة وسيط"
+    },
+    "errors": {
+      "required": "مطلوب.",
+      "area": "أدخل مساحة أكبر من 0.",
+      "count": "أدخل عددًا صحيحًا، 0 أو أكثر.",
+      "floor": "أدخل عددًا صحيحًا."
+    }
+  },
+  "CustomersScreen": {
+    "loading": "جارٍ تحميل العملاء…",
+    "empty": "لا يوجد عملاء مطابقون لهذه التصفية.",
+    "searchBy": "البحث في",
+    "searchFields": {
+      "name": "الاسم",
+      "mobile": "رقم الجوال",
+      "idNumber": "رقم الهوية",
+      "unit": "رقم الوحدة",
+      "code": "كود العميل"
+    },
+    "oneChoiceHint": "يصفّي الخادم باختيار واحد في كل مرة، لذا يُتجاهل أي مرشّح حُدّد فيه أكثر من اختيار.",
+    "notAvailable": "غير متاح بعد",
+    "moreUnits": "{count, plural, zero {} one {+وحدة أخرى} two {+وحدتان أخريان} few {+# وحدات أخرى} many {+# وحدة أخرى} other {+# وحدة أخرى}}",
+    "choose": "اختر…",
+    "chooseProject": "اختر مشروعاً",
+    "projectsUnavailable": "لا يمكن عرض المشاريع إلا للمشرف العام، لذا لا يمكن اختيار مشروع هنا.",
+    "requiredField": "مطلوب",
+    "saving": "جارٍ الحفظ…",
+    "close": "إغلاق",
+    "customerSaved": "تم حفظ العميل. يمكنك إضافة العميل التالي.",
+    "fields": {
+      "customerType": "نوع العميل",
+      "maritalStatus": "الحالة الاجتماعية",
+      "religion": "الديانة",
+      "projects": "المشاريع"
+    },
+    "delete": {
+      "title": "حذف العميل؟",
+      "loading": "جارٍ تحميل مشاريع العميل…",
+      "chooseProject": "الإزالة من مشروع",
+      "body": "ستتم إزالة {name} من {project}.",
+      "noProject": "هذا العميل ليس في أي مشروع يمكنك الوصول إليه.",
+      "irreversible": "لا يمكن التراجع عن هذا من هذه الشاشة.",
+      "confirm": "حذف",
+      "deleting": "جارٍ الحذف…",
+      "removedFromProject": "تمت إزالة {name} من {project}، ويبقى عميلاً في مشاريعه الأخرى."
+    },
+    "import": {
+      "title": "استيراد العملاء",
+      "file": "جدول بيانات (‎.xlsx أو ‎.xlsm أو ‎.csv، حتى 5 ميجابايت)",
+      "submit": "رفع",
+      "uploading": "جارٍ الرفع…",
+      "close": "إغلاق",
+      "queued": "عملية الاستيراد رقم {id} ({fileName}) في قائمة الانتظار.",
+      "requiredColumns": "الأعمدة المطلوبة: {columns}",
+      "optionalColumns": "الأعمدة الاختيارية: {columns}",
+      "checkStatus": "عرض الحالة",
+      "checking": "جارٍ التحقق…",
+      "statuses": {
+        "PENDING": "في انتظار البدء",
+        "PROCESSING": "قيد التنفيذ",
+        "COMPLETED": "اكتمل",
+        "COMPLETED_WITH_ERRORS": "اكتمل مع أخطاء",
+        "FAILED": "فشل"
+      },
+      "counts": "{total} صف: أُضيف {inserted}، وحُدّث {updated}، وتُخطّي {skipped}، وفشل {failed}",
+      "downloadErrors": "تنزيل الصفوف التي فشلت"
+    },
+    "loadingChoices": "جارٍ تحميل الخيارات…"
+  },
+  "FamilyMembersScreen": {
+    "loading": "جارٍ تحميل الطلبات…",
+    "empty": "لا توجد طلبات أفراد عائلة مطابقة لهذه التصفية.",
+    "searchFields": {
+      "unit": "رقم الوحدة",
+      "ownerMobile": "جوال المالك",
+      "relativeId": "رقم هوية القريب"
+    },
+    "saving": "جارٍ الحفظ…",
+    "close": "إغلاق",
+    "revert": "التراجع عن القبول",
+    "rejectTitle": "رفض الطلب",
+    "rejectBody": "رفض طلب إضافة {name}؟ سيُبلَّغ المالك في التطبيق.",
+    "rejectReason": "السبب (اختياري، يظهر للمالك)",
+    "rejectReasonShown": "السبب: {reason}",
+    "revertTitle": "التراجع عن القبول",
+    "revertBody": "التراجع عن قبول {name}؟ سيفقد الوصول إلى الوحدة، ويُعدّ الطلب مرفوضاً.",
+    "attachments": {
+      "profileImage": "الصورة الشخصية",
+      "nationalIdImage": "وثيقة الهوية",
+      "idImage": "المرفق {number}"
+    },
+    "importTitle": "استيراد أفراد العائلة",
+    "add": {
+      "unitHint": "اكتب رقم الوحدة",
+      "searchingUnits": "جارٍ البحث عن الوحدات…",
+      "noUnits": "لا توجد وحدة لها مالك مطابقة.",
+      "owner": "المالك",
+      "chooseOwner": "اختر المالك",
+      "added": "{count, plural, one {تمت إضافة فرد عائلة واحد} other {تمت إضافة # من أفراد العائلة}}. يُربطون بالوحدة فورًا ويظهرون في تخصيص الوحدات؛ أما هذه القائمة فتعرض الطلبات التي يرسلها الملاك من التطبيق.",
+      "errors": {
+        "required": "مطلوب.",
+        "email": "أدخل بريدًا إلكترونيًا صحيحًا."
+      }
+    }
+  },
+  "GuestInvitationsScreen": {
+    "loading": "جارٍ تحميل الدعوات…",
+    "empty": "لا توجد دعوات مطابقة لهذه التصفية.",
+    "until": "حتى {date}",
+    "notAvailable": "غير متاح بعد",
+    "saving": "جارٍ الحفظ…",
+    "close": "إغلاق",
+    "choose": "اختر…",
+    "reactivate": "إعادة التفعيل",
+    "reactivatedSuccess": "تمت إعادة تفعيل دعوة الضيف",
+    "fields": {
+      "guestEmail": "البريد الإلكتروني للضيف",
+      "guestGender": "جنس الضيف",
+      "validFrom": "صالحة من",
+      "validTo": "صالحة حتى"
+    },
+    "genders": {
+      "male": "ذكر",
+      "female": "أنثى"
+    },
+    "residentSearch": "اكتب اسم الساكن أو رقم جواله",
+    "typeToSearch": "اكتب حرفين على الأقل في الأعلى",
+    "searching": "جارٍ البحث…",
+    "noResidents": "لا يوجد سكان مطابقون",
+    "noUnits": "ليس لهذا الساكن وحدة نشطة",
+    "requiredField": "مطلوب",
+    "periodInvalid": "يجب أن تكون النهاية بعد البداية.",
+    "cairoTime": "الأوقات بتوقيت القاهرة.",
+    "created": "تم إنشاء الدعوة رقم {id}. يمكن للضيف تسجيل الدخول إلى التطبيق برقم جواله طوال مدتها."
+  },
+  "ProjectsScreen": {
+    "forbidden": "دور المدير العام وحده يمكنه عرض المشاريع وتعديلها.",
+    "notAvailableYet": "غير متاح بعد",
+    "loading": "جارٍ تحميل المشاريع…",
+    "empty": "لا توجد مشاريع تطابق هذه الفلاتر.",
+    "toggleActive": "تفعيل {name} أو إيقافه",
+    "companyCode": "رمز الشركة",
+    "projectCode": "رمز المشروع",
+    "projectCodeFixed": "لا يمكن تغيير رمز المشروع بعد إنشائه.",
+    "typeNotSet": "غير محدد",
+    "saving": "جارٍ الحفظ…",
+    "errors": {
+      "required": "هذا الحقل مطلوب.",
+      "tooLong": "النص أطول من المسموح.",
+      "invalidUrl": "أدخل رابطاً كاملاً يبدأ بـ http:// أو https://.",
+      "invalidPoint": "أدخل خط العرض وخط الطول، مثل 30.0444, 31.2357.",
+      "boundaryIncomplete": "أدخل النقاط الأربع كلها، أو اتركها كلها فارغة."
+    }
+  },
+  "UnitAssignmentScreen": {
+    "forbidden": "دور المدير العام وحده يمكنه عرض تخصيصات الوحدات.",
+    "projectsForbidden": "دور المدير العام وحده يمكنه عرض قائمة المشاريع، لذا لا يمكن اختيار مشروع هنا.",
+    "notAvailableYet": "غير متاح بعد",
+    "loading": "جارٍ تحميل التخصيصات…",
+    "empty": "لا توجد تخصيصات تطابق هذه الفلاتر.",
+    "otherHolders": "{count, plural, zero {لا يوجد عملاء آخرون على هذه الوحدة} one {عميل آخر على هذه الوحدة} two {عميلان آخران على هذه الوحدة} few {# عملاء آخرين على هذه الوحدة} many {# عميلاً آخر على هذه الوحدة} other {# عميل آخر على هذه الوحدة}}",
+    "allProjects": "كل المشاريع",
+    "unitLabel": "الوحدة {number}",
+    "close": "إغلاق",
+    "assignmentNumber": "التخصيص {id}",
+    "endDate": "تاريخ الانتهاء",
+    "signDate": "تاريخ التوقيع",
+    "contractNumber": "رقم العقد",
+    "notes": "ملاحظات",
+    "noCurrentHolders": "لا أحد يشغل هذه الوحدة حالياً.",
+    "thisAssignment": "هذا التخصيص",
+    "selectProject": "اختر مشروعاً",
+    "pickProjectFirst": "اختر المشروع أولاً",
+    "customerSearchPlaceholder": "اكتب حرفين على الأقل من اسم العميل",
+    "changeCustomer": "تغيير",
+    "searching": "جارٍ البحث…",
+    "noCustomers": "لا يوجد عميل في هذا المشروع بهذا الاسم.",
+    "endDateHint": "اتركه فارغاً لتخصيص مستمر. مع تاريخ انتهاء يُحفظ التخصيص كمنتهٍ.",
+    "assign": "تخصيص الوحدة",
+    "saving": "جارٍ الحفظ…",
+    "errors": {
+      "required": "هذا الحقل مطلوب.",
+      "endBeforeStart": "لا يمكن أن يسبق تاريخ الانتهاء تاريخ البدء."
+    },
+    "confirmEnd": "إنهاء ملكية {customer} للوحدة {unit} اعتباراً من اليوم؟ سيفقد أفراد عائلته الوحدة أيضاً. لا يمكن التراجع عن ذلك من هنا.",
+    "endsInRentals": "ينتهي تخصيص المستأجر من شاشة إدارة الإيجارات (تسجيل الخروج أو الإنهاء).",
+    "cannotReactivate": "لا يمكن إعادة تفعيل تخصيص منتهٍ من هنا. خصّص الوحدة من جديد بدلاً من ذلك."
+  },
+  "NotificationsScreen": {
+    "sent": "{count, plural, =0 {أُرسل، لكن لا يوجد في المشروع من يستقبله بعد.} one {أُرسل إلى مستلم واحد.} two {أُرسل إلى مستلمَين.} few {أُرسل إلى # مستلمين.} many {أُرسل إلى # مستلماً.} other {أُرسل إلى # مستلم.}}",
+    "dismiss": "إخفاء",
+    "notAvailableYet": "غير متاح بعد",
+    "targets": {
+      "customers": "السكان",
+      "guests": "الضيوف",
+      "all": "السكان والضيوف"
+    },
+    "selectProject": "اختر مشروعاً",
+    "loadingProjects": "جارٍ تحميل المشاريع…",
+    "projectsForbidden": "دور المدير العام وحده يمكنه عرض قائمة المشاريع، لذا لا يمكن اختيار مشروع هنا.",
+    "image": "صورة (اختيارية)",
+    "imageHint": "JPG أو PNG أو WebP، حتى {max} ميغابايت.",
+    "sending": "جارٍ الإرسال…",
+    "errors": {
+      "required": "هذا الحقل مطلوب.",
+      "tooLong": "النص أطول من المسموح.",
+      "imageType": "اختر صورة بصيغة JPG أو PNG أو WebP.",
+      "imageTooLarge": "حجم الصورة أكبر من {max} ميغابايت."
+    },
+    "loadingHistory": "جارٍ تحميل الإشعارات المرسلة…",
+    "noneSent": "لم يُرسل أي إشعار بعد.",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية"
+  },
+  "GuidelinesScreen": {
+    "loading": "جارٍ تحميل الأدلة الإرشادية…",
+    "empty": "لا توجد أدلة إرشادية تطابق هذه الفلاتر."
+  },
+  "PhoneDirectoryScreen": {
+    "loading": "جارٍ تحميل دليل الهاتف…",
+    "empty": "لا توجد جهات اتصال تطابق هذا البحث."
+  },
+  "EventsScreen": {
+    "loading": "جارٍ تحميل الفعاليات…",
+    "empty": "لا توجد فعاليات مطابقة.",
+    "editTitle": "تعديل الفعالية",
+    "dateTime": "{date} الساعة {time}",
+    "errors": {
+      "capacity": "أدخل عددًا صحيحًا، 1 أو أكثر."
+    }
   }
 }

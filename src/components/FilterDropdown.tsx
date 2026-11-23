@@ -7,9 +7,12 @@ type Props = {
   label: string;
   options: { value: string; label: string }[];
   onChange?: (selected: Set<string>) => void;
+  /** For a filter the API can't apply yet; `title` says why. */
+  disabled?: boolean;
+  title?: string;
 };
 
-export default function FilterDropdown({ label, options, onChange }: Props) {
+export default function FilterDropdown({ label, options, onChange, disabled, title }: Props) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const ref = useRef<HTMLDivElement>(null);
@@ -45,7 +48,9 @@ export default function FilterDropdown({ label, options, onChange }: Props) {
         onClick={() => setOpen(!open)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2 h-7 text-[10.5px] text-gray-600 hover:bg-gray-50 transition-colors"
+        disabled={disabled}
+        title={title}
+        className="flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2 h-7 text-[10.5px] text-gray-600 hover:bg-gray-50 transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white"
       >
         <FilterIcon className="h-2.5 w-2.5 text-gray-400" />
         {label}

@@ -1,19 +1,16 @@
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import DashboardContent from "./dashboard/components/DashboardContent";
 import { requireProductAccess } from "@/src/lib/access";
-import {
-  fetchDashboardStats,
-  fetchServiceRequestTrend,
-  fetchOccupancyByProject,
-  fetchQuickMetrics,
-  fetchProjectsOverview,
-  fetchRecentServiceRequests,
-} from "@/src/services/dashboard";
+import { readBrowserApiConfig } from "@/src/lib/apiConfig";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
+/**
+ * The dashboard. The browser loads its figures from the API (`useDashboardPage`), since
+ * only the browser holds the API's `access_token` cookie.
+ */
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   // Signed-out clients are redirected to the Portal's sign-in page here.
@@ -23,24 +20,7 @@ export default async function HomePage({ params }: Props) {
     return <ProductAccessNotice access={access} locale={locale} />;
   }
 
-  const [stats, serviceRequests, occupancy, quickMetrics, projects, recentRequests] =
-    await Promise.all([
-      fetchDashboardStats(),
-      fetchServiceRequestTrend(),
-      fetchOccupancyByProject(),
-      fetchQuickMetrics(),
-      fetchProjectsOverview(),
-      fetchRecentServiceRequests(),
-    ]);
+  const { apiBaseUrl, portalBaseUrl } = await readBrowserApiConfig();
 
-  return (
-    <DashboardContent
-      stats={stats}
-      serviceRequests={serviceRequests}
-      occupancy={occupancy}
-      quickMetrics={quickMetrics}
-      projects={projects}
-      recentRequests={recentRequests}
-    />
-  );
+  return <DashboardContent apiBaseUrl={apiBaseUrl} portalBaseUrl={portalBaseUrl} />;
 }

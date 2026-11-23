@@ -1,14 +1,17 @@
 import { getTranslations } from "next-intl/server";
 import FamilyMembersPageClient from "./components/FamilyMembersPageClient";
-import { fetchFamilyMembers } from "@/src/services/familyMembers";
-import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
+import { readBrowserApiConfig } from "@/src/lib/apiConfig";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
+/**
+ * Family members: the owners' requests to add relatives. The browser loads them from the API
+ * (`useFamilyMembersPage`), since only the browser holds the API's `access_token` cookie.
+ */
 export default async function FamilyMembersPage({ params }: Props) {
   const { locale } = await params;
   const access = await requireProductAccess(locale);
@@ -17,16 +20,15 @@ export default async function FamilyMembersPage({ params }: Props) {
     return <ProductAccessNotice access={access} locale={locale} />;
   }
 
-  const t = await getTranslations("MasterData");
-  const [members, projectOptions] = await Promise.all([
-    fetchFamilyMembers(),
-    fetchProjectFilterOptions(),
+  const [t, { apiBaseUrl, portalBaseUrl }] = await Promise.all([
+    getTranslations("MasterData"),
+    readBrowserApiConfig(),
   ]);
 
   return (
     <FamilyMembersPageClient
-      data={members}
-      projectOptions={projectOptions}
+      apiBaseUrl={apiBaseUrl}
+      portalBaseUrl={portalBaseUrl}
       labels={{
         searchPlaceholder: t("searchMembers"),
         exactSearch: t("exactSearch"),

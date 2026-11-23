@@ -5,9 +5,12 @@ import FilterDropdown from "@/src/components/FilterDropdown";
 
 type Props = {
   onTypeChange?: (selected: Set<string>) => void;
+  /** For a filter the API can't apply yet; `title` says why. */
+  disabled?: boolean;
+  title?: string;
 };
 
-export default function NotificationFilters({ onTypeChange }: Props) {
+export default function NotificationFilters({ onTypeChange, disabled, title }: Props) {
   const t = useTranslations("Notifications");
 
   return (
@@ -18,6 +21,8 @@ export default function NotificationFilters({ onTypeChange }: Props) {
         { value: "push", label: t("types.push") },
       ]}
       onChange={onTypeChange}
+      disabled={disabled}
+      title={title}
     />
   );
 }

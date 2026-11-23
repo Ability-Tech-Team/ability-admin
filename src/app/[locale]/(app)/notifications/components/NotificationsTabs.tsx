@@ -6,11 +6,12 @@ import { Link, usePathname } from "@/src/i18n/navigation";
 type Tab = {
   key: string;
   href: string;
+  /** A count from the API; none yet (no route counts sent notifications). Never a made-up number. */
   count?: number;
 };
 
 const tabs: Tab[] = [
-  { key: "notifications", href: "/notifications", count: 4 },
+  { key: "notifications", href: "/notifications" },
   { key: "templates", href: "/notifications/templates" },
   { key: "deliveryLogs", href: "/notifications/delivery-logs" },
 ];

@@ -1,21 +1,24 @@
 "use client";
 
-import type { DeliveryLog } from "@/src/services/deliveryLogs";
+import { useTranslations } from "next-intl";
 
-type Props = {
-  data: DeliveryLog[];
-  labels: {
-    notification: string;
-    sentAt: string;
-    recipients: string;
-    delivered: string;
-    read: string;
-    failed: string;
-    readRate: string;
-  };
+export type DeliveryLogsLabels = {
+  notification: string;
+  sentAt: string;
+  recipients: string;
+  delivered: string;
+  read: string;
+  failed: string;
+  readRate: string;
 };
 
-export default function DeliveryLogsTable({ data, labels }: Props) {
+type Props = {
+  labels: DeliveryLogsLabels;
+};
+
+/** The logs' columns over an empty body: no admin route lists the sends or their push results. */
+export default function DeliveryLogsTable({ labels }: Props) {
+  const t = useTranslations("NotificationsScreen");
   const columns = [
     { key: "notification", label: labels.notification },
     { key: "sentAt", label: labels.sentAt },
@@ -42,44 +45,11 @@ export default function DeliveryLogsTable({ data, labels }: Props) {
           </tr>
         </thead>
         <tbody>
-          {data.map((log) => (
-            <tr
-              key={log.id}
-              className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/40 transition-colors"
-            >
-              <td className="px-4 py-3 text-[12px] font-semibold text-gray-900">
-                {log.notification}
-              </td>
-              <td className="px-4 py-3 text-[11px] text-gray-400 font-mono">
-                {log.sentAt}
-              </td>
-              <td className="px-4 py-3 text-[12px] font-semibold text-gray-700">
-                {log.recipients.toLocaleString()}
-              </td>
-              <td className="px-4 py-3 text-[12px] font-semibold text-green-600">
-                {log.delivered.toLocaleString()}
-              </td>
-              <td className="px-4 py-3 text-[12px] font-semibold text-blue-600">
-                {log.read.toLocaleString()}
-              </td>
-              <td className="px-4 py-3 text-[12px] font-semibold text-red-500">
-                {log.failed.toLocaleString()}
-              </td>
-              <td className="px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <div className="h-1.5 w-16 overflow-hidden rounded-full bg-gray-200">
-                    <div
-                      className="h-full rounded-full bg-blue-500"
-                      style={{ width: `${log.readRate}%` }}
-                    />
-                  </div>
-                  <span className="text-[11px] font-medium text-gray-600">
-                    {log.readRate}%
-                  </span>
-                </div>
-              </td>
-            </tr>
-          ))}
+          <tr>
+            <td colSpan={columns.length} className="px-4 py-8 text-center text-[12px] text-gray-400">
+              {t("notAvailableYet")}
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

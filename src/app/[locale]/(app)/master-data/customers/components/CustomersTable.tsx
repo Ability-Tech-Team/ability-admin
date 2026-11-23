@@ -1,144 +1,171 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import type { Customer } from "@/src/services/customers";
-import CustomerProfile from "./CustomerProfile";
-import EditCustomerModal from "./EditCustomerModal";
-import AttachmentsModal from "./AttachmentsModal";
+import type { Customer } from "../types";
+import { avatarColorOf, initialsOf, ownershipNames, primaryUnit } from "../utils";
 
 type CustomersTableProps = {
-  data: Customer[];
+  customers: Customer[];
+  /** True before the first page arrives. */
+  loading: boolean;
+  /** The status switches wait while one change is saved. */
+  savingStatus: boolean;
+  onOpen: (customer: Customer) => void;
+  onEdit: (customer: Customer) => void;
+  onShowAttachments: (customer: Customer) => void;
+  onSetActive: (customer: Customer, active: boolean) => void;
+  /** The pager, under the rows. */
+  footer: React.ReactNode;
 };
 
 const badgeClass = "border border-[#bedbff] bg-[#eff6ff] text-[#1447e6]";
+const headClass = "px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]";
+const none = "—";
 
-export default function CustomersTable({ data }: CustomersTableProps) {
+export default function CustomersTable({
+  customers,
+  loading,
+  savingStatus,
+  onOpen,
+  onEdit,
+  onShowAttachments,
+  onSetActive,
+  footer,
+}: CustomersTableProps) {
   const t = useTranslations("MasterData");
-  const [toggledIds, setToggledIds] = useState<Set<string>>(new Set());
-  const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set());
-  const [updatedMap, setUpdatedMap] = useState<Map<string, Customer>>(new Map());
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
-  const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
-  const [attachmentsCustomer, setAttachmentsCustomer] = useState<Customer | null>(null);
-
-  const customers = useMemo(() =>
-    data
-      .filter((c) => !deletedIds.has(c.id))
-      .map((c) => {
-        const updated = updatedMap.get(c.id);
-        const base = updated ?? c;
-        return toggledIds.has(c.id) ? { ...base, active: !base.active } : base;
-      }),
-    [data, toggledIds, deletedIds, updatedMap]
-  );
-
-  function toggleActive(id: string) {
-    setToggledIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
+  const tc = useTranslations("CustomersScreen");
 
   return (
-    <>
-      <div className="rounded-xl bg-white shadow-sm overflow-x-auto">
-        <table className="w-full table-fixed">
-          <colgroup>
-            <col className="w-[120px]" />
-            <col className="w-[80px]" />
-            <col className="w-[95px]" />
-            <col className="w-[150px]" />
-            <col className="w-[80px]" />
-            <col className="w-[85px]" />
-            <col className="w-[70px]" />
-            <col className="w-[65px]" />
-            <col className="w-[60px]" />
-            <col className="w-[85px]" />
-            <col className="w-[70px]" />
-            <col className="w-[55px]" />
-          </colgroup>
-          <thead>
-            <tr className="border-b border-gray-100">
-              <th className="px-3 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.customer")}</th>
-              <th className="px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.idPassportType")}</th>
-              <th className="px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.idPassport")}</th>
-              <th className="px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.contact")}</th>
-              <th className="px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.project")}</th>
-              <th className="px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.unit")}</th>
-              <th className="px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.nationality")}</th>
-              <th className="px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.customerType")}</th>
-              <th className="px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.joinDate")}</th>
-              <th className="px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.status")}</th>
-              <th className="px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.attachments")}</th>
-              <th className="px-2 py-3 text-start text-[11px] font-semibold uppercase tracking-wider text-[#627892]">{t("columns.actions")}</th>
+    <div className="rounded-xl bg-white shadow-sm overflow-x-auto">
+      <table className="w-full min-w-[1000px] table-fixed">
+        <colgroup>
+          <col className="w-[120px]" />
+          <col className="w-[80px]" />
+          <col className="w-[95px]" />
+          <col className="w-[150px]" />
+          <col className="w-[80px]" />
+          <col className="w-[85px]" />
+          <col className="w-[70px]" />
+          <col className="w-[65px]" />
+          <col className="w-[60px]" />
+          <col className="w-[85px]" />
+          <col className="w-[70px]" />
+          <col className="w-[55px]" />
+        </colgroup>
+        <thead>
+          <tr className="border-b border-gray-100">
+            <th className={`${headClass} px-3`}>{t("columns.customer")}</th>
+            <th className={headClass}>{t("columns.idPassportType")}</th>
+            <th className={headClass}>{t("columns.idPassport")}</th>
+            <th className={headClass}>{t("columns.contact")}</th>
+            <th className={headClass}>{t("columns.project")}</th>
+            <th className={headClass}>{t("columns.unit")}</th>
+            <th className={headClass}>{t("columns.nationality")}</th>
+            <th className={headClass}>{t("columns.customerType")}</th>
+            <th className={headClass}>{t("columns.joinDate")}</th>
+            <th className={headClass}>{t("columns.status")}</th>
+            <th className={headClass}>{t("columns.attachments")}</th>
+            <th className={headClass}>{t("columns.actions")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {customers.length === 0 && (
+            <tr>
+              <td colSpan={12} className="px-3 py-10 text-center text-[11px] text-gray-400" aria-live="polite">
+                {loading ? tc("loading") : tc("empty")}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {customers.map((customer) => (
+          )}
+          {customers.map((customer) => {
+            const unit = primaryUnit(customer);
+            const otherUnits = customer.units.length - 1;
+            const types = ownershipNames(customer);
+            return (
               <tr
                 key={customer.id}
-                onClick={() => setSelectedCustomer(customer)}
                 tabIndex={0}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelectedCustomer(customer); } }}
-                className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors cursor-pointer"
+                onClick={() => onOpen(customer)}
+                onKeyDown={(e) => {
+                  if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
+                    e.preventDefault();
+                    onOpen(customer);
+                  }
+                }}
+                className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 focus:outline-none focus-visible:bg-blue-50/50 transition-colors cursor-pointer"
               >
                 {/* Customer */}
                 <td className="px-3 py-3">
                   <div className="flex items-center gap-2">
-                    <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white ${customer.avatarColor}`}>
-                      {customer.initials}
+                    <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white ${avatarColorOf(customer.id)}`}>
+                      {initialsOf(customer.name)}
                     </div>
-                    <div>
-                      <p className="text-[11px] font-semibold text-gray-900">{customer.name}</p>
-                      <p className="text-[9px] text-gray-400">{customer.nameAr}</p>
+                    <div className="min-w-0">
+                      <p className="truncate text-[11px] font-semibold text-gray-900">{customer.name}</p>
+                      {customer.code && <p className="text-[9px] text-gray-400">{customer.code}</p>}
                     </div>
                   </div>
                 </td>
 
                 {/* ID / Passport Type */}
                 <td className="px-2 py-3">
-                  <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-medium ${badgeClass}`}>
-                    {t(`idTypes.${customer.idType}` as Parameters<typeof t>[0])}
-                  </span>
+                  {customer.idTypeName ? (
+                    <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-medium ${badgeClass}`}>
+                      {customer.idTypeName}
+                    </span>
+                  ) : (
+                    <span className="text-[11px] text-gray-400">{none}</span>
+                  )}
                 </td>
 
                 {/* ID / Passport Number */}
-                <td className="px-2 py-3 text-[11px] text-gray-600">{customer.idNumber}</td>
+                <td className="px-2 py-3 text-[11px] text-gray-600 break-all">{customer.idNumber}</td>
 
                 {/* Contact */}
                 <td className="px-2 py-3">
-                  <p className="text-[11px] text-gray-900">{customer.email}</p>
-                  <p className="text-[9px] text-gray-400">{customer.phone}</p>
+                  <p className="truncate text-[11px] text-gray-900">{customer.email ?? none}</p>
+                  <p className="text-[9px] text-gray-400">{customer.mobile ?? none}</p>
                 </td>
 
                 {/* Project */}
-                <td className="px-2 py-3 text-[11px] font-semibold text-gray-900">{customer.project}</td>
+                <td className="px-2 py-3 text-[11px] font-semibold text-gray-900">{unit?.projectName ?? none}</td>
 
                 {/* Unit */}
-                <td className="px-2 py-3 text-[11px] text-gray-600">{customer.unit}</td>
-
-                {/* Nationality */}
-                <td className="px-2 py-3 text-[11px] text-gray-600">{customer.nationality}</td>
-
-                {/* Type */}
-                <td className="px-2 py-3">
-                  <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-medium ${badgeClass}`}>
-                    {t(`customerTypes.${customer.customerType}` as Parameters<typeof t>[0])}
-                  </span>
+                <td className="px-2 py-3 text-[11px] text-gray-600">
+                  {unit ? unit.unitNumber : none}
+                  {otherUnits > 0 && <span className="block text-[9px] text-gray-400">{tc("moreUnits", { count: otherUnits })}</span>}
                 </td>
 
-                {/* Join Date */}
-                <td className="px-2 py-3 text-[11px] text-gray-600">{customer.joinDate}</td>
+                {/* Nationality: the API gives the country */}
+                <td className="px-2 py-3 text-[11px] text-gray-600">{customer.countryName ?? none}</td>
+
+                {/* Type: owner, renter... on their units */}
+                <td className="px-2 py-3">
+                  {types.length ? (
+                    <div className="flex flex-wrap gap-1">
+                      {types.map((type) => (
+                        <span key={type} className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-medium ${badgeClass}`}>
+                          {type}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-[11px] text-gray-400">{none}</span>
+                  )}
+                </td>
+
+                {/* Join Date: when the record was created */}
+                <td className="px-2 py-3 text-[11px] text-gray-600">{customer.createdOn ?? none}</td>
 
                 {/* Status */}
                 <td className="px-2 py-3">
                   <button
                     type="button"
-                    onClick={(e) => { e.stopPropagation(); toggleActive(customer.id); }}
-                    className="flex items-center gap-1"
+                    role="switch"
+                    aria-checked={customer.active}
+                    disabled={savingStatus}
+                    onClick={(e) => { e.stopPropagation(); onSetActive(customer, !customer.active); }}
+                    onKeyDown={(e) => e.stopPropagation()}
+                    className="flex items-center gap-1 disabled:cursor-wait disabled:opacity-60"
                   >
                     <div className={`relative h-[14px] w-[26px] shrink-0 rounded-full transition-colors ${customer.active ? "bg-blue-500" : "bg-gray-200"}`}>
                       <div className={`absolute top-[2px] h-[10px] w-[10px] rounded-full bg-white shadow-sm transition-all ${customer.active ? "start-[14px]" : "start-[2px]"}`} />
@@ -153,10 +180,12 @@ export default function CustomersTable({ data }: CustomersTableProps) {
                 <td className="px-2 py-3">
                   <button
                     type="button"
-                    onClick={(e) => { e.stopPropagation(); setAttachmentsCustomer(customer); }}
+                    onClick={(e) => { e.stopPropagation(); onShowAttachments(customer); }}
+                    onKeyDown={(e) => e.stopPropagation()}
                     className="text-[10px] font-medium text-gray-900 hover:text-gray-700"
                   >
                     {t("show")}
+                    {customer.attachments.length > 0 && ` (${customer.attachments.length})`}
                   </button>
                 </td>
 
@@ -164,95 +193,21 @@ export default function CustomersTable({ data }: CustomersTableProps) {
                 <td className="px-2 py-3">
                   <button
                     type="button"
-                    onClick={(e) => { e.stopPropagation(); setEditingCustomer(customer); }}
+                    onClick={(e) => { e.stopPropagation(); onEdit(customer); }}
+                    onKeyDown={(e) => e.stopPropagation()}
                     className="rounded-md border border-gray-200 bg-white px-2.5 py-0.5 text-[10px] font-medium text-gray-600 shadow-[0_3px_6px_-2px_rgba(0,0,0,0.1)] hover:bg-gray-50 transition-colors"
                   >
                     {t("edit")}
                   </button>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            );
+          })}
+        </tbody>
+      </table>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between border-t border-gray-100 px-3 py-3">
-          <span className="text-[10px] text-gray-400">
-            {t("showing", { from: 1, to: customers.length, total: customers.length })}
-          </span>
-          <div className="flex items-center gap-1">
-            <button type="button" className="flex h-5 w-5 items-center justify-center rounded text-[10px] text-gray-400 hover:bg-gray-100">
-              <ChevronLeftIcon className="h-2.5 w-2.5" />
-            </button>
-            <button type="button" className="flex h-5 w-5 items-center justify-center rounded bg-blue-600 text-[10px] font-medium text-white">
-              1
-            </button>
-            <button type="button" className="flex h-5 w-5 items-center justify-center rounded text-[10px] text-gray-400 hover:bg-gray-100">
-              <ChevronRightIcon className="h-2.5 w-2.5" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Side panel */}
-      {selectedCustomer && !editingCustomer && (
-        <CustomerProfile
-          customer={selectedCustomer}
-          onClose={() => setSelectedCustomer(null)}
-          onEdit={() => {
-            setEditingCustomer(selectedCustomer);
-            setSelectedCustomer(null);
-          }}
-          onDelete={() => {
-            setDeletedIds((prev) => new Set(prev).add(selectedCustomer.id));
-            setSelectedCustomer(null);
-          }}
-          onShowAttachments={() => {
-            setAttachmentsCustomer(selectedCustomer);
-            setSelectedCustomer(null);
-          }}
-        />
-      )}
-
-      {/* Edit modal */}
-      {editingCustomer && (
-        <EditCustomerModal
-          customer={editingCustomer}
-          onClose={() => setEditingCustomer(null)}
-          onSave={(updated) => {
-            setUpdatedMap((prev) => new Map(prev).set(updated.id, updated));
-            setEditingCustomer(null);
-          }}
-          onDelete={() => {
-            setDeletedIds((prev) => new Set(prev).add(editingCustomer.id));
-            setEditingCustomer(null);
-          }}
-        />
-      )}
-
-      {/* Attachments modal */}
-      {attachmentsCustomer && (
-        <AttachmentsModal
-          customer={attachmentsCustomer}
-          onClose={() => setAttachmentsCustomer(null)}
-        />
-      )}
-    </>
-  );
-}
-
-function ChevronLeftIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
-      <path fillRule="evenodd" d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
-    </svg>
-  );
-}
-
-function ChevronRightIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
-      <path fillRule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
-    </svg>
+      {/* Footer */}
+      <div className="border-t border-gray-100 px-3">{footer}</div>
+    </div>
   );
 }

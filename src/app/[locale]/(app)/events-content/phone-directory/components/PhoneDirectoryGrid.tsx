@@ -1,20 +1,34 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import type { PhoneContact } from "@/src/services/phoneDirectory";
+import { useLocale, useTranslations } from "next-intl";
+import Pagination from "@/src/components/Pagination";
+import type { PhoneDirectoryPage } from "@/src/services/phoneDirectory";
 
 type Props = {
-  data: PhoneContact[];
+  /** Null until the first page has loaded. */
+  data: PhoneDirectoryPage | null;
+  loading: boolean;
+  page: number;
+  onPageChange: (page: number) => void;
+  /** Why Edit is disabled: the screen has no contact form yet. */
+  editTitle: string;
 };
 
-const BADGE_CLASS = "border-blue-200 bg-blue-50 text-blue-600";
-
-export default function PhoneDirectoryGrid({ data }: Props) {
+export default function PhoneDirectoryGrid({ data, loading, page, onPageChange, editTitle }: Props) {
   const t = useTranslations("EventsContent.phoneDir");
+  const tScreen = useTranslations("PhoneDirectoryScreen");
+  const locale = useLocale();
+  const contacts = data?.contacts ?? [];
 
   return (
-    <div className="grid grid-cols-1 gap-4 px-5 lg:grid-cols-2">
-      {data.map((contact) => (
+    <>
+    {contacts.length === 0 && (
+      <div className="px-5 py-10 text-center text-[12px] text-gray-400">
+        {loading ? tScreen("loading") : data ? tScreen("empty") : "—"}
+      </div>
+    )}
+    <div className={`grid grid-cols-1 gap-4 px-5 lg:grid-cols-2 ${loading && data ? "opacity-60" : ""}`} aria-busy={loading}>
+      {contacts.map((contact) => (
         <div
           key={contact.id}
           className="flex items-center gap-3 rounded-xl border border-gray-100 bg-white px-4 py-4 shadow-sm"
@@ -28,25 +42,37 @@ export default function PhoneDirectoryGrid({ data }: Props) {
 
           {/* Info */}
           <div className="flex-1 min-w-0">
-            <div className="text-[12px] font-bold text-gray-900">{contact.name}</div>
+            <div className="text-[12px] font-bold text-gray-900">{locale === "ar" ? contact.nameAr : contact.nameEn}</div>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-[11px] font-mono text-gray-500">{contact.phone}</span>
-              <span className={`inline-block rounded-full border px-2 py-0.5 text-[10px] font-semibold capitalize ${BADGE_CLASS}`}>
-                {t(`categories.${contact.category}` as Parameters<typeof t>[0])}
-              </span>
+              <span className="text-[11px] font-mono text-gray-500" dir="ltr">{contact.phone}</span>
+              {/* The API has no category for a contact. */}
+              <span className="text-[11px] text-gray-300">—</span>
             </div>
-            <div className="text-[10px] text-gray-400 mt-0.5">{contact.project}</div>
+            <div className="text-[10px] text-gray-400 mt-0.5">{contact.projectName ?? "—"}</div>
           </div>
 
           {/* Edit */}
           <button
             type="button"
-            className="shrink-0 text-[11px] font-medium text-gray-500 hover:text-gray-700 transition-colors"
+            disabled
+            title={editTitle}
+            className="shrink-0 text-[11px] font-medium text-gray-500 hover:text-gray-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:text-gray-500"
           >
             {t("edit")}
           </button>
         </div>
       ))}
     </div>
+    {data && data.totalPages > 1 && (
+      <div className="px-5">
+        <Pagination
+          page={page}
+          totalPages={data.totalPages}
+          onPageChange={onPageChange}
+          disabled={loading}
+        />
+      </div>
+    )}
+    </>
   );
 }

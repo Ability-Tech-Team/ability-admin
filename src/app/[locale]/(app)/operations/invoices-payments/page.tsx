@@ -1,15 +1,16 @@
-import { getTranslations } from "next-intl/server";
-import InvoiceSummaryCards from "./components/InvoiceSummaryCards";
 import InvoicesPageClient from "./components/InvoicesPageClient";
-import { fetchInvoiceStats, fetchInvoices, fetchMaintenanceDeposits } from "@/src/services/invoices";
-import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
+import { readBrowserApiConfig } from "@/src/lib/apiConfig";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
+/**
+ * Invoices & Payments. The browser loads the invoices from the API (`useInvoicesPage`),
+ * since only the browser holds the API's `access_token` cookie.
+ */
 export default async function InvoicesPaymentsPage({ params }: Props) {
   const { locale } = await params;
   const access = await requireProductAccess(locale);
@@ -18,29 +19,7 @@ export default async function InvoicesPaymentsPage({ params }: Props) {
     return <ProductAccessNotice access={access} locale={locale} />;
   }
 
-  const t = await getTranslations("Operations");
-  const [stats, invoices, depositData, projectOptions] = await Promise.all([
-    fetchInvoiceStats(),
-    fetchInvoices(),
-    fetchMaintenanceDeposits(),
-    fetchProjectFilterOptions(),
-  ]);
+  const { apiBaseUrl, portalBaseUrl } = await readBrowserApiConfig();
 
-  return (
-    <>
-      <InvoiceSummaryCards stats={stats} />
-      <InvoicesPageClient
-        data={invoices}
-        depositData={depositData}
-        projectOptions={projectOptions}
-        labels={{
-          searchPlaceholder: t("searchInvoices"),
-          exactSearch: t("exactSearch"),
-          status: t("status"),
-          export: t("export"),
-          addLabel: t("invoice.generateInvoice"),
-        }}
-      />
-    </>
-  );
+  return <InvoicesPageClient apiBaseUrl={apiBaseUrl} portalBaseUrl={portalBaseUrl} />;
 }

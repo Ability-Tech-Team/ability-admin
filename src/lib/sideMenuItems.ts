@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { SideMenuCountKey } from "./sideMenuCounts";
 import {
   type IconProps,
   DashboardIcon,
@@ -37,8 +38,8 @@ export type SubItem = {
   key: string;
   href: string;
   icon: (props: IconProps) => ReactNode;
-  /** A count from the API (none yet); never a made-up number. */
-  badge?: number;
+  /** Which API count the badge shows (`src/lib/sideMenuCounts.ts`); never a made-up number. */
+  badge?: SideMenuCountKey;
 };
 
 export type MenuItem = {
@@ -55,9 +56,9 @@ export const menuItems: MenuItem[] = [
     href: "#",
     icon: MasterDataIcon,
     children: [
-      { key: "projects", href: "/master-data/projects", icon: ProjectsSubIcon, badge: 5 },
-      { key: "units", href: "/master-data/units", icon: UnitsSubIcon, badge: 1710 },
-      { key: "customers", href: "/master-data/customers", icon: CustomersSubIcon, badge: 1470 },
+      { key: "projects", href: "/master-data/projects", icon: ProjectsSubIcon, badge: "projects" },
+      { key: "units", href: "/master-data/units", icon: UnitsSubIcon, badge: "units" },
+      { key: "customers", href: "/master-data/customers", icon: CustomersSubIcon, badge: "customers" },
       { key: "unitAssignment", href: "/master-data/unit-assignment", icon: UnitAssignmentSubIcon },
       { key: "familyMembers", href: "/master-data/family-members", icon: FamilyMembersSubIcon },
       { key: "rentalManagement", href: "/master-data/rental-management", icon: RentalSubIcon },
@@ -68,10 +69,11 @@ export const menuItems: MenuItem[] = [
     href: "#",
     icon: OperationsIcon,
     children: [
-      { key: "serviceRequests", href: "/operations/service-requests", icon: ServiceReqSubIcon, badge: 47 },
-      { key: "complaints", href: "/operations/complaints", icon: ComplaintsSubIcon, badge: 19 },
-      { key: "invoicesPayments", href: "/operations/invoices-payments", icon: InvoicesSubIcon, badge: 23 },
-      { key: "guestInvitations", href: "/operations/guest-invitations", icon: GuestInvSubIcon, badge: 4 },
+      { key: "serviceRequests", href: "/operations/service-requests", icon: ServiceReqSubIcon, badge: "serviceRequests" },
+      { key: "complaints", href: "/operations/complaints", icon: ComplaintsSubIcon, badge: "complaints" },
+      // No count for these in the API yet.
+      { key: "invoicesPayments", href: "/operations/invoices-payments", icon: InvoicesSubIcon },
+      { key: "guestInvitations", href: "/operations/guest-invitations", icon: GuestInvSubIcon },
     ],
   },
   { key: "notifications", href: "/notifications", icon: NotificationsIcon },

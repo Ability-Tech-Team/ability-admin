@@ -1,14 +1,17 @@
 import { getTranslations } from "next-intl/server";
 import CustomersPageClient from "./components/CustomersPageClient";
-import { fetchCustomers } from "@/src/services/customers";
-import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
+import { readBrowserApiConfig } from "@/src/lib/apiConfig";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
+/**
+ * Customers. The browser loads them from the API (`useCustomersPage`), since only the browser
+ * holds the API's `access_token` cookie.
+ */
 export default async function CustomersPage({ params }: Props) {
   const { locale } = await params;
   const access = await requireProductAccess(locale);
@@ -17,16 +20,15 @@ export default async function CustomersPage({ params }: Props) {
     return <ProductAccessNotice access={access} locale={locale} />;
   }
 
-  const t = await getTranslations("MasterData");
-  const [customers, projectOptions] = await Promise.all([
-    fetchCustomers(),
-    fetchProjectFilterOptions(),
+  const [t, { apiBaseUrl, portalBaseUrl }] = await Promise.all([
+    getTranslations("MasterData"),
+    readBrowserApiConfig(),
   ]);
 
   return (
     <CustomersPageClient
-      data={customers}
-      projectOptions={projectOptions}
+      apiBaseUrl={apiBaseUrl}
+      portalBaseUrl={portalBaseUrl}
       labels={{
         searchPlaceholder: t("searchCustomers"),
         exactSearch: t("exactSearch"),

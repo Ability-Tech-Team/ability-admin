@@ -1,35 +1,32 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
-import type { Guideline } from "@/src/services/guidelines";
-import EditGuidelineModal from "./EditGuidelineModal";
+import Pagination from "@/src/components/Pagination";
+import type { GuidelinesPage } from "@/src/services/guidelines";
 
 type Props = {
-  data: Guideline[];
-  projectOptions: { value: string; label: string }[];
+  /** Null until the first page has loaded. */
+  data: GuidelinesPage | null;
+  loading: boolean;
+  page: number;
+  onPageChange: (page: number) => void;
+  onEdit: (guidelineId: number) => void;
 };
 
-const categoryColors: Record<string, string> = {
-  "community-guide": "border-blue-200 bg-blue-50 text-blue-600",
-  "resident-guide": "border-green-200 bg-green-50 text-green-600",
-  "facility-rules": "border-emerald-200 bg-emerald-50 text-emerald-600",
-};
+// The API saves text only (no PDF), so every guideline is TEXT.
+const textFormatClass = "border-blue-200 bg-blue-50 text-blue-500";
 
-const formatColors: Record<string, string> = {
-  pdf: "border-red-200 bg-red-50 text-red-500",
-  text: "border-blue-200 bg-blue-50 text-blue-500",
-};
+/** What the API has no field for: a category, sections, an update time. */
+const noValue = <span className="text-[11px] text-gray-300">—</span>;
 
-export default function GuidelinesTable({ data, projectOptions }: Props) {
+export default function GuidelinesTable({ data, loading, page, onPageChange, onEdit }: Props) {
   const t = useTranslations("EventsContent.guidelines");
-  const [editing, setEditing] = useState<Guideline | null>(null);
+  const tScreen = useTranslations("GuidelinesScreen");
+  const guidelines = data?.guidelines ?? [];
 
   return (
-    <>
-    {editing && <EditGuidelineModal guideline={editing} projectOptions={projectOptions} onClose={() => setEditing(null)} />}
     <div className="mx-5 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
-      <table className="w-full text-start">
+      <table className="w-full text-start" aria-busy={loading}>
         <thead>
           <tr className="border-b border-gray-100 bg-gray-50/60">
             <th className="px-4 py-2.5 text-start text-[10px] font-semibold uppercase tracking-wider text-gray-400">
@@ -56,8 +53,15 @@ export default function GuidelinesTable({ data, projectOptions }: Props) {
             <th className="px-4 py-2.5 text-start text-[10px] font-semibold uppercase tracking-wider text-gray-400" />
           </tr>
         </thead>
-        <tbody>
-          {data.map((g) => (
+        <tbody className={loading && data ? "opacity-60" : undefined}>
+          {guidelines.length === 0 && (
+            <tr>
+              <td colSpan={8} className="px-4 py-10 text-center text-[12px] text-gray-400">
+                {loading ? tScreen("loading") : data ? tScreen("empty") : "—"}
+              </td>
+            </tr>
+          )}
+          {guidelines.map((g) => (
             <tr
               key={g.id}
               className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/40 transition-colors"
@@ -67,39 +71,37 @@ export default function GuidelinesTable({ data, projectOptions }: Props) {
                 <div className="text-[10px] text-gray-400">{g.titleAr}</div>
               </td>
               <td className="px-4 py-3">
-                <span className={`inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-medium ${categoryColors[g.category] ?? "border-gray-200 bg-gray-50 text-gray-500"}`}>
-                  {t(`categories.${g.category}` as Parameters<typeof t>[0])}
-                </span>
+                {noValue}
               </td>
               <td className="px-4 py-3 text-[11px] text-gray-600">
-                {g.project}
+                {g.projectName ?? "—"}
               </td>
               <td className="px-4 py-3">
-                <span className={`inline-block rounded-full border px-2 py-0.5 text-[10px] font-medium ${formatColors[g.format] ?? "border-gray-200 bg-gray-50 text-gray-500"}`}>
-                  {g.format.toUpperCase()}
+                <span className={`inline-block rounded-full border px-2 py-0.5 text-[10px] font-medium ${textFormatClass}`}>
+                  TEXT
                 </span>
               </td>
               <td className="px-4 py-3 text-[12px] font-semibold text-gray-700 text-center">
-                {g.sections}
+                {noValue}
               </td>
               <td className="px-4 py-3">
                 <span
                   className={`inline-block rounded-full border px-2 py-0.5 text-[10px] font-medium ${
-                    g.status === "published"
+                    g.published
                       ? "border-green-200 bg-green-50 text-green-600"
                       : "border-gray-200 bg-gray-50 text-gray-500"
                   }`}
                 >
-                  {t(`statuses.${g.status}` as Parameters<typeof t>[0])}
+                  {g.published ? t("statuses.published") : t("statuses.draft")}
                 </span>
               </td>
               <td className="px-4 py-3 text-[11px] text-gray-500">
-                {g.updated}
+                {noValue}
               </td>
               <td className="px-4 py-3">
                 <button
                   type="button"
-                  onClick={() => setEditing(g)}
+                  onClick={() => onEdit(g.id)}
                   className="rounded-md border border-gray-200 px-2.5 py-1 text-[10px] font-medium text-gray-600 hover:bg-gray-50 transition-colors"
                 >
                   {t("edit")}
@@ -109,7 +111,18 @@ export default function GuidelinesTable({ data, projectOptions }: Props) {
           ))}
         </tbody>
       </table>
+
+      {/* Footer: shown only when there is more than one page. */}
+      {data && data.totalPages > 1 && (
+        <div className="border-t border-gray-100 px-4">
+          <Pagination
+            page={page}
+            totalPages={data.totalPages}
+            onPageChange={onPageChange}
+            disabled={loading}
+          />
+        </div>
+      )}
     </div>
-    </>
   );
 }

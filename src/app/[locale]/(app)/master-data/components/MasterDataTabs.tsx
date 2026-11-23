@@ -2,32 +2,40 @@
 
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/src/i18n/navigation";
+import { useSideMenuCounts } from "@/src/hooks/useSideMenuCounts";
+import { formatBadge, type SideMenuCountKey } from "@/src/lib/sideMenuCounts";
 
 type Tab = {
   key: string;
   href: string;
-  /** Count from the API — undefined means no badge. */
-  count?: number;
+  /** Which API count the badge shows (`src/lib/sideMenuCounts.ts`); none means no badge. */
+  badge?: SideMenuCountKey;
 };
 
-// TODO: replace counts with real API data
 const tabs: Tab[] = [
-  { key: "projects", href: "/master-data/projects", count: 5 },
-  { key: "units", href: "/master-data/units", count: 1710 },
-  { key: "customers", href: "/master-data/customers", count: 1470 },
+  { key: "projects", href: "/master-data/projects", badge: "projects" },
+  { key: "units", href: "/master-data/units", badge: "units" },
+  { key: "customers", href: "/master-data/customers", badge: "customers" },
   { key: "unitAssignment", href: "/master-data/unit-assignment" },
   { key: "familyMembers", href: "/master-data/family-members" },
   { key: "rentalMgmt", href: "/master-data/rental-management" },
 ];
 
-export default function MasterDataTabs() {
+type Props = {
+  /** Where the browser calls the API, for the badges' counts; null shows none. */
+  apiBaseUrl: string | null;
+};
+
+export default function MasterDataTabs({ apiBaseUrl }: Props) {
   const t = useTranslations("MasterData");
   const pathname = usePathname();
+  const counts = useSideMenuCounts(apiBaseUrl);
 
   return (
     <div className="flex items-center gap-0.5 overflow-x-auto px-5">
       {tabs.map((tab) => {
         const isActive = pathname === tab.href || pathname.startsWith(tab.href + "/");
+        const badge = tab.badge ? formatBadge(counts[tab.badge]) : null;
         return (
           <Link
             key={tab.key}
@@ -39,7 +47,7 @@ export default function MasterDataTabs() {
             }`}
           >
             {t(`tabs.${tab.key}` as Parameters<typeof t>[0])}
-            {tab.count !== undefined && (
+            {badge && (
               <span
                 className={`rounded-full px-1.5 py-1 text-[10.5px] font-medium leading-none ${
                   isActive
@@ -47,7 +55,7 @@ export default function MasterDataTabs() {
                     : "bg-[#e2e8f0] text-gray-400"
                 }`}
               >
-                {tab.count.toLocaleString()}
+                {badge}
               </span>
             )}
           </Link>

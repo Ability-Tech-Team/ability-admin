@@ -1,21 +1,33 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import FilterDropdown from "@/src/components/FilterDropdown";
+import { filterSelectClass, optionalId } from "../utils";
+import type { ProjectOption } from "@/src/services/projects";
 
 type Props = {
-  projectOptions: { value: string; label: string }[];
-  onProjectChange?: (selected: Set<string>) => void;
+  options: ProjectOption[];
+  projectId: number | null;
+  onProjectChange: (projectId: number | null) => void;
 };
 
-export default function ServiceRequestFilters({ projectOptions, onProjectChange }: Props) {
+/** The project filter, from the API's projects (`project_id` takes one). */
+export default function ServiceRequestFilters({ options, projectId, onProjectChange }: Props) {
   const t = useTranslations("Operations");
+  const ts = useTranslations("ServiceRequestsScreen");
 
   return (
-    <FilterDropdown
-      label={t("filters.projects")}
-      options={projectOptions}
-      onChange={onProjectChange}
-    />
+    <select
+      value={projectId ?? ""}
+      onChange={(e) => onProjectChange(optionalId(e.target.value))}
+      aria-label={t("filters.projects")}
+      className={filterSelectClass}
+    >
+      <option value="">{ts("allProjects")}</option>
+      {options.map((option) => (
+        <option key={option.id} value={option.id}>
+          {option.name ?? `#${option.id}`}
+        </option>
+      ))}
+    </select>
   );
 }

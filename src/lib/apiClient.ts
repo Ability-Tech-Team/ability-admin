@@ -69,25 +69,152 @@ export type ApiCallOptions = {
   fetchImpl?: typeof fetch;
 };
 
-/** POSTs JSON and resolves with the envelope's `result`; anything else throws an `ApiError`. */
+/**
+ * Query parameters. `undefined`, `null`, and empty values are left out; an array repeats the
+ * key (`status=1&status=2`). The API rejects parameters its DTO doesn't declare (400).
+ */
+export type ApiQueryValue = string | number | boolean | null | undefined;
+export type ApiQuery = Record<string, ApiQueryValue | readonly ApiQueryValue[]>;
+
+/** A JSON body, or `FormData` for routes that take files (the browser sets the boundary). */
+export type ApiBody = unknown;
+
+export function buildQueryString(query: ApiQuery): string {
+  const search = new URLSearchParams();
+  for (const [key, raw] of Object.entries(query)) {
+    const values = Array.isArray(raw) ? raw : [raw];
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") {
+        search.append(key, String(value));
+      }
+    }
+  }
+  const queryString = search.toString();
+  return queryString ? `?${queryString}` : "";
+}
+
+/** GETs `path` with `query` and resolves with the envelope's `result`; anything else throws an `ApiError`. */
+export async function apiGet<T = unknown>(
+  baseUrl: string,
+  path: string,
+  query: ApiQuery,
+  options: ApiCallOptions,
+): Promise<T> {
+  return send<T>(`${baseUrl}${path}${buildQueryString(query)}`, "GET", undefined, options);
+}
+
+/** POSTs JSON (or `FormData`) and resolves with the envelope's `result`; anything else throws an `ApiError`. */
 export async function apiPost<T = unknown>(
   baseUrl: string,
   path: string,
-  body: unknown,
-  { locale, fetchImpl = fetch }: ApiCallOptions,
+  body: ApiBody,
+  options: ApiCallOptions,
 ): Promise<T> {
+  return send<T>(`${baseUrl}${path}`, "POST", body, options);
+}
+
+/** PUTs JSON (or `FormData`) and resolves with the envelope's `result`. */
+export async function apiPut<T = unknown>(
+  baseUrl: string,
+  path: string,
+  body: ApiBody,
+  options: ApiCallOptions,
+): Promise<T> {
+  return send<T>(`${baseUrl}${path}`, "PUT", body, options);
+}
+
+/** DELETEs `path`; some routes take a JSON body (e.g. a reason), others none. */
+export async function apiDelete<T = unknown>(
+  baseUrl: string,
+  path: string,
+  body: ApiBody | undefined,
+  options: ApiCallOptions,
+): Promise<T> {
+  return send<T>(`${baseUrl}${path}`, "DELETE", body, options);
+}
+
+/** A file route (`is_excel=1` exports, import error reports): what to ask for, and a name to fall back on. */
+export type DownloadRequest = { path: string; query: ApiQuery; fallbackName: string };
+
+export type DownloadedFile = { blob: Blob; fileName: string };
+
+/** The file name from `Content-Disposition` (the API exposes that header), else `fallback`. */
+export function downloadFileName(contentDisposition: string | null, fallback: string): string {
+  const match = contentDisposition?.match(/filename\*?=(?:UTF-8'')?"?([^";]+)"?/i);
+  const name = match?.[1]?.trim();
+  if (!name) return fallback;
+  try {
+    return decodeURIComponent(name);
+  } catch {
+    return name;
+  }
+}
+
+/**
+ * GETs a file. These routes stream the file instead of the JSON envelope, so a plain link would
+ * do, but it couldn't send the page's language (the API rejects an undeclared `lang` query
+ * parameter) or show a refusal, which still comes back as the envelope and throws an `ApiError`.
+ */
+export async function apiDownload(
+  baseUrl: string,
+  { path, query, fallbackName }: DownloadRequest,
+  { locale, fetchImpl = fetch }: ApiCallOptions,
+): Promise<DownloadedFile> {
   let response: Response;
   try {
-    response = await fetchImpl(`${baseUrl}${path}`, {
-      method: "POST",
+    response = await fetchImpl(`${baseUrl}${path}${buildQueryString(query)}`, {
+      method: "GET",
+      credentials: "include",
+      headers: { "Accept-Language": locale, lang: locale },
+    });
+  } catch {
+    throw new ApiError(0, null, null);
+  }
+
+  const contentType = response.headers.get("Content-Type") ?? "";
+  if (!response.ok || contentType.includes("json")) {
+    let status = response.ok ? 502 : response.status;
+    let code: string | null = null;
+    let message: string | null = null;
+    try {
+      const data: unknown = await response.json();
+      if (isEnvelope(data)) {
+        if (typeof data.statusCode === "number" && data.statusCode >= 400) status = data.statusCode;
+        code = readString(data.result, "message_code");
+        message = readString(data.result, "message");
+      }
+    } catch {
+      // Not JSON: keep the HTTP status.
+    }
+    throw new ApiError(status, code, message);
+  }
+
+  return {
+    blob: await response.blob(),
+    fileName: downloadFileName(response.headers.get("Content-Disposition"), fallbackName),
+  };
+}
+
+async function send<T>(
+  url: string,
+  method: "GET" | "POST" | "PUT" | "DELETE",
+  body: ApiBody | undefined,
+  { locale, fetchImpl = fetch }: ApiCallOptions,
+): Promise<T> {
+  const isForm = typeof FormData !== "undefined" && body instanceof FormData;
+  const hasBody = method !== "GET" && body !== undefined;
+  let response: Response;
+  try {
+    response = await fetchImpl(url, {
+      method,
       credentials: "include",
       headers: {
-        "Content-Type": "application/json",
+        ...(hasBody && !isForm && { "Content-Type": "application/json" }),
         Accept: "application/json",
         "Accept-Language": locale,
         lang: locale,
       },
-      body: JSON.stringify(body),
+      ...(hasBody && { body: isForm ? (body as FormData) : JSON.stringify(body) }),
     });
   } catch {
     throw new ApiError(0, null, null);

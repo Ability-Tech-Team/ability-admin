@@ -1,17 +1,24 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import type { Guideline, GuidelineStats } from "@/src/services/guidelines";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import type { ToolbarLabels } from "@/src/components/Toolbar";
 import Toolbar from "@/src/components/Toolbar";
 import FilterDropdown from "@/src/components/FilterDropdown";
+import ApiFailureNotice from "@/src/components/ApiFailureNotice";
+import { ALL_PROJECTS_ID } from "@/src/services/guidelines";
+import { useGuidelinesPage } from "../hooks/useGuidelinesPage";
+import type { ProjectChoice } from "../types";
 import GuidelineStatsCards from "./GuidelineStatsCards";
 import GuidelinesTable from "./GuidelinesTable";
 import NewGuidelineModal from "./NewGuidelineModal";
+import EditGuidelineModal from "./EditGuidelineModal";
 
 type Props = {
-  data: Guideline[];
-  stats: GuidelineStats;
+  /** Where the browser calls the API, or null when the sign-in names none this app trusts. */
+  apiBaseUrl: string | null;
+  /** Ability Portal, for signing in again when the session has ended. */
+  portalBaseUrl: string | null;
   labels: ToolbarLabels;
   statsLabels: {
     published: string;
@@ -22,49 +29,75 @@ type Props = {
     sectionsSub: string;
   };
   projectsLabel: string;
-  projectOptions: { value: string; label: string }[];
 };
 
-export default function GuidelinesPageClient({ data, stats, labels, statsLabels, projectsLabel, projectOptions }: Props) {
-  const [search, setSearch] = useState("");
-  const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
-  const [showNew, setShowNew] = useState(false);
+export default function GuidelinesPageClient({ apiBaseUrl, portalBaseUrl, labels, statsLabels, projectsLabel }: Props) {
+  const t = useTranslations("EventsContent.guidelines");
+  const page = useGuidelinesPage({ apiBaseUrl, portalBaseUrl });
+  const { list, stats } = page;
 
-  const filtered = useMemo(() => {
-    let result = data;
-    if (projectFilter.size > 0) {
-      result = result.filter((g) => projectFilter.has(g.project.toLowerCase().replace(/\s+/g, "-")));
-    }
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (g) =>
-          g.titleEn.toLowerCase().includes(q) ||
-          g.titleAr.includes(q) ||
-          g.project.toLowerCase().includes(q),
-      );
-    }
-    return result;
-  }, [data, projectFilter, search]);
+  // The active projects (none for a role that can't list them); the form adds "All Projects".
+  const projectOptions: ProjectChoice[] = useMemo(
+    () => (page.projects.data ?? []).map((project) => ({ value: String(project.id), label: project.name })),
+    [page.projects.data],
+  );
+  const filterOptions: ProjectChoice[] = useMemo(
+    () => [{ value: String(ALL_PROJECTS_ID), label: t("newModal.allProjects") }, ...projectOptions],
+    [projectOptions, t],
+  );
 
   return (
     <div className="flex flex-col gap-4">
-      {showNew && <NewGuidelineModal projectOptions={projectOptions} onClose={() => setShowNew(false)} />}
-      <GuidelineStatsCards stats={stats} labels={statsLabels} />
+      {page.modal?.mode === "create" && (
+        <NewGuidelineModal
+          projectOptions={projectOptions}
+          pending={page.savePending}
+          failure={page.saveFailure}
+          onClose={page.closeModal}
+          onSubmit={page.submitCreate}
+        />
+      )}
+      {page.modal?.mode === "edit" && page.editing && (
+        <EditGuidelineModal
+          key={page.editing.id}
+          guideline={page.editing}
+          projectOptions={projectOptions}
+          pending={page.savePending}
+          failure={page.saveFailure}
+          onClose={page.closeModal}
+          onSubmit={(input) => (page.editing ? page.submitEdit(page.editing.id, input) : Promise.resolve(false))}
+        />
+      )}
+      <GuidelineStatsCards
+        stats={{ published: stats.data?.published ?? null, draft: stats.data?.draft ?? null, contentSections: null }}
+        labels={statsLabels}
+      />
       <Toolbar
         labels={labels}
         hideStatus
-        onSearch={setSearch}
-        onAdd={() => setShowNew(true)}
+        onSearch={page.setSearch}
+        onAdd={page.openCreate}
         extraFilters={
           <FilterDropdown
             label={projectsLabel}
-            options={projectOptions}
-            onChange={setProjectFilter}
+            options={filterOptions}
+            onChange={page.setProjectFilter}
           />
         }
       />
-      <GuidelinesTable data={filtered} projectOptions={projectOptions} />
+      {(list.failure || stats.failure) && (
+        <div className="flex flex-col gap-3 px-5">
+          {list.failure && <ApiFailureNotice failure={list.failure} onRetry={list.reload} />}
+          {!list.failure && stats.failure && <ApiFailureNotice failure={stats.failure} onRetry={stats.reload} />}
+        </div>
+      )}
+      <GuidelinesTable
+        data={list.data}
+        loading={list.loading}
+        page={page.page}
+        onPageChange={page.setPage}
+        onEdit={page.openEdit}
+      />
     </div>
   );
 }

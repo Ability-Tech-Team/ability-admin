@@ -1,13 +1,17 @@
 import { getTranslations } from "next-intl/server";
 import ProjectsPageClient from "./components/ProjectsPageClient";
-import { fetchProjects } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
+import { readBrowserApiConfig } from "@/src/lib/apiConfig";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
+/**
+ * Projects. The browser loads and saves them through the API (`useProjectsPage`), since only
+ * the browser holds the API's `access_token` cookie.
+ */
 export default async function ProjectsPage({ params }: Props) {
   const { locale } = await params;
   const access = await requireProductAccess(locale);
@@ -16,20 +20,21 @@ export default async function ProjectsPage({ params }: Props) {
     return <ProductAccessNotice access={access} locale={locale} />;
   }
 
+  const { apiBaseUrl, portalBaseUrl } = await readBrowserApiConfig();
   const t = await getTranslations("MasterData");
-  const projects = await fetchProjects();
 
   return (
     <ProjectsPageClient
-      data={projects}
+      apiBaseUrl={apiBaseUrl}
+      portalBaseUrl={portalBaseUrl}
       labels={{
         searchPlaceholder: t("searchProjects"),
         exactSearch: t("exactSearch"),
         status: t("status"),
-        export: t("export"),
-        import: t("import"),
         addLabel: t("addProject"),
       }}
+      exportLabel={t("export")}
+      importLabel={t("import")}
     />
   );
 }

@@ -1,13 +1,16 @@
 import { getTranslations } from "next-intl/server";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
-import { fetchDeliveryLogs } from "@/src/services/deliveryLogs";
-import DeliveryLogsTable from "./components/DeliveryLogsTable";
+import DeliveryLogsPageClient from "./components/DeliveryLogsPageClient";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
+/**
+ * Delivery logs: each sent announcement with its recipients, push results and read rate. No
+ * admin route lists them, so the page shows the table empty, with "not available yet".
+ */
 export default async function DeliveryLogsPage({ params }: Props) {
   const { locale } = await params;
   const access = await requireProductAccess(locale);
@@ -18,11 +21,8 @@ export default async function DeliveryLogsPage({ params }: Props) {
 
   const t = await getTranslations("Notifications");
 
-  const logs = await fetchDeliveryLogs();
-
   return (
-    <DeliveryLogsTable
-      data={logs}
+    <DeliveryLogsPageClient
       labels={{
         notification: t("deliveryLogs.notification"),
         sentAt: t("deliveryLogs.sentAt"),

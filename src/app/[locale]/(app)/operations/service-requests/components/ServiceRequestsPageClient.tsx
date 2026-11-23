@@ -1,65 +1,65 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import type { ToolbarLabels } from "@/src/components/Toolbar";
-import type { ServiceRequest } from "@/src/services/serviceRequests";
-import ServiceRequestToolbarWithModal from "./ServiceRequestToolbarWithModal";
+import ApiFailureNotice from "@/src/components/ApiFailureNotice";
+import StatusCards from "../../components/StatusCards";
+import { useServiceRequestsPage } from "../hooks/useServiceRequestsPage";
+import ServiceRequestDetail from "./ServiceRequestDetail";
 import ServiceRequestFilters from "./ServiceRequestFilters";
 import ServiceRequestsTable from "./ServiceRequestsTable";
+import ServiceRequestsToolbar from "./ServiceRequestsToolbar";
 
 type Props = {
-  data: ServiceRequest[];
-  projectOptions: { value: string; label: string }[];
-  labels: ToolbarLabels;
+  apiBaseUrl: string | null;
+  portalBaseUrl: string | null;
 };
 
-function slugify(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, "-");
-}
-
-export default function ServiceRequestsPageClient({ data, projectOptions, labels }: Props) {
-  const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
-  const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
-  const [search, setSearch] = useState("");
-
-  const filtered = useMemo(() => {
-    let result = data;
-
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (r) =>
-          r.requestId.toLowerCase().includes(q) ||
-          r.title.toLowerCase().includes(q) ||
-          r.category.toLowerCase().includes(q) ||
-          r.project.toLowerCase().includes(q) ||
-          r.customer.toLowerCase().includes(q) ||
-          r.assignedTo.toLowerCase().includes(q),
-      );
-    }
-
-    if (statusFilter.size > 0) {
-      result = result.filter((r) => statusFilter.has(r.status));
-    }
-
-    if (projectFilter.size > 0) {
-      result = result.filter((r) => projectFilter.has(slugify(r.project)));
-    }
-
-    return result;
-  }, [data, search, statusFilter, projectFilter]);
+export default function ServiceRequestsPageClient({ apiBaseUrl, portalBaseUrl }: Props) {
+  const page = useServiceRequestsPage({ apiBaseUrl, portalBaseUrl });
+  const { list, stats } = page;
 
   return (
     <>
-      <ServiceRequestToolbarWithModal
-        labels={labels}
-        onStatusChange={setStatusFilter}
-        onSearch={setSearch}
+      <StatusCards stats={stats.data} loading={stats.loading} />
+      <ServiceRequestsToolbar
+        search={page.search}
+        onSearchChange={page.setSearch}
+        exact={page.exact}
+        onExactChange={page.setExact}
+        statusId={page.statusId}
+        onStatusChange={page.setStatusId}
+        onExport={page.exportSheet}
+        exporting={page.exporting}
         extraFilters={
-          <ServiceRequestFilters projectOptions={projectOptions} onProjectChange={setProjectFilter} />
+          page.projectOptions.length > 0 && (
+            <ServiceRequestFilters
+              options={page.projectOptions}
+              projectId={page.projectId}
+              onProjectChange={page.setProjectId}
+            />
+          )
         }
       />
-      <ServiceRequestsTable data={filtered} />
+      {list.failure && (
+        <ApiFailureNotice failure={list.failure} onRetry={list.reload} className="mx-5" />
+      )}
+      {page.exportFailure && <ApiFailureNotice failure={page.exportFailure} className="mx-5" />}
+      <ServiceRequestsTable
+        data={list.data}
+        loading={list.loading}
+        page={page.page}
+        onPageChange={page.setPage}
+        onSelect={page.select}
+      />
+      {page.selectedId !== null && (
+        <ServiceRequestDetail
+          key={page.selectedId}
+          apiBaseUrl={apiBaseUrl}
+          portalBaseUrl={portalBaseUrl}
+          id={page.selectedId}
+          onChanged={page.reloadAll}
+          onClose={() => page.select(null)}
+        />
+      )}
     </>
   );
 }

@@ -31,6 +31,9 @@ type ToolbarProps = {
   /** Hide the Status filter button entirely. */
   hideStatus?: boolean;
   onSearch?: (query: string) => void;
+  /** Shows the "Exact search" checkbox; leave it out where the API can't search exactly. */
+  onExactSearchChange?: (exact: boolean) => void;
+  /** Called with the ticked values. Without `statusOptions` the Status filter isn't shown. */
   onStatusChange?: (selected: Set<string>) => void;
   onAdd?: () => void;
   onExport?: () => void;
@@ -45,6 +48,7 @@ export default function Toolbar({
   trailingContent,
   hideStatus,
   onSearch,
+  onExactSearchChange,
   onStatusChange,
   onAdd,
   onExport,
@@ -72,17 +76,25 @@ export default function Toolbar({
           />
         </div>
 
-        <label className="flex items-center gap-1 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={exactSearch}
-            onChange={(e) => setExactSearch(e.target.checked)}
-            className="h-3 w-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
-          <span className="text-[12px] text-gray-500">{labels.exactSearch}</span>
-        </label>
+        {/* Only where the screen's API route can search exactly; elsewhere it would do nothing. */}
+        {onExactSearchChange && (
+          <label className="flex items-center gap-1 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={exactSearch}
+              onChange={(e) => {
+                setExactSearch(e.target.checked);
+                onExactSearchChange(e.target.checked);
+              }}
+              className="h-3 w-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="text-[12px] text-gray-500">{labels.exactSearch}</span>
+          </label>
+        )}
 
-        {!hideStatus && <FilterDropdown label={labels.status} options={statusOptions} onChange={onStatusChange} />}
+        {!hideStatus && statusOptions.length > 0 && (
+          <FilterDropdown label={labels.status} options={statusOptions} onChange={onStatusChange} />
+        )}
 
         {extraFilters}
       </div>

@@ -1,15 +1,16 @@
-import { getTranslations } from "next-intl/server";
-import StatusCards from "../components/StatusCards";
 import ServiceRequestsPageClient from "./components/ServiceRequestsPageClient";
-import { fetchServiceRequestStats, fetchServiceRequests } from "@/src/services/serviceRequests";
-import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
+import { readBrowserApiConfig } from "@/src/lib/apiConfig";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
+/**
+ * Service requests (the backend's tickets). The browser loads them from the API
+ * (`useServiceRequestsPage`), since only the browser holds the API's `access_token` cookie.
+ */
 export default async function ServiceRequestsPage({ params }: Props) {
   const { locale } = await params;
   const access = await requireProductAccess(locale);
@@ -18,27 +19,7 @@ export default async function ServiceRequestsPage({ params }: Props) {
     return <ProductAccessNotice access={access} locale={locale} />;
   }
 
-  const t = await getTranslations("Operations");
-  const [stats, requests, projectOptions] = await Promise.all([
-    fetchServiceRequestStats(),
-    fetchServiceRequests(),
-    fetchProjectFilterOptions(),
-  ]);
+  const { apiBaseUrl, portalBaseUrl } = await readBrowserApiConfig();
 
-  return (
-    <>
-      <StatusCards stats={stats} />
-      <ServiceRequestsPageClient
-        data={requests}
-        projectOptions={projectOptions}
-        labels={{
-          searchPlaceholder: t("searchRequests"),
-          exactSearch: t("exactSearch"),
-          status: t("status"),
-          export: t("export"),
-          addLabel: t("newRequest"),
-        }}
-      />
-    </>
-  );
+  return <ServiceRequestsPageClient apiBaseUrl={apiBaseUrl} portalBaseUrl={portalBaseUrl} />;
 }

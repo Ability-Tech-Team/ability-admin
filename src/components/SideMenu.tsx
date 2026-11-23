@@ -12,10 +12,14 @@ import {
   writeExpandedKeys,
 } from "@/src/lib/sideMenuExpanded";
 import { menuItems } from "@/src/lib/sideMenuItems";
+import { formatBadge } from "@/src/lib/sideMenuCounts";
+import { useSideMenuCounts } from "@/src/hooks/useSideMenuCounts";
 import { ChevronIcon, CollapseIcon } from "./icons/SideMenuIcons";
 
 type SideMenuProps = {
   notificationCount?: number;
+  /** Where the browser calls the API (`browserApiBaseUrl`), for the badges' counts; null shows none. */
+  apiBaseUrl?: string | null;
 };
 
 /** Narrow screens start with the menu collapsed to its icons. */
@@ -27,8 +31,9 @@ function subscribeToNarrowScreen(onChange: () => void) {
   return () => query.removeEventListener("change", onChange);
 }
 
-export default function SideMenu({ notificationCount = 0 }: SideMenuProps) {
+export default function SideMenu({ notificationCount = 0, apiBaseUrl = null }: SideMenuProps) {
   const t = useTranslations("SideMenu");
+  const counts = useSideMenuCounts(apiBaseUrl);
   const pathname = usePathname();
   // The server renders the menu open; the browser then follows the screen
   // width until the user collapses or opens it.
@@ -147,15 +152,16 @@ export default function SideMenu({ notificationCount = 0 }: SideMenuProps) {
                     <div className="flex flex-col gap-0.5 mt-0.5">
                       {item.children!.map((child) => {
                         const childActive = isActive(child.href);
+                        const badge = child.badge ? formatBadge(counts[child.badge]) : null;
                         const childContent = (
                           <>
                             <child.icon className="h-3 w-3 shrink-0" />
                             <span className={`flex-1 whitespace-nowrap overflow-hidden text-ellipsis transition-colors ${childActive ? "text-white" : "text-white/60 group-hover:text-white"}`}>
                               {t(child.key)}
                             </span>
-                            {child.badge != null && child.badge > 0 && (
+                            {badge && (
                               <span className="ms-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-500 px-1.5 text-[10px] font-bold leading-none text-white">
-                                {child.badge}
+                                {badge}
                               </span>
                             )}
                           </>

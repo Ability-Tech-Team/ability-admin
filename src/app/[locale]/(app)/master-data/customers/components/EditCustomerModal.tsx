@@ -2,198 +2,104 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import type { Customer } from "@/src/services/customers";
-import SelectWrapper from "@/src/components/SelectWrapper";
 import ModalWrapper from "@/src/components/ModalWrapper";
 import CloseButton from "@/src/components/CloseButton";
+import ApiFailureNotice from "@/src/components/ApiFailureNotice";
+import type { ApiFailure } from "@/src/lib/apiFailure";
+import type { Customer, CustomerFormField, CustomerFormValues } from "../types";
+import { customerFormFrom, EDIT_REQUIRED, missingFields } from "../utils";
+import CustomerFormFields from "./CustomerFormFields";
 
 type EditCustomerModalProps = {
   customer: Customer;
+  /** Resolves true once saved (or when nothing changed). */
+  onSave: (values: CustomerFormValues) => Promise<boolean>;
+  saving: boolean;
+  failure: ApiFailure | null;
   onClose: () => void;
-  onSave: (updated: Customer) => void;
+  /** Opens the delete confirmation. */
   onDelete: () => void;
 };
 
-export default function EditCustomerModal({ customer, onClose, onSave, onDelete }: EditCustomerModalProps) {
+export default function EditCustomerModal({ customer, onSave, saving, failure, onClose, onDelete }: EditCustomerModalProps) {
   const t = useTranslations("MasterData");
+  const tc = useTranslations("CustomersScreen");
+  const [values, setValues] = useState<CustomerFormValues>(() => customerFormFrom(customer));
+  const [missing, setMissing] = useState<CustomerFormField[]>([]);
 
-  const [name, setName] = useState(customer.name);
-  const [phone, setPhone] = useState(customer.phone);
-  const [email, setEmail] = useState(customer.email);
-  const [idType, setIdType] = useState<"id" | "passport">(customer.idType);
-  const [idNumber, setIdNumber] = useState(customer.idNumber);
-  const [nationality, setNationality] = useState(customer.nationality);
-  const [project, setProject] = useState(customer.project);
-  const [unit, setUnit] = useState(customer.unit);
-  const [joinDate, setJoinDate] = useState(customer.joinDate);
+  function change(field: CustomerFormField, value: string) {
+    setValues((previous) => ({ ...previous, [field]: value }));
+    setMissing((previous) => previous.filter((name) => name !== field));
+  }
 
-  function handleSave() {
-    onSave({
-      ...customer,
-      name,
-      phone,
-      email,
-      idType,
-      idNumber,
-      nationality,
-      project,
-      unit,
-      joinDate,
-    });
+  async function handleSave() {
+    const empty = missingFields(values, EDIT_REQUIRED);
+    setMissing(empty);
+    if (empty.length > 0) return;
+    if (await onSave(values)) onClose();
   }
 
   return (
-    <ModalWrapper onClose={onClose} width="max-w-[580px]">
+    <ModalWrapper onClose={onClose} width="max-w-[580px]" labelledBy="edit-customer-title">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3">
-            <h2 className="text-[13px] font-semibold text-gray-900">{t("editCustomer")}</h2>
-            <CloseButton onClick={onClose} />
+            <h2 id="edit-customer-title" className="text-[13px] font-semibold text-gray-900">{t("editCustomer")}</h2>
+            <CloseButton onClick={onClose} label={t("cancel")} />
           </div>
 
-          {/* Form */}
-          <div className="px-5 pb-4">
-            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
-              {/* Customer Name */}
-              <Field label={t("formFields.customerName")} required>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[11px] text-gray-900 outline-none focus:border-blue-400 transition-colors"
-                />
-              </Field>
-
-              {/* Mobile Number */}
-              <Field label={t("formFields.mobileNumber")} required>
-                <input
-                  type="text"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[11px] text-gray-900 outline-none focus:border-blue-400 transition-colors"
-                />
-              </Field>
-
-              {/* Email */}
-              <Field label={t("formFields.email")}>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[11px] text-gray-900 outline-none focus:border-blue-400 transition-colors"
-                />
-              </Field>
-
-              {/* ID / Passport Type */}
-              <Field label={t("formFields.idPassportType")}>
-                <SelectWrapper>
-                  <select
-                    value={idType}
-                    onChange={(e) => setIdType(e.target.value as "id" | "passport")}
-                    className="w-full appearance-none rounded-lg border border-gray-200 ps-3 pe-10 py-1.5 text-[11px] text-gray-900 outline-none focus:border-blue-400 transition-colors bg-white"
-                  >
-                    <option value="id">{t("idTypes.id")}</option>
-                    <option value="passport">{t("idTypes.passport")}</option>
-                  </select>
-                </SelectWrapper>
-              </Field>
-
-              {/* ID / Passport Number */}
-              <Field label={t("formFields.idPassportNumber")} required>
-                <input
-                  type="text"
-                  value={idNumber}
-                  onChange={(e) => setIdNumber(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[11px] text-gray-900 outline-none focus:border-blue-400 transition-colors"
-                />
-              </Field>
-
-              {/* Nationality */}
-              <Field label={t("formFields.nationality")}>
-                <input
-                  type="text"
-                  value={nationality}
-                  onChange={(e) => setNationality(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[11px] text-gray-900 outline-none focus:border-blue-400 transition-colors"
-                />
-              </Field>
-
-              {/* Project */}
-              <Field label={t("formFields.project")} required>
-                <input
-                  type="text"
-                  value={project}
-                  onChange={(e) => setProject(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[11px] text-gray-900 outline-none focus:border-blue-400 transition-colors"
-                />
-              </Field>
-
-              {/* Assigned Unit */}
-              <Field label={t("formFields.assignedUnit")}>
-                <input
-                  type="text"
-                  value={unit}
-                  onChange={(e) => setUnit(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[11px] text-gray-900 outline-none focus:border-blue-400 transition-colors"
-                />
-              </Field>
-
-              {/* Join Date */}
-              <Field label={t("formFields.joinDate")} required>
-                <input
-                  type="date"
-                  value={joinDate}
-                  onChange={(e) => setJoinDate(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[11px] text-gray-900 outline-none focus:border-blue-400 transition-colors"
-                />
-              </Field>
-
-              {/* Identity Attachment */}
-              <Field label={t("formFields.identityAttachment")}>
-                <input
-                  type="file"
-                  className="w-full text-[12px] text-gray-500 file:mr-3 file:rounded-lg file:border file:border-blue-200 file:bg-blue-50 file:px-3 file:py-1.5 file:text-[11px] file:font-medium file:text-blue-600 file:cursor-pointer hover:file:bg-blue-100 file:transition-colors"
-                />
-              </Field>
+          <form
+            className="flex min-h-0 flex-1 flex-col"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void handleSave();
+            }}
+          >
+            {/* Form */}
+            <div className="px-5 pb-4 overflow-y-auto flex-1">
+              <CustomerFormFields
+                variant="edit"
+                values={values}
+                onChange={change}
+                required={EDIT_REQUIRED}
+                missing={missing}
+                disabled={saving}
+                savedNames={{
+                  idTypeId: customer.idTypeName,
+                  countryId: customer.countryName,
+                  customerTypeId: customer.customerTypeName,
+                  maritalStatusId: customer.maritalStatusName,
+                  religionId: customer.religionName,
+                }}
+              />
+              {failure && <ApiFailureNotice failure={failure} className="mt-3" />}
             </div>
-          </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-center gap-3 border-t border-gray-100 px-5 py-3">
-            <button
-              type="button"
-              onClick={onDelete}
-              className="rounded-full bg-red-600 px-5 py-2 text-[11px] font-medium text-white hover:bg-red-700 transition-colors"
-            >
-              {t("removeCustomer")}
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-full border border-gray-200 bg-white px-5 py-2 text-[11px] font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-            >
-              {t("cancel")}
-            </button>
-            <button
-              type="button"
-              onClick={handleSave}
-              className="rounded-full bg-blue-600 px-5 py-2 text-[11px] font-medium text-white hover:bg-blue-700 transition-colors"
-            >
-              {t("saveChanges")}
-            </button>
-          </div>
+            {/* Footer */}
+            <div className="flex flex-wrap items-center justify-center gap-3 border-t border-gray-100 px-5 py-3">
+              <button
+                type="button"
+                onClick={onDelete}
+                disabled={saving}
+                className="rounded-full bg-red-600 px-5 py-2 text-[11px] font-medium text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
+              >
+                {t("removeCustomer")}
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-full border border-gray-200 bg-white px-5 py-2 text-[11px] font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+              >
+                {t("cancel")}
+              </button>
+              <button
+                type="submit"
+                disabled={saving}
+                className="rounded-full bg-blue-600 px-5 py-2 text-[11px] font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              >
+                {saving ? tc("saving") : t("saveChanges")}
+              </button>
+            </div>
+          </form>
     </ModalWrapper>
   );
 }
-
-function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <label className="text-[10px] font-medium text-gray-500">
-        {label}
-        {required && <span className="text-red-500 ms-0.5">*</span>}
-      </label>
-      {children}
-    </div>
-  );
-}
-

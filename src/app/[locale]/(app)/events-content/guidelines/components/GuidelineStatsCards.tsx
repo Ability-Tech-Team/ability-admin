@@ -1,9 +1,12 @@
 "use client";
 
-import type { GuidelineStats } from "@/src/services/guidelines";
-
 type Props = {
-  stats: GuidelineStats;
+  /** Null while loading, or when the API has no such count (content sections). */
+  stats: {
+    published: number | null;
+    draft: number | null;
+    contentSections: number | null;
+  };
   labels: {
     published: string;
     publishedSub: string;
@@ -29,7 +32,7 @@ export default function GuidelineStatsCards({ stats, labels }: Props) {
           className="rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm"
         >
           <p className="text-[11px] text-gray-500">{card.label}</p>
-          <p className="text-[28px] font-bold text-gray-900 leading-tight">{card.value}</p>
+          <p className="text-[28px] font-bold text-gray-900 leading-tight">{card.value ?? "—"}</p>
           <p className="text-[10px] text-gray-400">{card.sub}</p>
         </div>
       ))}

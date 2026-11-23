@@ -2,33 +2,24 @@
 
 import { useTranslations } from "next-intl";
 import FilterDropdown from "@/src/components/FilterDropdown";
+import type { Named } from "@/src/services/customers";
 
 type Props = {
-  projectOptions: { value: string; label: string }[];
+  /** The projects to filter by; null hides the filter (e.g. not a Super Admin). */
+  projects: Named[] | null;
   onProjectChange?: (selected: Set<string>) => void;
-  onRelationshipChange?: (selected: Set<string>) => void;
 };
 
-export default function FamilyMemberFilters({ projectOptions, onProjectChange, onRelationshipChange }: Props) {
+/** The API filters requests by project; it has no relationship filter (the app sends free text). */
+export default function FamilyMemberFilters({ projects, onProjectChange }: Props) {
   const t = useTranslations("MasterData");
 
+  if (!projects || projects.length === 0) return null;
   return (
-    <>
-      <FilterDropdown
-        label={t("filters.projects")}
-        options={projectOptions}
-        onChange={onProjectChange}
-      />
-      <FilterDropdown
-        label={t("filters.relationship")}
-        options={[
-          { value: "spouse", label: t("relationships.spouse") },
-          { value: "child", label: t("relationships.child") },
-          { value: "parent", label: t("relationships.parent") },
-          { value: "sibling", label: t("relationships.sibling") },
-        ]}
-        onChange={onRelationshipChange}
-      />
-    </>
+    <FilterDropdown
+      label={t("filters.projects")}
+      options={projects.map((project) => ({ value: String(project.id), label: project.name ?? `#${project.id}` }))}
+      onChange={onProjectChange}
+    />
   );
 }

@@ -1,77 +1,144 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import type { ToolbarLabels } from "@/src/components/Toolbar";
-import type { Rental } from "@/src/services/rentals";
-import RentalToolbarWithModal from "./RentalToolbarWithModal";
-import RentalFilters, { PrintRCButton } from "./RentalFilters";
-import RentalsTable from "./RentalsTable";
+import { useCallback } from "react";
+import ApiFailureNotice from "@/src/components/ApiFailureNotice";
+import Pagination from "@/src/components/Pagination";
+import { useApiDownload } from "@/src/hooks/useApiDownload";
+import { reservationsSheetRequest } from "@/src/services/rentals";
+import { useRentalManagementPage } from "../hooks/useRentalManagementPage";
+import AddRentalModal from "./AddRentalModal";
+import RentalActionDialog from "./RentalActionDialog";
+import RentalDetail from "./RentalDetail";
+import RentalToolbar from "./RentalToolbar";
+import ReservationsTable from "./ReservationsTable";
+import WalkInRequestsTable from "./WalkInRequestsTable";
 
 type Props = {
-  data: Rental[];
-  projectOptions: { value: string; label: string }[];
-  labels: ToolbarLabels;
+  /** Where the browser calls the API, or null when the sign-in names none this app trusts. */
+  apiBaseUrl: string | null;
+  /** Ability Portal, for signing in again when the session has ended. */
+  portalBaseUrl: string | null;
 };
 
-function slugify(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, "-");
-}
+export default function RentalManagementPageClient({ apiBaseUrl, portalBaseUrl }: Props) {
+  const screen = useRentalManagementPage({ apiBaseUrl, portalBaseUrl });
+  const exporting = useApiDownload({ apiBaseUrl, portalBaseUrl });
+  const { view, list, selected, dialog, select, setAddOpen, reloadReservations } = screen;
+  const projectsUnavailable = screen.projects.failure !== null;
+  const busy = screen.actionPending;
 
-export default function RentalManagementPageClient({ data, projectOptions, labels }: Props) {
-  const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
-  const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
-  const [sourceFilter, setSourceFilter] = useState<Set<string>>(new Set());
-  const [search, setSearch] = useState("");
+  const viewRow = useCallback((id: number) => select({ view, id }), [select, view]);
+  // Escape on an open dialog closes the dialog, not the panel under it.
+  const closeDetail = useCallback(() => {
+    if (!dialog) select(null);
+  }, [dialog, select]);
+  const closeAdd = useCallback(() => setAddOpen(false), [setAddOpen]);
 
-  const filtered = useMemo(() => {
-    let result = data;
-
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (r) =>
-          r.rentalId.toLowerCase().includes(q) ||
-          r.unit.toLowerCase().includes(q) ||
-          r.project.toLowerCase().includes(q) ||
-          r.tenantName.toLowerCase().includes(q),
-      );
-    }
-
-    if (statusFilter.size > 0) {
-      result = result.filter((r) => statusFilter.has(r.status));
-    }
-
-    if (projectFilter.size > 0) {
-      result = result.filter((r) => projectFilter.has(slugify(r.project)));
-    }
-
-    if (sourceFilter.size > 0) {
-      result = result.filter((r) =>
-        sourceFilter.has(r.source.toLowerCase()),
-      );
-    }
-
-    return result;
-  }, [data, search, statusFilter, projectFilter, sourceFilter]);
+  // The detail queries keep their last answer while another row loads: only show the selected one.
+  const reservationDetail =
+    screen.reservationDetail.data && screen.reservationDetail.data.id === selected?.id
+      ? screen.reservationDetail.data
+      : null;
+  const walkInDetail =
+    screen.walkInDetail.data && screen.walkInDetail.data.id === selected?.id ? screen.walkInDetail.data : null;
+  const detailQuery = selected?.view === "walkIns" ? screen.walkInDetail : screen.reservationDetail;
 
   return (
     <>
-      <RentalToolbarWithModal
-        labels={labels}
-        leadingContent={<PrintRCButton />}
-        onStatusChange={setStatusFilter}
-        onSearch={setSearch}
-        extraFilters={
-          <RentalFilters
-            projectOptions={projectOptions}
-            onProjectChange={setProjectFilter}
-            onSourceChange={setSourceFilter}
-          />
+      <RentalToolbar
+        view={view}
+        onViewChange={screen.setView}
+        searchField={screen.searchField}
+        onSearchFieldChange={screen.setSearchField}
+        search={screen.search}
+        onSearch={screen.setSearch}
+        projectId={screen.projectId}
+        onProjectChange={screen.setProjectId}
+        projects={screen.projects.data}
+        projectsUnavailable={projectsUnavailable}
+        statusId={screen.statusId}
+        onStatusChange={screen.setStatusId}
+        sourceId={screen.sourceId}
+        onSourceChange={screen.setSourceId}
+        onExport={
+          view === "reservations" && apiBaseUrl && (screen.reservations.data?.totalCount ?? 0) > 0
+            ? () => void exporting.download(reservationsSheetRequest(screen.reservationFilter))
+            : null
         }
+        exporting={exporting.pending}
+        onAdd={() => setAddOpen(true)}
       />
-      <div className="px-5">
-        <RentalsTable data={filtered} />
+      <div className="flex flex-col gap-3 px-5">
+        {list.failure && <ApiFailureNotice failure={list.failure} onRetry={list.reload} />}
+        {exporting.failure && <ApiFailureNotice failure={exporting.failure} />}
+        <div aria-busy={list.loading}>
+          {view === "reservations" ? (
+            <ReservationsTable
+              items={screen.reservations.data?.items ?? []}
+              loading={screen.reservations.loading}
+              busy={busy}
+              onView={viewRow}
+              onAction={screen.openDialog}
+            />
+          ) : (
+            <WalkInRequestsTable
+              items={screen.walkIns.data?.items ?? []}
+              loading={screen.walkIns.loading}
+              busy={busy}
+              onView={viewRow}
+              onAction={screen.openDialog}
+            />
+          )}
+        </div>
+        {list.data && (
+          <Pagination
+            page={screen.page}
+            totalPages={list.data.totalPages}
+            totalCount={list.data.totalCount}
+            onPageChange={screen.setPage}
+            disabled={list.loading}
+          />
+        )}
       </div>
+
+      {selected && (
+        <RentalDetail
+          detail={
+            selected.view === "walkIns"
+              ? { kind: "walkIns", data: walkInDetail }
+              : { kind: "reservations", data: reservationDetail }
+          }
+          loading={detailQuery.loading}
+          failure={detailQuery.failure}
+          onRetry={detailQuery.reload}
+          busy={busy}
+          onAction={screen.openDialog}
+          onClose={closeDetail}
+        />
+      )}
+
+      {dialog && (
+        <RentalActionDialog
+          key={`${dialog.mode}-${dialog.target.id}`}
+          dialog={dialog}
+          problem={screen.dialogProblem}
+          pending={busy}
+          failure={screen.actionFailure}
+          onSubmit={(values) => void screen.submitDialog(values)}
+          onClose={screen.closeDialog}
+        />
+      )}
+
+      {screen.addOpen && (
+        <AddRentalModal
+          apiBaseUrl={apiBaseUrl}
+          portalBaseUrl={portalBaseUrl}
+          projects={screen.projects.data}
+          projectsUnavailable={projectsUnavailable}
+          onSaved={reloadReservations}
+          onClose={closeAdd}
+        />
+      )}
     </>
   );
 }

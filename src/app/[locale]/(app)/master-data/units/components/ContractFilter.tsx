@@ -2,30 +2,38 @@
 
 import { useTranslations } from "next-intl";
 import FilterDropdown from "@/src/components/FilterDropdown";
+import type { ProjectOption } from "@/src/services/projects";
+import ProjectFilter from "../../components/ProjectFilter";
 
 type Props = {
-  projectOptions: { value: string; label: string }[];
-  onProjectChange?: (selected: Set<string>) => void;
-  onContractChange?: (selected: Set<string>) => void;
+  /** From the API's project list. */
+  projects: ProjectOption[];
+  projectId: number | undefined;
+  onProjectChange: (projectId: number | undefined) => void;
 };
 
-export default function ContractFilter({ projectOptions, onProjectChange, onContractChange }: Props) {
+export default function ContractFilter({ projects, projectId, onProjectChange }: Props) {
   const t = useTranslations("MasterData");
+  const tUnits = useTranslations("UnitsScreen");
 
   return (
     <>
-      <FilterDropdown
+      <ProjectFilter
         label={t("filters.projects")}
-        options={projectOptions}
+        allLabel={tUnits("allProjects")}
+        projects={projects}
+        value={projectId}
         onChange={onProjectChange}
       />
+      {/* Units have no contract type (annual, monthly) in the API, so this can't filter yet. */}
       <FilterDropdown
         label={t("contract")}
         options={[
           { value: "annual", label: t("contractTypes.annual") },
           { value: "monthly", label: t("contractTypes.monthly") },
         ]}
-        onChange={onContractChange}
+        disabled
+        title={tUnits("notAvailableYet")}
       />
     </>
   );

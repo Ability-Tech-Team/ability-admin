@@ -1,67 +1,94 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import Toolbar, { type ToolbarLabels } from "@/src/components/Toolbar";
-import type { UnitAssignment } from "@/src/services/unitAssignments";
+import ApiFailureNotice from "@/src/components/ApiFailureNotice";
+import { useUnitAssignmentPage } from "../hooks/useUnitAssignmentPage";
 import AssignmentFilters from "./AssignmentFilters";
 import UnitAssignmentTable from "./UnitAssignmentTable";
+import UnitAssignmentDetail from "./UnitAssignmentDetail";
+import AssignUnitModal from "./AssignUnitModal";
 
 type Props = {
-  data: UnitAssignment[];
-  projectOptions: { value: string; label: string }[];
+  /** Where the browser calls the API, or null when the sign-in names none this app trusts. */
+  apiBaseUrl: string | null;
+  /** Ability Portal, for signing in again when the session has ended. */
+  portalBaseUrl: string | null;
   labels: ToolbarLabels;
 };
 
-function slugify(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, "-");
-}
-
-export default function UnitAssignmentPageClient({ data, projectOptions, labels }: Props) {
-  const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
-  const [occupancyFilter, setOccupancyFilter] = useState<Set<string>>(new Set());
-  const [search, setSearch] = useState("");
-
-  const filtered = useMemo(() => {
-    let result = data;
-
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (a) =>
-          a.assignmentId.toLowerCase().includes(q) ||
-          a.unitNumber.toLowerCase().includes(q) ||
-          a.customerName.toLowerCase().includes(q) ||
-          a.project.toLowerCase().includes(q),
-      );
-    }
-
-    if (projectFilter.size > 0) {
-      result = result.filter((a) => projectFilter.has(slugify(a.project)));
-    }
-
-    if (occupancyFilter.size > 0) {
-      result = result.filter((a) => occupancyFilter.has(a.occupancyType));
-    }
-
-    return result;
-  }, [data, search, projectFilter, occupancyFilter]);
+export default function UnitAssignmentPageClient({ apiBaseUrl, portalBaseUrl, labels }: Props) {
+  const t = useTranslations("MasterData");
+  const tScreen = useTranslations("UnitAssignmentScreen");
+  const page = useUnitAssignmentPage({ apiBaseUrl, portalBaseUrl });
+  const { list } = page;
+  const projectOptions = page.projects.data ?? [];
 
   return (
     <>
       <Toolbar
         labels={labels}
-        onSearch={setSearch}
+        statusOptions={[
+          { value: "active", label: t("active") },
+          { value: "inactive", label: t("inactive") },
+        ]}
+        onSearch={page.setSearch}
+        onExactSearchChange={page.setExact}
+        onStatusChange={page.setStatusFilter}
+        onAdd={page.openAssign}
         extraFilters={
           <AssignmentFilters
-            projectOptions={projectOptions}
-            onProjectChange={setProjectFilter}
-            onOccupancyChange={setOccupancyFilter}
+            projects={projectOptions}
+            projectId={page.projectId}
+            onProjectChange={page.setProjectId}
+            onOccupancyChange={page.setOccupancyFilter}
           />
         }
       />
-      <div className="px-5">
-        <UnitAssignmentTable data={filtered} />
+      <div className="flex flex-col gap-3 px-5">
+        {list.failure && (
+          <ApiFailureNotice
+            failure={list.failure}
+            onRetry={list.reload}
+            messages={{ forbidden: tScreen("forbidden") }}
+          />
+        )}
+        {page.endFailure && <ApiFailureNotice failure={page.endFailure} />}
+        <UnitAssignmentTable
+          data={list.data}
+          loading={list.loading}
+          page={page.page}
+          onPageChange={page.setPage}
+          onView={page.select}
+          onEnd={page.endAssignment}
+          endingId={page.endingId}
+        />
       </div>
+
+      {page.selectedId !== null && (
+        <UnitAssignmentDetail
+          summary={page.selected}
+          detail={page.detail.data}
+          loading={page.detail.loading}
+          failure={page.detail.failure}
+          onRetry={page.detail.reload}
+          onClose={page.closeDetail}
+        />
+      )}
+
+      {page.assignOpen && (
+        <AssignUnitModal
+          apiBaseUrl={apiBaseUrl}
+          portalBaseUrl={portalBaseUrl}
+          projects={projectOptions.filter((project) => project.active)}
+          projectsFailure={page.projects.failure}
+          initialProjectId={page.projectId}
+          pending={page.assignPending}
+          failure={page.assignFailure}
+          onClose={page.closeAssign}
+          onSubmit={page.submitAssign}
+        />
+      )}
     </>
   );
 }

@@ -1,14 +1,17 @@
 import { getTranslations } from "next-intl/server";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
-import { fetchEvents } from "@/src/services/events";
-import { fetchProjectFilterOptions } from "@/src/services/projects";
+import { readBrowserApiConfig } from "@/src/lib/apiConfig";
 import EventsPageClient from "./components/EventsPageClient";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
+/**
+ * Events. The browser loads and saves them through the API (`useEventsPage`), since only the
+ * browser holds the API's `access_token` cookie.
+ */
 export default async function EventsPage({ params }: Props) {
   const { locale } = await params;
   const access = await requireProductAccess(locale);
@@ -17,16 +20,13 @@ export default async function EventsPage({ params }: Props) {
     return <ProductAccessNotice access={access} locale={locale} />;
   }
 
+  const { apiBaseUrl, portalBaseUrl } = await readBrowserApiConfig();
   const t = await getTranslations("EventsContent");
-  const [events, projectOptions] = await Promise.all([
-    fetchEvents(),
-    fetchProjectFilterOptions(),
-  ]);
 
   return (
     <EventsPageClient
-      data={events}
-      projectOptions={projectOptions}
+      apiBaseUrl={apiBaseUrl}
+      portalBaseUrl={portalBaseUrl}
       labels={{
         searchPlaceholder: t("searchPlaceholder"),
         exactSearch: t("exactSearch"),

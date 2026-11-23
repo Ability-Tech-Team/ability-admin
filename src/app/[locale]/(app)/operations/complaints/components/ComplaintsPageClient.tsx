@@ -1,59 +1,50 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import type { ToolbarLabels } from "@/src/components/Toolbar";
-import type { Complaint } from "@/src/services/complaints";
-import ComplaintToolbarWithModal from "./ComplaintToolbarWithModal";
-import ComplaintFilters from "./ComplaintFilters";
+import ApiFailureNotice from "@/src/components/ApiFailureNotice";
+import { useComplaintsPage } from "../hooks/useComplaintsPage";
+import ComplaintDetail from "./ComplaintDetail";
 import ComplaintsTable from "./ComplaintsTable";
+import ComplaintsToolbar from "./ComplaintsToolbar";
 
 type Props = {
-  data: Complaint[];
-  labels: ToolbarLabels;
+  apiBaseUrl: string | null;
+  portalBaseUrl: string | null;
 };
 
-export default function ComplaintsPageClient({ data, labels }: Props) {
-  const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
-  const [priorityFilter, setPriorityFilter] = useState<Set<string>>(new Set());
-  const [search, setSearch] = useState("");
-
-  const filtered = useMemo(() => {
-    let result = data;
-
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (c) =>
-          c.complaintId.toLowerCase().includes(q) ||
-          c.subject.toLowerCase().includes(q) ||
-          c.project.toLowerCase().includes(q) ||
-          c.submittedBy.toLowerCase().includes(q) ||
-          c.assignedTo.toLowerCase().includes(q),
-      );
-    }
-
-    if (statusFilter.size > 0) {
-      result = result.filter((c) => statusFilter.has(c.status));
-    }
-
-    if (priorityFilter.size > 0) {
-      result = result.filter((c) => priorityFilter.has(c.priority));
-    }
-
-    return result;
-  }, [data, search, statusFilter, priorityFilter]);
+export default function ComplaintsPageClient({ apiBaseUrl, portalBaseUrl }: Props) {
+  const page = useComplaintsPage({ apiBaseUrl, portalBaseUrl });
+  const { list, selected } = page;
 
   return (
     <>
-      <ComplaintToolbarWithModal
-        labels={labels}
-        onStatusChange={setStatusFilter}
-        onSearch={setSearch}
-        extraFilters={
-          <ComplaintFilters onPriorityChange={setPriorityFilter} />
-        }
+      <ComplaintsToolbar
+        search={page.search}
+        onSearchChange={page.setSearch}
+        statusId={page.statusId}
+        onStatusChange={page.setStatusId}
       />
-      <ComplaintsTable data={filtered} />
+      {list.failure && (
+        <ApiFailureNotice failure={list.failure} onRetry={list.reload} className="mx-5" />
+      )}
+      <ComplaintsTable
+        data={list.data}
+        loading={list.loading}
+        page={page.page}
+        onPageChange={page.setPage}
+        onSelect={page.select}
+      />
+      {selected && (
+        <ComplaintDetail
+          key={selected.id}
+          complaint={selected}
+          refreshing={list.loading}
+          saving={page.saving}
+          saveFailure={page.saveFailure}
+          onAddResponse={(response) => page.addResponse(selected.id, response)}
+          onChangeStatus={(statusId) => page.changeStatus(selected.id, statusId)}
+          onClose={() => page.select(null)}
+        />
+      )}
     </>
   );
 }

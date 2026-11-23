@@ -28,16 +28,39 @@ the workspace instead of assuming it exists.
   leave changes uncommitted (`../AGENTS.md`, Read first).
 - **Status:** the admin shell (side menu and navbar, 2026-11-11) and the
   team's dashboard, master-data, operations, and notifications screens
-  (merged 2026-11-16) are behind the Portal's session cookie. They show sample
-  data from `src/services/`, accepted as a placeholder until the API client
-  exists. The app reads its API address from the sign-in and has the local
+  (merged 2026-11-16) are behind the Portal's session cookie. Since
+  2026-11-22 every screen with an API route loads from the API in the browser:
+  the dashboard, projects, units, customers, unit assignment, family members,
+  rental management, service requests, complaints, invoices, guest
+  invitations, sending notifications, events, news, guidelines, the phone
+  directory and About Us (branding), plus the side-menu and tab counts.
+  Controls whose route doesn't exist yet stay visible but disabled with a
+  "not available yet" title (e.g. Add Unit and Add Customer, which need an
+  admin lookups route; the sent-notifications list and Delivery Logs, which
+  need `GET /admin/notifications`). Screens with no admin routes at all still
+  show sample data: Users, Roles & Permissions, Audit Log, Notification
+  Templates, and Settings (`src/services/*.ts` marked `TODO: replace with
+  real API call`).
+- **API plumbing** (shared by every screen): `src/lib/apiConfig.ts`
+  (`readBrowserApiConfig`, called by pages after the access check),
+  `src/hooks/useApiQuery.ts` (reads), `useApiMutation.ts` (saves),
+  `useApiDownload.ts` (exports and import error reports, sent with the page's
+  language), `useDebouncedValue.ts`, `src/lib/apiFailure.ts` with
+  `src/components/ApiFailureNotice.tsx`, and `src/components/Pagination.tsx`.
+  The one project list for pickers is `fetchProjectOptions` in
+  `src/services/projects.ts` (Super Admin only on the API, so other roles get
+  no project choices). Never add sample or fallback data to a connected screen. The app reads its API address from the sign-in and has the local
   dev proxy (below). Do not expose protected features without the check, and
   do not add a stub, bypass, or demo mode.
 - **Backend:** this app's API is `../ability-crm-api/apps/community-admin`
   (prefix `/admin`, port 5556), with shared modules in its `libs/domain` and
-  `libs/core`. Only Contact support calls it so far, through
-  `src/lib/apiClient.ts` (`fetch`, the envelope, `ApiError`) and
-  `src/services/support.ts`. Read a route's controller, DTOs, and guards
+  `libs/core`. The screens call it through `src/lib/apiClient.ts`
+  (`apiGet`/`apiPost`/`apiPut`/`apiDelete`/`apiDownload`, the envelope,
+  `ApiError`) and one `src/services/<entity>.ts` per entity, which parses each
+  answer with zod. Calls are made from the browser, which alone holds the
+  API's `access_token` cookie. The admin API also serves the shared orders,
+  rentals and imports routes (`libs/domain`), whose `@RequirePermission`
+  checks don't run there because `PermissionsGuard` is commented out. Read a route's controller, DTOs, and guards
   before calling it. The mobile app's API is the separate
   `community-api` (`/app`). Rules for changing the backend are in
   `../AGENTS.md` ("The backend repository").

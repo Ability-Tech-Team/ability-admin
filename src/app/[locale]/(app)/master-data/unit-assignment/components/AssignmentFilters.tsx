@@ -2,23 +2,32 @@
 
 import { useTranslations } from "next-intl";
 import FilterDropdown from "@/src/components/FilterDropdown";
+import type { ProjectOption } from "@/src/services/projects";
+import ProjectFilter from "../../components/ProjectFilter";
 
 type Props = {
-  projectOptions: { value: string; label: string }[];
-  onProjectChange?: (selected: Set<string>) => void;
+  /** From the API's project list. */
+  projects: ProjectOption[];
+  projectId: number | undefined;
+  onProjectChange: (projectId: number | undefined) => void;
   onOccupancyChange?: (selected: Set<string>) => void;
 };
 
-export default function AssignmentFilters({ projectOptions, onProjectChange, onOccupancyChange }: Props) {
+export default function AssignmentFilters({ projects, projectId, onProjectChange, onOccupancyChange }: Props) {
   const t = useTranslations("MasterData");
+  const tScreen = useTranslations("UnitAssignmentScreen");
 
   return (
     <>
-      <FilterDropdown
+      {/* The API filters by one project at a time. */}
+      <ProjectFilter
         label={t("filters.projects")}
-        options={projectOptions}
+        allLabel={tScreen("allProjects")}
+        projects={projects}
+        value={projectId}
         onChange={onProjectChange}
       />
+      {/* `ownerShipTypeEnums`: 1 owner, 2 renter. */}
       <FilterDropdown
         label={t("filters.occupancyType")}
         options={[

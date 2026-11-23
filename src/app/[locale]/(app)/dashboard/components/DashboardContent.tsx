@@ -5,19 +5,14 @@ import { useTranslations } from "next-intl";
 import PageHeader from "@/src/components/PageHeader";
 import StatCard from "@/src/components/StatCard";
 import ToggleSwitch from "@/src/components/ToggleSwitch";
-import ServiceRequestChart from "./ServiceRequestChart";
+import TopServicesChart from "./TopServicesChart";
 import OccupancyByProject from "./OccupancyByProject";
-import QuickMetrics from "./QuickMetrics";
 import ProjectsOverview from "./ProjectsOverview";
 import RecentServiceRequests from "./RecentServiceRequests";
-import type {
-  DashboardStat,
-  ServiceRequestMonth,
-  ProjectOccupancy,
-  QuickMetric,
-  DashboardProject,
-  RecentServiceRequest,
-} from "@/src/services/dashboard";
+import DashboardNotice from "./DashboardNotice";
+import { useDashboardPage } from "../hooks/useDashboardPage";
+import type { DashboardMetrics } from "../types";
+import { formatNumber, formatPercent } from "../utils";
 import {
   ProjectsIcon,
   UnitsIcon,
@@ -28,86 +23,54 @@ import {
   OccupancyIcon,
   ServiceRequestsIcon,
   ComplaintsIcon,
-  OverdueInvoicesIcon,
   InvoiceValueIcon,
   CollectedIcon,
-  OverdueValueIcon,
 } from "./DashboardIcons";
 
 /** Widget keys — the order here is the default display order. */
 type WidgetKey = "kpiCards" | "srTrendChart" | "occupancyRates" | "quickMetrics" | "recentServiceRequests" | "projectsOverview";
 
-/** Card visual configuration — icon, color, and route. */
-const cardConfig: Record<
-  string,
-  {
-    icon: React.ComponentType<{ className?: string }>;
-    iconBg: string;
-    iconColor: string;
-    href: string;
-  }
-> = {
-  totalProjects:       { icon: ProjectsIcon,        iconBg: "bg-blue-50",    iconColor: "text-blue-500",    href: "/master-data/projects" },
-  totalUnits:          { icon: UnitsIcon,            iconBg: "bg-blue-50",    iconColor: "text-blue-500",    href: "/master-data/units" },
-  activeCustomers:     { icon: CustomersIcon,        iconBg: "bg-purple-50",  iconColor: "text-purple-500",  href: "/master-data/customers" },
-  totalOwners:         { icon: OwnersIcon,           iconBg: "bg-purple-50",  iconColor: "text-purple-500",  href: "/master-data/unit-assignment" },
-  totalGuests:         { icon: GuestsIcon,           iconBg: "bg-purple-50",  iconColor: "text-purple-500",  href: "/operations/guest-invitations" },
-  totalTenants:        { icon: TenantsIcon,          iconBg: "bg-purple-50",  iconColor: "text-purple-500",  href: "/master-data/rental-management" },
-  avgOccupancy:        { icon: OccupancyIcon,        iconBg: "bg-purple-50",  iconColor: "text-purple-500",  href: "/master-data/units" },
-  openServiceRequests: { icon: ServiceRequestsIcon,  iconBg: "bg-orange-50",  iconColor: "text-orange-400",  href: "/operations/service-requests" },
-  openComplaints:      { icon: ComplaintsIcon,       iconBg: "bg-orange-50",  iconColor: "text-orange-400",  href: "/operations/complaints" },
-  overdueInvoices:     { icon: OverdueInvoicesIcon,  iconBg: "bg-red-50",     iconColor: "text-red-500",     href: "/operations/invoices-payments" },
-  totalInvoiceValue:   { icon: InvoiceValueIcon,     iconBg: "bg-blue-50",    iconColor: "text-blue-500",    href: "/operations/invoices-payments" },
-  collectedInvoices:   { icon: CollectedIcon,        iconBg: "bg-emerald-50", iconColor: "text-emerald-500", href: "/operations/invoices-payments" },
-  overdueInvoiceValue: { icon: OverdueValueIcon,     iconBg: "bg-red-50",     iconColor: "text-red-500",     href: "/operations/invoices-payments" },
-};
+type StatKey =
+  | "totalProjects"
+  | "totalUnits"
+  | "activeCustomers"
+  | "totalOwners"
+  | "totalGuests"
+  | "totalTenants"
+  | "avgOccupancy"
+  | "openServiceRequests"
+  | "openComplaints"
+  | "totalInvoiceValue"
+  | "collectedInvoices";
 
-/** Order the backend stats should appear in the grid. */
-const statOrder = [
-  "totalProjects",
-  "totalUnits",
-  "activeCustomers",
-  "totalOwners",
-  "totalGuests",
-  "totalTenants",
-  "avgOccupancy",
-  "openServiceRequests",
-  "openComplaints",
-  "overdueInvoices",
-  "totalInvoiceValue",
-  "collectedInvoices",
-  "overdueInvoiceValue",
+/** The stat cards, in grid order: the figure each shows, its look, and its route. */
+const statCards: {
+  key: StatKey;
+  value: (metrics: DashboardMetrics) => string;
+  icon: React.ComponentType<{ className?: string }>;
+  iconBg: string;
+  iconColor: string;
+  href: string;
+}[] = [
+  { key: "totalProjects",       value: (m) => formatNumber(m.totalProjects),       icon: ProjectsIcon,        iconBg: "bg-blue-50",    iconColor: "text-blue-500",    href: "/master-data/projects" },
+  { key: "totalUnits",          value: (m) => formatNumber(m.totalUnits),          icon: UnitsIcon,           iconBg: "bg-blue-50",    iconColor: "text-blue-500",    href: "/master-data/units" },
+  { key: "activeCustomers",     value: (m) => formatNumber(m.activeCustomers),     icon: CustomersIcon,       iconBg: "bg-purple-50",  iconColor: "text-purple-500",  href: "/master-data/customers" },
+  { key: "totalOwners",         value: (m) => formatNumber(m.totalOwners),         icon: OwnersIcon,          iconBg: "bg-purple-50",  iconColor: "text-purple-500",  href: "/master-data/unit-assignment" },
+  { key: "totalGuests",         value: (m) => formatNumber(m.totalGuests),         icon: GuestsIcon,          iconBg: "bg-purple-50",  iconColor: "text-purple-500",  href: "/operations/guest-invitations" },
+  { key: "totalTenants",        value: (m) => formatNumber(m.totalTenants),        icon: TenantsIcon,         iconBg: "bg-purple-50",  iconColor: "text-purple-500",  href: "/master-data/rental-management" },
+  { key: "avgOccupancy",        value: (m) => formatPercent(m.avgOccupancy),       icon: OccupancyIcon,       iconBg: "bg-purple-50",  iconColor: "text-purple-500",  href: "/master-data/units" },
+  { key: "openServiceRequests", value: (m) => formatNumber(m.openServiceRequests), icon: ServiceRequestsIcon, iconBg: "bg-orange-50",  iconColor: "text-orange-400",  href: "/operations/service-requests" },
+  { key: "openComplaints",      value: (m) => formatNumber(m.openComplaints),      icon: ComplaintsIcon,      iconBg: "bg-orange-50",  iconColor: "text-orange-400",  href: "/operations/complaints" },
+  { key: "totalInvoiceValue",   value: (m) => formatNumber(m.totalInvoicesValue),  icon: InvoiceValueIcon,    iconBg: "bg-blue-50",    iconColor: "text-blue-500",    href: "/operations/invoices-payments" },
+  { key: "collectedInvoices",   value: (m) => formatNumber(m.totalCollectedValue), icon: CollectedIcon,       iconBg: "bg-emerald-50", iconColor: "text-emerald-500", href: "/operations/invoices-payments" },
 ];
 
-/** Format a number with commas. */
-function fmt(n: number): string {
-  return n.toLocaleString();
-}
-
-/** Build the display value: prefix + formatted number + suffix. */
-function displayValue(stat: DashboardStat): string {
-  const parts: string[] = [];
-  if (stat.prefix) parts.push(stat.prefix);
-  parts.push(fmt(stat.value));
-  if (stat.suffix) parts.push(stat.suffix);
-  return parts.join(" ");
-}
-
 type DashboardContentProps = {
-  stats: DashboardStat[];
-  serviceRequests: ServiceRequestMonth[];
-  occupancy: ProjectOccupancy[];
-  quickMetrics: QuickMetric[];
-  projects: DashboardProject[];
-  recentRequests: RecentServiceRequest[];
+  /** Where the browser calls the API (`browserApiBaseUrl`), or null when the sign-in names none this app trusts. */
+  apiBaseUrl: string | null;
+  /** Ability Portal, for signing in again when the session has ended. */
+  portalBaseUrl: string | null;
 };
-
-/** Format today or an offset as YYYY-MM-DD for the date input. */
-function toDateString(daysOffset: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() + daysOffset);
-  return d.toISOString().slice(0, 10);
-}
 
 const defaultWidgetOrder: WidgetKey[] = [
   "kpiCards",
@@ -118,20 +81,15 @@ const defaultWidgetOrder: WidgetKey[] = [
   "projectsOverview",
 ];
 
-export default function DashboardContent({
-  stats,
-  serviceRequests,
-  occupancy,
-  quickMetrics: quickMetricsData,
-  projects,
-  recentRequests,
-}: DashboardContentProps) {
+export default function DashboardContent({ apiBaseUrl, portalBaseUrl }: DashboardContentProps) {
   const t = useTranslations("Dashboard");
   const tSide = useTranslations("SideMenu");
   const tHeader = useTranslations("PageHeader");
+  const { period, setStartDate, setEndDate, data, loading, failure, retry } = useDashboardPage({
+    apiBaseUrl,
+    portalBaseUrl,
+  });
 
-  const [dateFrom, setDateFrom] = useState(toDateString(-13));
-  const [dateTo, setDateTo] = useState(toDateString(0));
   const [showWidgetManager, setShowWidgetManager] = useState(false);
   const [widgetOrder, setWidgetOrder] = useState<WidgetKey[]>(defaultWidgetOrder);
   const [widgetVisible, setWidgetVisible] = useState<Record<WidgetKey, boolean>>({
@@ -175,40 +133,35 @@ export default function DashboardContent({
     setWidgetVisible((prev) => ({ ...prev, [key]: !prev[key] }));
   }, []);
 
-  const ordered = statOrder
-    .map((key) => stats.find((s) => s.key === key))
-    .filter((s): s is DashboardStat => s != null);
-
-  /** Render a widget section by key. */
+  /** Render a widget section by key. Until the API has answered, only the stat cards show (with "—"). */
   const renderWidget = (key: WidgetKey) => {
     if (!widgetVisible[key]) return null;
+    if (key === "kpiCards") {
+      return (
+        <div key={key} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-1">
+          {statCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <StatCard
+                key={card.key}
+                value={data ? card.value(data.metrics) : "—"}
+                label={t(card.key)}
+                icon={<Icon className={`h-[13px] w-[13px] ${card.iconColor}`} />}
+                iconBg={card.iconBg}
+                href={card.href}
+              />
+            );
+          })}
+        </div>
+      );
+    }
+    if (!data) return null;
     switch (key) {
-      case "kpiCards":
-        return (
-          <div key={key} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-1">
-            {ordered.map((stat) => {
-              const cfg = cardConfig[stat.key];
-              if (!cfg) return null;
-              const Icon = cfg.icon;
-              return (
-                <StatCard
-                  key={stat.key}
-                  value={displayValue(stat)}
-                  label={t(stat.key as Parameters<typeof t>[0])}
-                  change={stat.change}
-                  icon={<Icon className={`h-[13px] w-[13px] ${cfg.iconColor}`} />}
-                  iconBg={cfg.iconBg}
-                  href={cfg.href}
-                />
-              );
-            })}
-          </div>
-        );
       case "srTrendChart":
         return (
           <div key={key} className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 px-1">
-            <ServiceRequestChart data={serviceRequests} />
-            {widgetVisible.occupancyRates && <OccupancyByProject data={occupancy} />}
+            <TopServicesChart data={data.topServices} />
+            {widgetVisible.occupancyRates && <OccupancyByProject data={data.occupancy} />}
           </div>
         );
       case "occupancyRates":
@@ -216,14 +169,17 @@ export default function DashboardContent({
         if (widgetVisible.srTrendChart) return null;
         return (
           <div key={key} className="px-1">
-            <OccupancyByProject data={occupancy} />
+            <OccupancyByProject data={data.occupancy} />
           </div>
         );
       case "quickMetrics":
         return (
           <div key={key} className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-4 px-1">
-            <QuickMetrics data={quickMetricsData} />
-            {widgetVisible.projectsOverview && <ProjectsOverview data={projects} />}
+            <QuickMetrics
+              title={t("widget_quickMetrics")}
+              items={[{ key: "avgOccupancy", label: t("avgOccupancy"), value: data.metrics.avgOccupancy, color: "#10b981" }]}
+            />
+            {widgetVisible.projectsOverview && <ProjectsOverview data={data.occupancy} />}
           </div>
         );
       case "projectsOverview":
@@ -231,13 +187,13 @@ export default function DashboardContent({
         if (widgetVisible.quickMetrics) return null;
         return (
           <div key={key} className="px-1">
-            <ProjectsOverview data={projects} />
+            <ProjectsOverview data={data.occupancy} />
           </div>
         );
       case "recentServiceRequests":
         return (
           <div key={key} className="px-1">
-            <RecentServiceRequests data={recentRequests} viewAllHref="/operations/service-requests" />
+            <RecentServiceRequests data={data.latestRequests} viewAllHref="/operations/service-requests" />
           </div>
         );
       default:
@@ -254,10 +210,10 @@ export default function DashboardContent({
         ]}
         title={t("title")}
         subtitle={t("subtitle")}
-        dateFrom={dateFrom}
-        dateTo={dateTo}
-        onDateFromChange={setDateFrom}
-        onDateToChange={setDateTo}
+        dateFrom={period.startDate}
+        dateTo={period.endDate}
+        onDateFromChange={setStartDate}
+        onDateToChange={setEndDate}
         action={
           <button
             type="button"
@@ -269,6 +225,10 @@ export default function DashboardContent({
           </button>
         }
       />
+
+      <p className="-mt-3 px-5 text-[11px] text-gray-400">
+        {period.startDate || period.endDate ? t("periodHint") : t("allTimeHint")}
+      </p>
 
       {/* Widget Manager panel */}
       {showWidgetManager && (
@@ -301,12 +261,13 @@ export default function DashboardContent({
                 <div className="flex items-center gap-3">
                   <DragHandleIcon className="h-4 w-4 text-gray-300" />
                   <span className="text-[13px] font-medium text-gray-700">
-                    {t(`widget_${key}` as Parameters<typeof t>[0])}
+                    {t(`widget_${key}`)}
                   </span>
                 </div>
                 <ToggleSwitch
                   checked={widgetVisible[key]}
                   onChange={() => toggleWidget(key)}
+                  label={t(`widget_${key}`)}
                 />
               </div>
             ))}
@@ -314,8 +275,74 @@ export default function DashboardContent({
         </div>
       )}
 
-      {/* Dashboard widgets in configured order */}
-      {widgetOrder.map(renderWidget)}
+      {failure && (
+        <div className="px-1">
+          <DashboardNotice failure={failure} onRetry={retry} />
+        </div>
+      )}
+
+      <div aria-busy={loading} className={`flex flex-col gap-4 transition-opacity ${loading && data ? "opacity-60" : ""}`}>
+        {/* Dashboard widgets in configured order */}
+        {widgetOrder.map(renderWidget)}
+
+        {!data && loading && (
+          <p role="status" className="px-5 text-[12px] text-gray-400">
+            {t("loading")}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+type QuickMetric = { key: string; label: string; value: number; color: string };
+
+/** Percentages from the API as rings; only figures the API returns are shown. */
+function QuickMetrics({ title, items }: { title: string; items: QuickMetric[] }) {
+  return (
+    <div className="flex flex-col gap-4 rounded-xl bg-white p-4 shadow-sm">
+      <h2 className="text-[12px] font-semibold text-gray-800">{title}</h2>
+      <div className="flex items-center justify-around py-2">
+        {items.map((m) => (
+          <div key={m.key} className="flex flex-col items-center gap-2">
+            <DonutRing value={m.value} color={m.color} />
+            <span className="text-[10px] text-gray-400">{m.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DonutRing({ value, color }: { value: number; color: string }) {
+  const radius = 24;
+  const stroke = 7;
+  const center = radius + stroke;
+  const size = center * 2;
+  const circumference = 2 * Math.PI * radius;
+  const filled = (Math.min(100, Math.max(0, value)) / 100) * circumference;
+  const gap = circumference - filled;
+
+  return (
+    <div className="relative">
+      <svg width={size} height={size} className="-rotate-90" aria-hidden="true">
+        {/* Track */}
+        <circle cx={center} cy={center} r={radius} fill="none" stroke="#f1f5f9" strokeWidth={stroke} />
+        {/* Value arc */}
+        <circle
+          cx={center}
+          cy={center}
+          r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth={stroke}
+          strokeDasharray={`${filled} ${gap}`}
+          strokeLinecap="round"
+        />
+      </svg>
+      <span className="absolute inset-0 flex items-center justify-center text-[12px] font-bold text-gray-700">
+        {formatPercent(value)}
+      </span>
     </div>
   );
 }

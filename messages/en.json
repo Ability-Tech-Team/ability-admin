@@ -73,10 +73,8 @@
     "avgOccupancy": "Avg Occupancy %",
     "openServiceRequests": "Open Service Requests",
     "openComplaints": "Open Complaints",
-    "overdueInvoices": "Overdue Invoices",
     "totalInvoiceValue": "Total Invoice Value",
     "collectedInvoices": "Collected Invoices",
-    "overdueInvoiceValue": "Overdue Invoice Value",
     "widgetManager": "Widget Manager",
     "widgetManagerSubtitle": "Drag to reorder. Toggle to show/hide widgets on the dashboard.",
     "done": "Done",
@@ -86,28 +84,18 @@
     "widget_quickMetrics": "Quick Metrics",
     "widget_recentServiceRequests": "Recent Service Requests",
     "widget_projectsOverview": "Projects Overview",
-    "serviceRequestTrend": "Service Request Trend",
-    "open": "Open",
-    "resolved": "Resolved",
     "occupancyByProject": "Occupancy by Project",
-    "quickMetrics": "Quick Metrics",
-    "avgOccupancyShort": "Avg Occupancy",
-    "srResolved": "SR Resolved",
-    "slaMet": "SLA Met",
     "projectsOverview": "Projects Overview",
     "viewAll": "View All",
     "units": "units",
     "residents": "residents",
     "occupancy": "occupancy",
     "recentServiceRequests": "Recent Service Requests",
-    "recentServiceRequestsSubtitle": "Showing latest 5 open & in-progress requests",
+    "recentServiceRequestsSubtitle": "The 5 newest requests, whatever their status",
     "requestId": "Request ID",
-    "srTitle": "Title",
     "project": "Project",
     "customer": "Customer",
-    "priority": "Priority",
     "status": "Status",
-    "sla": "SLA",
     "statusActive": "Active",
     "statusInactive": "Inactive",
     "priorities": {
@@ -121,6 +109,29 @@
       "in progress": "In Progress",
       "resolved": "Resolved",
       "pending": "Pending"
+    },
+    "topServices": "Most Requested Services",
+    "requests": "requests",
+    "unnamedService": "Unnamed service",
+    "unnamedProject": "Unnamed project",
+    "noServiceRequests": "No service requests in this period",
+    "noProjects": "No active projects",
+    "occupiedUnits": "occupied",
+    "services": "Services",
+    "unit": "Unit",
+    "createdAt": "Created",
+    "loading": "Loading the dashboard…",
+    "allTimeHint": "Showing all time. Pick dates to see what was added in a period.",
+    "periodHint": "Showing what was added in the chosen period. Clear both dates for all time.",
+    "errors": {
+      "sessionEnded": "Your session has ended. Sign in again to see the dashboard.",
+      "signInAgain": "Sign in again",
+      "forbidden": "Only the Super Admin role can see the dashboard.",
+      "unreachable": "The dashboard couldn't reach the server. Check your connection and try again.",
+      "failed": "The dashboard couldn't be loaded. Try again.",
+      "noApi": "This sign-in doesn't name a Community Admin API this app trusts, so the dashboard can't load.",
+      "invalidPeriod": "The period's end is before its start.",
+      "retry": "Try again"
     }
   },
   "MasterData": {
@@ -139,7 +150,6 @@
     "searchCustomers": "Search customers...",
     "searchAssignments": "Search assignments...",
     "searchMembers": "Search family members...",
-    "searchRentals": "Search unit, tenant, or ID...",
     "exactSearch": "Exact search",
     "status": "Status",
     "export": "Export",
@@ -183,39 +193,21 @@
       "projects": "Projects",
       "type": "Type",
       "occupancyType": "Occupancy Type",
-      "relationship": "Relationship",
       "source": "Source"
     },
-    "relationships": {
-      "spouse": "Spouse",
-      "child": "Child",
-      "parent": "Parent",
-      "sibling": "Sibling"
-    },
-    "sources": {
-      "app": "App",
-      "admin": "Admin"
-    },
-    "rentalStatuses": {
-      "pending": "Pending",
-      "approved": "Approved"
-    },
+    "relationships": {},
     "rentalColumns": {
       "rentalId": "Rental ID",
       "unit": "Unit",
       "tenantName": "Tenant Name",
-      "idPassportType": "ID / Passport Type",
       "idPassport": "ID / Passport",
       "start": "Start",
       "end": "End",
-      "annualRent": "Annual Rent",
       "source": "Source",
       "printRC": "Print RC"
     },
     "rentalDetail": {
-      "tenantsOn": "Tenants on",
-      "showAttachments": "Show Attachments",
-      "attachmentDescription": "Rental contract or identity document attached to this rental."
+      "tenantsOn": "Tenants on"
     },
     "familyColumns": {
       "familyMember": "Family Member",
@@ -240,22 +232,9 @@
     "assignmentDetail": {
       "customersAssigned": "Customers Assigned to Unit",
       "familyMembersTitle": "Family Members",
-      "nationalId": "National ID",
-      "mobile": "Mobile",
-      "email": "Email",
-      "nationality": "Nationality",
       "assignmentStart": "Assignment Start",
       "relationship": "Relationship",
       "attachments": "Attachments",
-      "roles": {
-        "owner": "Owner",
-        "co-owner": "Co-owner",
-        "tenant": "Tenant"
-      },
-      "statuses": {
-        "approved": "Approved",
-        "pending": "Pending"
-      },
       "attachmentPreview": "Attachment Preview",
       "attachmentDescription": "Identity or ownership document attached to this unit assignment."
     },
@@ -301,14 +280,11 @@
       "idPassportNumber": "ID / Passport Number",
       "nationality": "Nationality",
       "project": "Project",
-      "assignedUnit": "Assigned Unit",
-      "joinDate": "Join Date",
       "identityAttachment": "Identity Attachment"
     },
     "attachmentsTitle": "Attachments",
     "open": "Open",
     "noAttachments": "No attachments found.",
-    "openingFile": "Opening {fileName}",
     "show": "Show",
     "edit": "Edit",
     "addRentalModal": {
@@ -320,7 +296,6 @@
       "tenantAttachments": "Tenant Attachments",
       "startDate": "Start Date",
       "endDate": "End Date",
-      "annualRent": "Annual Rent (EGP)",
       "saveAndAddAnother": "Save & Add Another Tenant",
       "submit": "Add Rental"
     },
@@ -343,7 +318,6 @@
       "unitNumber": "Unit Number",
       "floor": "Floor",
       "unitType": "Unit Type",
-      "contract": "Contract",
       "submit": "Add Unit"
     },
     "addCustomerModal": {
@@ -355,8 +329,6 @@
       "idPassportNumber": "ID / Passport Number",
       "nationality": "Nationality",
       "project": "Project",
-      "assignedUnit": "Assigned Unit",
-      "joinDate": "Join Date",
       "identityAttachment": "Identity Attachment",
       "saveAndAddAnother": "Save & Add Another",
       "submit": "Add Customer"
@@ -419,48 +391,23 @@
     "columns": {
       "requestId": "Request ID",
       "issue": "Issue",
-      "projectUnit": "Project / Unit",
       "customer": "Customer",
       "dueDate": "Due Date",
       "status": "Status"
     },
-    "statuses": {
-      "open": "Open",
-      "in-progress": "In Progress",
-      "resolved": "Resolved",
-      "delayed": "Delayed"
-    },
     "detail": {
-      "project": "Project",
       "unit": "Unit",
       "customer": "Customer",
       "type": "Type",
-      "assignedTo": "Assigned To",
       "created": "Created",
       "dueDateAndTime": "Due Date & Time",
       "activityTimeline": "Activity Timeline",
       "addComment": "Add Comment",
       "commentPlaceholder": "Write a comment or update..."
     },
-    "serviceRequest": {
-      "create": {
-        "title": "New Service Request",
-        "issueTitle": "Issue Title",
-        "serviceType": "Service Type",
-        "project": "Project",
-        "unit": "Unit",
-        "customer": "Customer",
-        "dueDate": "Due Date",
-        "dueTimeSlot": "Due Time Slot",
-        "cancel": "Cancel",
-        "submit": "Create Request"
-      }
-    },
     "showing": "Showing {from}-{to} of {total}",
     "filters": {
-      "projects": "Projects",
-      "priority": "Priority",
-      "invoiceType": "Invoice Type"
+      "projects": "Projects"
     },
     "invoice": {
       "summary": {
@@ -475,46 +422,13 @@
         "invoiceType": "Invoice Type",
         "amount": "Amount"
       },
-      "types": {
-        "annual-rent": "Annual Rent",
-        "monthly-rent": "Monthly Rent",
-        "service-charge": "Service Charge"
-      },
-      "statuses": {
-        "paid": "paid",
-        "pending": "pending",
-        "overdue": "overdue"
-      },
       "actions": {
         "view": "View",
         "markPaid": "Mark Paid",
         "download": "Download"
       },
       "generateInvoice": "Generate Invoice",
-      "maintenanceDeposit": "Maintenance Deposit Difference",
-      "deposit": {
-        "title": "Maintenance Deposit Difference — Bulk Upload",
-        "uploadTitle": "Upload Maintenance Deposit Difference Sheet",
-        "uploadDescription": "Excel or CSV with Unit Number, Current Deposit, Required Deposit, and Difference.",
-        "unitNumber": "Unit Number",
-        "currentDeposit": "Current Deposit",
-        "requiredDeposit": "Required Deposit",
-        "difference": "Difference",
-        "downloadTemplate": "Download Template",
-        "cancel": "Cancel",
-        "uploadSheet": "Upload Sheet"
-      },
-      "generate": {
-        "title": "Generate Invoice",
-        "customerName": "Customer Name",
-        "invoiceType": "Invoice Type",
-        "amount": "Amount per Unit (EGP)",
-        "dueDate": "Due Date",
-        "units": "Units",
-        "selectUnits": "Select one or more units",
-        "unitInfo": "0 units selected. One invoice will be created for each unit.",
-        "cancel": "Cancel"
-      }
+      "maintenanceDeposit": "Maintenance Deposit Difference"
     },
     "complaint": {
       "columns": {
@@ -522,36 +436,12 @@
         "subject": "Subject",
         "description": "Description",
         "submittedBy": "Submitted By",
-        "priority": "Priority",
-        "assignedTo": "Assigned To",
         "date": "Date"
-      },
-      "create": {
-        "title": "New Complaint",
-        "subject": "Subject",
-        "description": "Description",
-        "project": "Project",
-        "unit": "Unit",
-        "customer": "Customer",
-        "priority": "Priority",
-        "status": "Status",
-        "cancel": "Cancel",
-        "submit": "Create Complaint"
-      },
-      "priorities": {
-        "low": "Low",
-        "medium": "Medium",
-        "high": "High"
       }
     },
     "complaintDetail": {
       "submittedBy": "Submitted By",
-      "ticketTimeline": "Ticket Timeline",
-      "customerVoiceNote": "Customer voice note",
-      "comments": "Comments",
-      "noComments": "No comments yet.",
-      "writeComment": "Write a comment...",
-      "addComment": "Add Comment"
+      "ticketTimeline": "Ticket Timeline"
     },
     "serviceRequestsComingSoon": "Service requests module is coming soon.",
     "complaintsComingSoon": "Complaints module is coming soon.",
@@ -561,20 +451,14 @@
       "summary": {
         "activeQrPasses": "Active QR passes",
         "scheduledVisits": "Scheduled visits",
-        "scannedEntries": "Scanned entries",
-        "outsideGeofence": "Outside geofence",
         "availableNow": "Available now",
-        "upcoming": "Upcoming",
-        "thisPeriod": "This period",
-        "qrHiddenInApp": "QR hidden in app"
+        "upcoming": "Upcoming"
       },
       "columns": {
         "guest": "Guest",
         "invitedBy": "Invited By",
         "visitDate": "Visit Date",
-        "qrStatus": "QR Status",
-        "locationRule": "Location Rule",
-        "scans": "Scans"
+        "qrStatus": "QR Status"
       },
       "qrStatuses": {
         "active": "active",
@@ -582,10 +466,7 @@
         "expired": "expired",
         "revoked": "revoked"
       },
-      "locationRules": {
-        "inside-zone": "Inside zone",
-        "outside-zone": "Outside zone"
-      },
+      "locationRules": {},
       "actions": {
         "view": "View"
       },
@@ -597,7 +478,6 @@
         "residentName": "Resident Name",
         "project": "Project",
         "unit": "Unit",
-        "visitDate": "Visit Date",
         "cancel": "Cancel"
       },
       "detailTitle": "Guest Invitation",
@@ -608,14 +488,9 @@
         "resident": "Resident",
         "unit": "Unit",
         "project": "Project",
-        "visitDate": "Visit Date",
         "created": "Created",
-        "successfulScans": "Successful Scans",
-        "mobileQrBehavior": "Mobile QR behavior",
-        "mobileQrDescription": "The QR code is only visible on the guest's device when they are within the configured geofence zone. Outside the zone, the QR is hidden in the app.",
         "resendInvitation": "Resend Invitation",
         "revoke": "Revoke",
-        "resentSuccess": "Invitation {id} sent again",
         "revokedSuccess": "Guest invitation revoked"
       }
     }
@@ -675,22 +550,8 @@
       "type": "Type"
     },
     "showing": "Showing {from}-{to} of {total}",
-    "create": {
-      "title": "New Notification",
-      "titleEn": "Title (English)",
-      "titleAr": "Title (Arabic)",
-      "body": "Body",
-      "type": "Type",
-      "project": "Project",
-      "audience": "Audience",
-      "scheduledDate": "Scheduled Date",
-      "cancel": "Cancel",
-      "submit": "Create Notification"
-    },
     "createModal": {
       "title": "Create Notification",
-      "english": "English",
-      "arabic": "Arabic",
       "titleEn": "Title (English)",
       "titleAr": "Title (Arabic)",
       "titleEnPlaceholder": "e.g. Scheduled Maintenance Notice",
@@ -699,10 +560,8 @@
       "bodyAr": "Body (Arabic)",
       "bodyEnPlaceholder": "Write notification body in English...",
       "bodyArPlaceholder": "اكتب نص الإشعار بالعربية...",
-      "notificationType": "Notification Type",
       "targetAudience": "Target Audience",
       "project": "Project",
-      "status": "Status",
       "cancel": "Cancel",
       "saveDraft": "Save Draft",
       "sendNow": "Send Now"
@@ -801,7 +660,9 @@
         "published": "published",
         "draft": "draft"
       },
-      "edit": "Edit"
+      "edit": "Edit",
+      "loading": "Loading news…",
+      "empty": "No news match these filters."
     },
     "phoneDir": {
       "searchPlaceholder": "Search directory...",
@@ -1225,5 +1086,521 @@
     "sentReference": "Your reference is <strong>{reference}</strong>. Quote it if you write to support about this again.",
     "sentReplyTo": "Ability-Tech's support team will answer at <strong>{email}</strong>.",
     "sentNoEmail": "Your account has no email address, so the team can't answer by email. Ask your administrator to add one to your account."
+  },
+  "ApiErrors": {
+    "sessionEnded": "Your session has ended. Sign in again to continue.",
+    "signInAgain": "Sign in again",
+    "forbidden": "Your role can't see or change this.",
+    "passwordChange": "Change your password in Ability CRM before continuing.",
+    "tooMany": "Too many attempts. Wait a minute and try again.",
+    "unreachable": "The server couldn't be reached. Check your connection and try again.",
+    "failed": "Something went wrong loading this. Try again.",
+    "rejected": "The server refused this request.",
+    "noApi": "This sign-in doesn't name a Community Admin API this app trusts, so nothing can load.",
+    "retry": "Try again"
+  },
+  "Pagination": {
+    "label": "Pages",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {totalPages}",
+    "total": "{count, plural, one {# record} other {# records}}"
+  },
+  "ServiceRequestsScreen": {
+    "allStatuses": "All statuses",
+    "allProjects": "All projects",
+    "statuses": {
+      "created": "Created",
+      "paid": "Paid",
+      "confirmed": "Confirmed",
+      "inProgress": "In Progress",
+      "fulfilled": "Fulfilled",
+      "done": "Done",
+      "rejected": "Rejected"
+    },
+    "notAvailableYet": "Not available yet",
+    "loading": "Loading service requests…",
+    "empty": "No service requests match these filters.",
+    "urgent": "Urgent",
+    "close": "Close",
+    "loadingDetail": "Loading the request…",
+    "detail": {
+      "requester": "Requested By",
+      "createdBy": "Created By",
+      "total": "Total",
+      "notes": "Notes",
+      "rejectReason": "Reason for rejecting",
+      "noActivity": "No activity yet.",
+      "comments": "Comments",
+      "noComments": "No comments yet.",
+      "statusFinal": "This request's status can't change any more.",
+      "chooseStatus": "Choose a new status",
+      "updateStatus": "Update status"
+    }
+  },
+  "ComplaintsScreen": {
+    "allStatuses": "All statuses",
+    "statuses": {
+      "open": "Open",
+      "inProgress": "In Progress",
+      "resolved": "Resolved",
+      "rejected": "Rejected"
+    },
+    "notAvailableYet": "Not available yet",
+    "department": "Department",
+    "loading": "Loading complaints…",
+    "empty": "No complaints match these filters.",
+    "close": "Close",
+    "mobile": "Mobile",
+    "source": "Source",
+    "recordedBy": "Recorded By",
+    "noActivity": "No activity yet.",
+    "responses": "Responses",
+    "responsesHint": "The customer is notified of each response.",
+    "noResponses": "No responses yet.",
+    "writeResponse": "Write a response to the customer...",
+    "addResponse": "Send Response",
+    "statusFinal": "This complaint's status can't change any more.",
+    "chooseStatus": "Choose a new status",
+    "updateStatus": "Update status"
+  },
+  "InvoicesScreen": {
+    "notAvailable": "Not available yet",
+    "allStatuses": "All statuses",
+    "allProjects": "All projects",
+    "loading": "Loading invoices…",
+    "empty": "No invoices match these filters.",
+    "exporting": "Exporting…",
+    "dismiss": "Dismiss",
+    "columns": {
+      "invoiceDate": "Invoice Date",
+      "actions": "Actions"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "collected": "Collected",
+      "void": "Void",
+      "underPaymentProcess": "Under payment",
+      "voidRequested": "Void requested",
+      "partiallyCollected": "Partially collected",
+      "refunded": "Refunded",
+      "refundRequested": "Refund requested",
+      "partiallyRefunded": "Partially refunded"
+    },
+    "payment": {
+      "title": "Record Payment",
+      "close": "Close",
+      "invoice": "Invoice",
+      "customer": "Customer",
+      "amountDue": "Amount due",
+      "method": "Payment method",
+      "methods": {
+        "cash": "Cash",
+        "visa": "Visa",
+        "cheque": "Cheque",
+        "instapay": "InstaPay"
+      },
+      "reference": "Reference number (optional)",
+      "description": "The full amount due is recorded as one payment, and the invoice is marked as collected.",
+      "cancel": "Cancel",
+      "submit": "Record Payment",
+      "submitting": "Saving…",
+      "success": "Payment recorded for invoice {number}."
+    },
+    "invoiceType": "Invoice type",
+    "allTypes": "All types"
+  },
+  "RentalsScreen": {
+    "viewsLabel": "Rental lists",
+    "views": {
+      "reservations": "Reservations",
+      "walkIns": "Walk-in requests"
+    },
+    "searchBy": "Search by",
+    "searchPlaceholder": "Search…",
+    "searchFields": {
+      "customer_name": "Tenant name",
+      "unit_number": "Unit number",
+      "id_number": "ID / passport number",
+      "mobile_number": "Mobile number"
+    },
+    "allStatuses": "All statuses",
+    "allProjects": "All projects",
+    "allSources": "All sources",
+    "projectsUnavailable": "Projects couldn't be loaded, so the project choice isn't available.",
+    "notAvailableYet": "Not available yet",
+    "reservationStatuses": {
+      "1": "Fees collection pending",
+      "2": "Active",
+      "3": "Finished",
+      "4": "Canceled",
+      "5": "Terminated"
+    },
+    "walkInStatuses": {
+      "1": "Pending",
+      "2": "Accepted",
+      "3": "Rejected",
+      "4": "Unit reserved"
+    },
+    "walkInSources": {
+      "1": "Broker",
+      "2": "Tenant",
+      "3": "Community app"
+    },
+    "idTypes": {
+      "1": "Passport",
+      "2": "National ID"
+    },
+    "columns": {
+      "mobile": "Mobile",
+      "requestId": "Request ID"
+    },
+    "loading": "Loading rentals…",
+    "emptyReservations": "No reservations match.",
+    "emptyWalkIns": "No walk-in requests match.",
+    "actions": {
+      "checkIn": "Check in",
+      "checkOut": "Check out",
+      "extend": "Extend",
+      "terminate": "Terminate",
+      "cancel": "Cancel rental"
+    },
+    "dialogs": {
+      "checkIn": "Check in {tenant} on unit {unit}? The rental becomes active.",
+      "cancel": "Cancel the rental of {tenant} on unit {unit}? This can't be undone.",
+      "extend": "Choose the new end date of the rental of {tenant} on unit {unit}. It must be after the current end date.",
+      "checkOut": "Check out {tenant} from unit {unit}. The rental is finished.",
+      "terminate": "Terminate the rental of {tenant} on unit {unit} before its end. This can't be undone.",
+      "accept": "Accept the request of {tenant}? It becomes a reservation on unit {unit}.",
+      "reject": "Reject the request of {tenant} for unit {unit}?",
+      "rating": "Tenant rating (1 to 5)",
+      "penalty": "Penalty amount (optional)",
+      "newEndDate": "New end date",
+      "reason": "Reason",
+      "back": "Back",
+      "confirm": "Confirm",
+      "sending": "Sending…",
+      "problems": {
+        "rating": "Choose a rating from 1 to 5.",
+        "penalty": "Enter a penalty of 0 or more, or leave it empty.",
+        "newEndDate": "Choose the new end date.",
+        "reason": "Enter a reason."
+      }
+    },
+    "detail": {
+      "close": "Close",
+      "loading": "Loading…",
+      "period": "{start} to {end}",
+      "rentalCompany": "Rental company",
+      "signDate": "Signed on",
+      "accessCard": "Access card",
+      "totalTenants": "Tenants",
+      "rating": "Tenant rating",
+      "terminationReason": "Termination reason",
+      "penalty": "Penalty",
+      "notes": "Notes",
+      "delegate": "Delegate",
+      "rejectReason": "Rejection reason",
+      "relatives": "Relatives"
+    },
+    "add": {
+      "chooseProject": "Choose a project",
+      "chooseUnit": "Choose a unit",
+      "unitsLoading": "Loading units…",
+      "noUnits": "No unit in this project can be rented now.",
+      "saved": "{count, plural, one {Rental added.} other {# rentals added.}}",
+      "problems": {
+        "required": "Fill in the required fields.",
+        "idNumberLength": "The ID / passport number must be 8 to 14 characters.",
+        "endBeforeStart": "The end date must be after the start date.",
+        "noRentalCompany": "This unit has no rental company, so it can't be rented here."
+      }
+    }
+  },
+  "UnitsScreen": {
+    "allProjects": "All projects",
+    "projectsUnavailable": "Projects couldn't be loaded, so the project choice isn't available.",
+    "notAvailableYet": "Not available yet",
+    "loading": "Loading units…",
+    "empty": "No units match.",
+    "floor": "Floor {floor}",
+    "import": {
+      "title": "Import units",
+      "chooseProject": "Choose a project",
+      "file": "Spreadsheet",
+      "fileHint": "An .xlsx, .xlsm or .csv file of up to 5 MB.",
+      "columns": "Required columns: {required}. Optional: {optional}.",
+      "submit": "Upload",
+      "uploading": "Uploading…",
+      "refresh": "Check again",
+      "another": "Import another file",
+      "close": "Close",
+      "errorReport": "Download the rejected rows",
+      "summary": "{inserted} added, {skipped} skipped and {failed} rejected, of {total} rows.",
+      "statuses": {
+        "PENDING": "Waiting to start",
+        "PROCESSING": "Importing…",
+        "COMPLETED": "Imported",
+        "COMPLETED_WITH_ERRORS": "Imported, some rows rejected",
+        "FAILED": "Failed"
+      },
+      "problems": {
+        "project": "Choose a project.",
+        "file": "Choose a file.",
+        "type": "Choose an .xlsx, .xlsm or .csv file.",
+        "size": "The file is larger than 5 MB."
+      }
+    },
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "form": {
+      "chooseProject": "Choose a project",
+      "choose": "Choose",
+      "noBuilding": "No building",
+      "buildingsUnavailable": "Buildings couldn't be loaded.",
+      "location": "Location",
+      "locationsUnavailable": "Locations aren't available from the API yet.",
+      "totalArea": "Total Area (m²)",
+      "address": "Address",
+      "rooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "livingRooms": "Living Rooms",
+      "balconies": "Balconies",
+      "deliveryDate": "Delivery Date",
+      "contractingDate": "Contracting Date",
+      "notes": "Notes",
+      "furnished": "Furnished",
+      "eligibleForRent": "Eligible for rent",
+      "broker": "Broker unit"
+    },
+    "errors": {
+      "required": "Required.",
+      "area": "Enter an area above 0.",
+      "count": "Enter a whole number, 0 or more.",
+      "floor": "Enter a whole number."
+    }
+  },
+  "CustomersScreen": {
+    "loading": "Loading customers…",
+    "empty": "No customers match these filters.",
+    "searchBy": "Search by",
+    "searchFields": {
+      "name": "Name",
+      "mobile": "Mobile",
+      "idNumber": "ID number",
+      "unit": "Unit number",
+      "code": "Customer code"
+    },
+    "oneChoiceHint": "The server filters by one choice at a time, so a filter with several ticked is ignored.",
+    "notAvailable": "Not available yet",
+    "moreUnits": "{count, plural, one {+# more unit} other {+# more units}}",
+    "choose": "Choose…",
+    "chooseProject": "Choose a project",
+    "projectsUnavailable": "Only a Super Admin can list projects, so no project can be chosen here.",
+    "requiredField": "Required",
+    "saving": "Saving…",
+    "close": "Close",
+    "customerSaved": "Customer saved. You can add the next one.",
+    "fields": {
+      "customerType": "Customer type",
+      "maritalStatus": "Marital status",
+      "religion": "Religion",
+      "projects": "Projects"
+    },
+    "delete": {
+      "title": "Delete customer?",
+      "loading": "Loading the customer's projects…",
+      "chooseProject": "Remove from project",
+      "body": "{name} will be removed from {project}.",
+      "noProject": "This customer isn't in a project you can reach.",
+      "irreversible": "This can't be undone from this screen.",
+      "confirm": "Delete",
+      "deleting": "Deleting…",
+      "removedFromProject": "{name} was removed from {project} and stays a customer of their other projects."
+    },
+    "import": {
+      "title": "Import customers",
+      "file": "Spreadsheet (.xlsx, .xlsm or .csv, up to 5 MB)",
+      "submit": "Upload",
+      "uploading": "Uploading…",
+      "close": "Close",
+      "queued": "Import #{id} ({fileName}) is queued.",
+      "requiredColumns": "Required columns: {columns}",
+      "optionalColumns": "Optional columns: {columns}",
+      "checkStatus": "Check status",
+      "checking": "Checking…",
+      "statuses": {
+        "PENDING": "Waiting to start",
+        "PROCESSING": "In progress",
+        "COMPLETED": "Completed",
+        "COMPLETED_WITH_ERRORS": "Completed with errors",
+        "FAILED": "Failed"
+      },
+      "counts": "{total} rows: {inserted} added, {updated} updated, {skipped} skipped, {failed} failed",
+      "downloadErrors": "Download the rows that failed"
+    },
+    "loadingChoices": "Loading choices…"
+  },
+  "FamilyMembersScreen": {
+    "loading": "Loading requests…",
+    "empty": "No family member requests match these filters.",
+    "searchFields": {
+      "unit": "Unit number",
+      "ownerMobile": "Owner's mobile",
+      "relativeId": "Relative's ID number"
+    },
+    "saving": "Saving…",
+    "close": "Close",
+    "revert": "Revert approval",
+    "rejectTitle": "Reject request",
+    "rejectBody": "Reject the request to add {name}? The owner is told in the app.",
+    "rejectReason": "Reason (optional, shown to the owner)",
+    "rejectReasonShown": "Reason: {reason}",
+    "revertTitle": "Revert approval",
+    "revertBody": "Take back the approval of {name}? They lose access to the unit, and the request ends as rejected.",
+    "attachments": {
+      "profileImage": "Profile photo",
+      "nationalIdImage": "ID document",
+      "idImage": "Attachment {number}"
+    },
+    "importTitle": "Import family members",
+    "add": {
+      "unitHint": "Type a unit number",
+      "searchingUnits": "Searching units…",
+      "noUnits": "No unit with an owner matches.",
+      "owner": "Owner",
+      "chooseOwner": "Choose the owner",
+      "added": "{count, plural, one {# family member added} other {# family members added}}. They are linked to the unit right away and show in Unit Assignment; this list shows the requests owners send from the app.",
+      "errors": {
+        "required": "Required.",
+        "email": "Enter a valid email address."
+      }
+    }
+  },
+  "GuestInvitationsScreen": {
+    "loading": "Loading invitations…",
+    "empty": "No invitations match these filters.",
+    "until": "until {date}",
+    "notAvailable": "Not available yet",
+    "saving": "Saving…",
+    "close": "Close",
+    "choose": "Choose…",
+    "reactivate": "Reactivate",
+    "reactivatedSuccess": "Guest invitation reactivated",
+    "fields": {
+      "guestEmail": "Guest email",
+      "guestGender": "Guest gender",
+      "validFrom": "Valid from",
+      "validTo": "Valid until"
+    },
+    "genders": {
+      "male": "Male",
+      "female": "Female"
+    },
+    "residentSearch": "Type a resident's name or mobile",
+    "typeToSearch": "Type at least two characters above",
+    "searching": "Searching…",
+    "noResidents": "No residents match",
+    "noUnits": "This resident has no active unit",
+    "requiredField": "Required",
+    "periodInvalid": "The end must come after the start.",
+    "cairoTime": "Times are Cairo time.",
+    "created": "Invitation #{id} created. The guest can sign in to the app with their mobile while it runs."
+  },
+  "ProjectsScreen": {
+    "forbidden": "Only the Super Admin role can see and change projects.",
+    "notAvailableYet": "Not available yet",
+    "loading": "Loading projects…",
+    "empty": "No projects match these filters.",
+    "toggleActive": "Turn {name} on or off",
+    "companyCode": "Company Code",
+    "projectCode": "Project Code",
+    "projectCodeFixed": "The project code can't be changed after the project is created.",
+    "typeNotSet": "Not set",
+    "saving": "Saving…",
+    "errors": {
+      "required": "This field is required.",
+      "tooLong": "This is too long.",
+      "invalidUrl": "Enter a full link starting with http:// or https://.",
+      "invalidPoint": "Enter a latitude and longitude, e.g. 30.0444, 31.2357.",
+      "boundaryIncomplete": "Enter all four points, or leave all four empty."
+    }
+  },
+  "UnitAssignmentScreen": {
+    "forbidden": "Only the Super Admin role can see unit assignments.",
+    "projectsForbidden": "Only the Super Admin role can list projects, so no project can be picked here.",
+    "notAvailableYet": "Not available yet",
+    "loading": "Loading assignments…",
+    "empty": "No assignments match these filters.",
+    "otherHolders": "{count, plural, one {# more customer holds this unit} other {# more customers hold this unit}}",
+    "allProjects": "All projects",
+    "unitLabel": "Unit {number}",
+    "close": "Close",
+    "assignmentNumber": "Assignment {id}",
+    "endDate": "End Date",
+    "signDate": "Sign Date",
+    "contractNumber": "Contract Number",
+    "notes": "Notes",
+    "noCurrentHolders": "Nobody holds this unit now.",
+    "thisAssignment": "This assignment",
+    "selectProject": "Select a project",
+    "pickProjectFirst": "Pick the project first",
+    "customerSearchPlaceholder": "Type at least 2 letters of the customer's name",
+    "changeCustomer": "Change",
+    "searching": "Searching…",
+    "noCustomers": "No customer of this project has that name.",
+    "endDateHint": "Leave empty for an ongoing assignment. With an end date it is saved as ended.",
+    "assign": "Assign Unit",
+    "saving": "Saving…",
+    "errors": {
+      "required": "This field is required.",
+      "endBeforeStart": "The end date can't be before the start date."
+    },
+    "confirmEnd": "End {customer}'s ownership of unit {unit} from today? Their family members on the unit lose it too. This can't be undone here.",
+    "endsInRentals": "A tenant's assignment ends from Rental Management (check-out or terminate).",
+    "cannotReactivate": "An ended assignment can't be turned back on here. Assign the unit again instead."
+  },
+  "NotificationsScreen": {
+    "sent": "{count, plural, =0 {Sent, but the project has no one to receive it yet.} one {Sent to # recipient.} other {Sent to # recipients.}}",
+    "dismiss": "Dismiss",
+    "notAvailableYet": "Not available yet",
+    "targets": {
+      "customers": "Residents",
+      "guests": "Guests",
+      "all": "Residents and guests"
+    },
+    "selectProject": "Select a project",
+    "loadingProjects": "Loading projects…",
+    "projectsForbidden": "Only the Super Admin role can list projects, so no project can be picked here.",
+    "image": "Image (optional)",
+    "imageHint": "JPG, PNG or WebP, up to {max} MB.",
+    "sending": "Sending…",
+    "errors": {
+      "required": "This field is required.",
+      "tooLong": "This is too long.",
+      "imageType": "Choose a JPG, PNG or WebP image.",
+      "imageTooLarge": "The image is larger than {max} MB."
+    },
+    "loadingHistory": "Loading sent notifications…",
+    "noneSent": "No notifications have been sent yet.",
+    "previousPage": "Previous page",
+    "nextPage": "Next page"
+  },
+  "GuidelinesScreen": {
+    "loading": "Loading guidelines…",
+    "empty": "No guidelines match these filters."
+  },
+  "PhoneDirectoryScreen": {
+    "loading": "Loading the phone directory…",
+    "empty": "No contacts match this search."
+  },
+  "EventsScreen": {
+    "loading": "Loading events…",
+    "empty": "No events match.",
+    "editTitle": "Edit Event",
+    "dateTime": "{date} at {time}",
+    "errors": {
+      "capacity": "Enter a whole number, 1 or more."
+    }
   }
 }

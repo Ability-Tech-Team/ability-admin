@@ -2,29 +2,34 @@
 
 import { useTranslations } from "next-intl";
 import FilterDropdown from "@/src/components/FilterDropdown";
+import { OWNERSHIP_FILTER_OPTIONS } from "../schema";
+import type { Named } from "../types";
 
 type Props = {
-  projectOptions: { value: string; label: string }[];
+  /** The projects to filter by; null hides the filter (e.g. not a Super Admin). */
+  projects: Named[] | null;
   onProjectChange?: (selected: Set<string>) => void;
   onTypeChange?: (selected: Set<string>) => void;
 };
 
-export default function CustomerFilters({ projectOptions, onProjectChange, onTypeChange }: Props) {
+export default function CustomerFilters({ projects, onProjectChange, onTypeChange }: Props) {
   const t = useTranslations("MasterData");
 
   return (
     <>
-      <FilterDropdown
-        label={t("filters.projects")}
-        options={projectOptions}
-        onChange={onProjectChange}
-      />
+      {projects && projects.length > 0 && (
+        <FilterDropdown
+          label={t("filters.projects")}
+          options={projects.map((project) => ({ value: String(project.id), label: project.name ?? `#${project.id}` }))}
+          onChange={onProjectChange}
+        />
+      )}
       <FilterDropdown
         label={t("filters.type")}
-        options={[
-          { value: "owner", label: t("customerTypes.owner") },
-          { value: "tenant", label: t("customerTypes.tenant") },
-        ]}
+        options={OWNERSHIP_FILTER_OPTIONS.map((option) => ({
+          value: String(option.id),
+          label: t(`customerTypes.${option.labelKey}`),
+        }))}
         onChange={onTypeChange}
       />
     </>

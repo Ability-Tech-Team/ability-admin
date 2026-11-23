@@ -1,79 +1,83 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useCallback, useState } from "react";
 import type { ToolbarLabels } from "@/src/components/Toolbar";
-import type { Unit } from "@/src/services/units";
+import ApiFailureNotice from "@/src/components/ApiFailureNotice";
+import { isImportRunning } from "@/src/services/units";
+import { UNITS_PAGE_SIZE, useUnitsPage } from "../hooks/useUnitsPage";
+import { useUnitImport } from "../hooks/useUnitImport";
 import UnitToolbarWithModal from "./UnitToolbarWithModal";
 import ContractFilter from "./ContractFilter";
 import UnitsTable from "./UnitsTable";
+import ImportUnitsModal from "./ImportUnitsModal";
 
 type Props = {
-  data: Unit[];
-  projectOptions: { value: string; label: string }[];
+  /** Where the browser calls the API, or null when the sign-in names none this app trusts. */
+  apiBaseUrl: string | null;
+  /** Ability Portal, for signing in again when the session has ended. */
+  portalBaseUrl: string | null;
   labels: ToolbarLabels;
 };
 
-function slugify(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, "-");
-}
+export default function UnitsPageClient({ apiBaseUrl, portalBaseUrl, labels }: Props) {
+  const screen = useUnitsPage({ apiBaseUrl, portalBaseUrl });
+  const importFlow = useUnitImport({ apiBaseUrl, portalBaseUrl });
+  const [importOpen, setImportOpen] = useState(false);
 
-export default function UnitsPageClient({ data, projectOptions, labels }: Props) {
-  const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
-  const [projectFilter, setProjectFilter] = useState<Set<string>>(new Set());
-  const [contractFilter, setContractFilter] = useState<Set<string>>(new Set());
-  const [search, setSearch] = useState("");
+  const { units, projects } = screen;
+  const { status: importStatus, reset: resetImport } = importFlow;
+  const { reload: reloadUnits } = units;
 
-  const filtered = useMemo(() => {
-    let result = data;
-
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (u) =>
-          u.unitId.toLowerCase().includes(q) ||
-          u.number.toLowerCase().includes(q) ||
-          u.type.toLowerCase().includes(q) ||
-          u.project.toLowerCase().includes(q) ||
-          u.building.toLowerCase().includes(q) ||
-          (u.owner?.name.toLowerCase().includes(q) ?? false),
-      );
+  const closeImport = useCallback(() => {
+    setImportOpen(false);
+    // A finished import may have added units; one still running stays visible next time.
+    if (importStatus && !isImportRunning(importStatus)) {
+      resetImport();
+      reloadUnits();
     }
-
-    if (statusFilter.size > 0) {
-      result = result.filter((u) => {
-        const status = u.active ? "active" : "inactive";
-        return statusFilter.has(status);
-      });
-    }
-
-    if (projectFilter.size > 0) {
-      result = result.filter((u) => projectFilter.has(slugify(u.project)));
-    }
-
-    if (contractFilter.size > 0) {
-      result = result.filter((u) => u.contract && contractFilter.has(u.contract));
-    }
-
-    return result;
-  }, [data, search, statusFilter, projectFilter, contractFilter]);
+  }, [importStatus, resetImport, reloadUnits]);
 
   return (
     <>
       <UnitToolbarWithModal
         labels={labels}
-        onStatusChange={setStatusFilter}
-        onSearch={setSearch}
+        onStatusChange={screen.setStatusFilter}
+        onSearch={screen.setSearch}
+        onExactSearchChange={screen.setExact}
+        onExport={screen.exportUnits}
+        onImport={() => setImportOpen(true)}
         extraFilters={
           <ContractFilter
-            projectOptions={projectOptions}
-            onProjectChange={setProjectFilter}
-            onContractChange={setContractFilter}
+            projects={projects.data ?? []}
+            projectId={screen.projectId}
+            onProjectChange={screen.setProjectId}
           />
         }
       />
-      <div className="px-5">
-        <UnitsTable data={filtered} />
+      <div className="flex flex-col gap-3 px-5">
+        {units.failure && <ApiFailureNotice failure={units.failure} onRetry={units.reload} />}
+        {screen.toggleFailure && <ApiFailureNotice failure={screen.toggleFailure} />}
+        {screen.exportFailure && <ApiFailureNotice failure={screen.exportFailure} />}
+        <UnitsTable
+          data={units.data}
+          loading={units.loading}
+          failed={units.failure !== null && !units.data}
+          page={screen.page}
+          pageSize={UNITS_PAGE_SIZE}
+          onPageChange={screen.setPage}
+          onToggle={screen.toggleActive}
+          togglingId={screen.togglingId}
+        />
       </div>
+      {importOpen && (
+        <ImportUnitsModal
+          apiBaseUrl={apiBaseUrl}
+          projects={projects.data}
+          projectsUnavailable={projects.failure !== null}
+          flow={importFlow}
+          onClose={closeImport}
+        />
+      )}
     </>
   );
 }

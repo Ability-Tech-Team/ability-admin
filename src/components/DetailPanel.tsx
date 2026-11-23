@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useId } from "react";
 import CloseButton from "./CloseButton";
 
 type Props = {
@@ -8,10 +8,13 @@ type Props = {
   onClose: () => void;
   /** Tailwind width class. Default: "w-[480px]" */
   width?: string;
+  /** The close button's label in the page's language (default "Close"). */
+  closeLabel?: string;
   children: React.ReactNode;
 };
 
-export default function DetailPanel({ title, onClose, width = "w-[480px]", children }: Props) {
+export default function DetailPanel({ title, onClose, width = "w-[480px]", closeLabel, children }: Props) {
+  const titleId = useId();
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") onClose();
   }, [onClose]);
@@ -34,12 +37,13 @@ export default function DetailPanel({ title, onClose, width = "w-[480px]", child
       <div
         role="dialog"
         aria-modal="true"
+        aria-labelledby={titleId}
         className={`fixed inset-y-0 end-0 z-50 ${width} overflow-y-auto bg-white shadow-xl`}
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-          <h2 className="text-[15px] font-bold text-gray-900">{title}</h2>
-          <CloseButton onClick={onClose} />
+          <h2 id={titleId} className="text-[15px] font-bold text-gray-900">{title}</h2>
+          <CloseButton onClick={onClose} label={closeLabel} />
         </div>
         {children}
       </div>

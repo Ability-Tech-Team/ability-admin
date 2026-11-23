@@ -1,14 +1,16 @@
-import { getTranslations } from "next-intl/server";
 import RentalManagementPageClient from "./components/RentalManagementPageClient";
-import { fetchRentals } from "@/src/services/rentals";
-import { fetchProjectFilterOptions } from "@/src/services/projects";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
+import { readBrowserApiConfig } from "@/src/lib/apiConfig";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
+/**
+ * Rental Management. The browser loads reservations and walk-in requests from the API
+ * (`useRentalManagementPage`), since only the browser holds the API's `access_token` cookie.
+ */
 export default async function RentalManagementPage({ params }: Props) {
   const { locale } = await params;
   const access = await requireProductAccess(locale);
@@ -17,24 +19,7 @@ export default async function RentalManagementPage({ params }: Props) {
     return <ProductAccessNotice access={access} locale={locale} />;
   }
 
-  const t = await getTranslations("MasterData");
-  const [rentals, projectOptions] = await Promise.all([
-    fetchRentals(),
-    fetchProjectFilterOptions(),
-  ]);
+  const { apiBaseUrl, portalBaseUrl } = await readBrowserApiConfig();
 
-  return (
-    <RentalManagementPageClient
-      data={rentals}
-      projectOptions={projectOptions}
-      labels={{
-        searchPlaceholder: t("searchRentals"),
-        exactSearch: t("exactSearch"),
-        status: t("status"),
-        export: t("export"),
-        import: t("import"),
-        addLabel: t("addRental"),
-      }}
-    />
-  );
+  return <RentalManagementPageClient apiBaseUrl={apiBaseUrl} portalBaseUrl={portalBaseUrl} />;
 }

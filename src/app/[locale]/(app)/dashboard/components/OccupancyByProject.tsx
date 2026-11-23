@@ -1,11 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-
-export type ProjectOccupancy = {
-  name: string;
-  percentage: number;
-};
+import type { ProjectOccupancy } from "../types";
+import { formatPercent } from "../utils";
 
 type Props = {
   data: ProjectOccupancy[];
@@ -25,14 +22,18 @@ export default function OccupancyByProject({
         {t("occupancyByProject")}
       </h2>
 
+      {data.length === 0 && (
+        <p className="text-[11px] text-gray-400">{t("noProjects")}</p>
+      )}
+
       <div className="flex flex-col gap-3">
         {data.map((p) => {
-          const isWarning = p.percentage < warningThreshold;
+          const isWarning = p.occupancy < warningThreshold;
           return (
-            <div key={p.name} className="flex items-center gap-3">
+            <div key={p.id} className="flex items-center gap-3">
               {/* Project name */}
-              <span className="w-[100px] shrink-0 text-[11px] text-gray-500 truncate">
-                {p.name}
+              <span className="w-[100px] shrink-0 text-[11px] text-gray-500 truncate" title={p.name ?? undefined}>
+                {p.name ?? t("unnamedProject")}
               </span>
               {/* Bar track */}
               <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
@@ -40,12 +41,12 @@ export default function OccupancyByProject({
                   className={`h-full rounded-full transition-all ${
                     isWarning ? "bg-orange-400" : "bg-emerald-500"
                   }`}
-                  style={{ width: `${p.percentage}%` }}
+                  style={{ width: `${Math.min(100, Math.max(0, p.occupancy))}%` }}
                 />
               </div>
               {/* Percentage */}
-              <span className="w-[36px] text-end text-[11px] font-semibold text-gray-700">
-                {p.percentage}%
+              <span className="w-[44px] text-end text-[11px] font-semibold text-gray-700">
+                {formatPercent(p.occupancy)}
               </span>
             </div>
           );
