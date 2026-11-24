@@ -25,8 +25,8 @@ type Options = {
 /**
  * The Units screen: every unit of the reachable projects (`GET /projects/units?all_units=1`), searched
  * by unit number and filtered by project and status on the API, a page at a time; the status
- * switch (`PUT /projects/units/:id`) and the export (`is_excel=1`). Add Unit isn't wired: its
- * form needs unit types and locations, which no admin route lists yet.
+ * switch (`PUT /projects/units/:id`) and the export (`is_excel=1`). Add Unit has its own hook
+ * (`useAddUnitForm`); its project choice comes from `projects` here.
  */
 export function useUnitsPage({ apiBaseUrl, portalBaseUrl }: Options) {
   const [search, setSearchValue] = useState("");

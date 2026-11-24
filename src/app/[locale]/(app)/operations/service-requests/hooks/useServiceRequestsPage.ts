@@ -29,6 +29,7 @@ export function useServiceRequestsPage({ apiBaseUrl, portalBaseUrl }: Options) {
   const [projectId, setProjectIdValue] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [creating, setCreating] = useState(false);
 
   const debouncedSearch = useDebouncedValue(search);
   const filters: ServiceRequestFilters = { search: debouncedSearch, exact, statusId, projectId };
@@ -48,7 +49,7 @@ export function useServiceRequestsPage({ apiBaseUrl, portalBaseUrl }: Options) {
     load: ({ apiBaseUrl, locale }) => fetchServiceRequestStats(apiBaseUrl, filters, locale),
   });
 
-  // Super Admin only: another role gets no options, and the filter stays hidden.
+  // The employee's projects; with none to offer, the filter stays hidden.
   const projects = useApiQuery({
     apiBaseUrl,
     portalBaseUrl,
@@ -76,7 +77,7 @@ export function useServiceRequestsPage({ apiBaseUrl, portalBaseUrl }: Options) {
 
   const { reload: reloadList } = list;
   const { reload: reloadStats } = stats;
-  /** After a change in the detail: the row and the counts may have moved. */
+  /** After a change in the detail, or a new request: the rows and the counts may have moved. */
   const reloadAll = useCallback(() => {
     reloadList();
     reloadStats();
@@ -106,6 +107,9 @@ export function useServiceRequestsPage({ apiBaseUrl, portalBaseUrl }: Options) {
     stats,
     selectedId,
     select: setSelectedId,
+    /** Whether New Request is open. */
+    creating,
+    setCreating,
     reloadAll,
   };
 }

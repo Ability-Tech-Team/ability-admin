@@ -5,6 +5,7 @@ import { useComplaintsPage } from "../hooks/useComplaintsPage";
 import ComplaintDetail from "./ComplaintDetail";
 import ComplaintsTable from "./ComplaintsTable";
 import ComplaintsToolbar from "./ComplaintsToolbar";
+import NewComplaintModal from "./NewComplaintModal";
 
 type Props = {
   apiBaseUrl: string | null;
@@ -22,6 +23,7 @@ export default function ComplaintsPageClient({ apiBaseUrl, portalBaseUrl }: Prop
         onSearchChange={page.setSearch}
         statusId={page.statusId}
         onStatusChange={page.setStatusId}
+        onNewComplaint={page.openNewComplaint}
       />
       {list.failure && (
         <ApiFailureNotice failure={list.failure} onRetry={list.reload} className="mx-5" />
@@ -43,6 +45,14 @@ export default function ComplaintsPageClient({ apiBaseUrl, portalBaseUrl }: Prop
           onAddResponse={(response) => page.addResponse(selected.id, response)}
           onChangeStatus={(statusId) => page.changeStatus(selected.id, statusId)}
           onClose={() => page.select(null)}
+        />
+      )}
+      {page.creating && (
+        <NewComplaintModal
+          apiBaseUrl={apiBaseUrl}
+          portalBaseUrl={portalBaseUrl}
+          onClose={page.closeNewComplaint}
+          onCreated={page.complaintCreated}
         />
       )}
     </>

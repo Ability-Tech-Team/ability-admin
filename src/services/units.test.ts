@@ -1,7 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildQueryString } from "@/src/lib/apiClient";
 import {
   UnitsAnswerError,
+  buildCreateUnitBody,
+  createUnit,
   importErrorReportRequest,
   isImportRunning,
   toImportJob,
@@ -10,6 +12,7 @@ import {
   unitImportFileProblem,
   unitsExportRequest,
   unitsQuery,
+  type NewUnit,
   type UnitsFilter,
 } from "./units";
 import { ownerInitials } from "@/src/app/[locale]/(app)/master-data/units/utils";
@@ -215,6 +218,78 @@ describe("unit imports", () => {
   it("links the error report with the import's project", () => {
     const request = importErrorReportRequest(12, 2);
     expect(request.path + buildQueryString(request.query)).toBe("/imports/12/errors?project_id=2");
+  });
+});
+
+const newUnit: NewUnit = {
+  projectId: 2,
+  subProjectId: null,
+  unitNumber: "  A-301 ",
+  unitTypeId: 4,
+  locationId: 7,
+  totalArea: 120.5,
+  floor: null,
+};
+
+describe("buildCreateUnitBody", () => {
+  it("sends CreateUnitDto's required fields with a new unit's defaults", () => {
+    expect(buildCreateUnitBody(newUnit)).toEqual({
+      project_id: 2,
+      sub_project_id: undefined,
+      unit_number: "A-301",
+      is_active: 1,
+      is_broker: 0,
+      is_eligible_for_rent: 0,
+      is_locked: 0,
+      unit_specifications: {
+        unit_type_id: 4,
+        location_id: 7,
+        total_area: 120.5,
+        floor: undefined,
+        is_furnished: 0,
+      },
+    });
+  });
+
+  it("adds the building and floor when given (floor 0 included)", () => {
+    const body = buildCreateUnitBody({ ...newUnit, subProjectId: 3, floor: 0 });
+    expect(body.sub_project_id).toBe(3);
+    expect(body.unit_specifications.floor).toBe(0);
+  });
+});
+
+describe("createUnit", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("POSTs the body to /projects/units and resolves with the unit's id", async () => {
+    const fetchMock = vi.fn(async () =>
+      new Response(
+        JSON.stringify({ result: { unit_id: 88, message: "UNIT_CREATED_SUCCESSFULLY" }, success: true, statusCode: 201 }),
+        { status: 201, headers: { "Content-Type": "application/json" } },
+      ),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(createUnit("https://api.example/admin", newUnit, "en")).resolves.toBe(88);
+    const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toMatch(/^https:\/\/api\.example\/admin\/projects\/units(\?|$)/);
+    expect(init.method).toBe("POST");
+    expect(JSON.parse(String(init.body))).toEqual(JSON.parse(JSON.stringify(buildCreateUnitBody(newUnit))));
+  });
+
+  it("rejects an answer without the unit's id", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        new Response(JSON.stringify({ result: { message: "ok" }, success: true, statusCode: 201 }), {
+          status: 201,
+          headers: { "Content-Type": "application/json" },
+        }),
+      ),
+    );
+    await expect(createUnit("https://api.example/admin", newUnit, "en")).rejects.toThrow(UnitsAnswerError);
   });
 });
 

@@ -3,8 +3,14 @@
 import { useCallback, useState } from "react";
 import { useApiMutation } from "@/src/hooks/useApiMutation";
 import { useApiQuery } from "@/src/hooks/useApiQuery";
+import { useDebouncedValue } from "@/src/hooks/useDebouncedValue";
 import { fetchProjectOptions } from "@/src/services/projects";
-import { sendNotification, type SendNotificationInput } from "@/src/services/notifications";
+import {
+  fetchSentNotifications,
+  sendNotification,
+  type SendNotificationInput,
+  type SentNotificationFilters,
+} from "@/src/services/notifications";
 
 type Options = {
   apiBaseUrl: string | null;
@@ -12,16 +18,31 @@ type Options = {
 };
 
 /**
- * Sending a notification to a project's customers, guests, or both (POST /admin/notifications).
- * No admin route lists what was sent, so the screen has no history to load.
+ * What was sent (GET /admin/notifications: searched by title and paged by the API, the search
+ * box debounced), and sending a notification to a project's customers, guests, or both
+ * (POST /admin/notifications). Once one is sent, the first page, where it is, loads again.
  */
 export function useNotificationsPage({ apiBaseUrl, portalBaseUrl }: Options) {
+  const [search, setSearchValue] = useState("");
+  const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [lastSent, setLastSent] = useState<number | null>(null);
   const send = useApiMutation({ apiBaseUrl, portalBaseUrl });
   const { run, reset } = send;
 
-  // Active projects, loaded once the form opens. The list route is Super Admin only.
+  const debouncedSearch = useDebouncedValue(search);
+  // The screen has no project filter, so every project the employee can reach.
+  const filters: SentNotificationFilters = { search: debouncedSearch, projectId: null };
+
+  const list = useApiQuery({
+    apiBaseUrl,
+    portalBaseUrl,
+    key: `sent|${JSON.stringify(filters)}|${page}`,
+    load: ({ apiBaseUrl: base, locale }) => fetchSentNotifications(base, filters, page, locale),
+  });
+  const { reload } = list;
+
+  // The employee's active projects, loaded once the form opens.
   const projects = useApiQuery({
     apiBaseUrl,
     portalBaseUrl,
@@ -29,6 +50,11 @@ export function useNotificationsPage({ apiBaseUrl, portalBaseUrl }: Options) {
     enabled: modalOpen,
     load: ({ apiBaseUrl: base, locale }) => fetchProjectOptions(base, { activeOnly: true }, locale),
   });
+
+  const setSearch = useCallback((value: string) => {
+    setSearchValue(value);
+    setPage(1);
+  }, []);
 
   const openModal = useCallback(() => {
     reset();
@@ -42,14 +68,21 @@ export function useNotificationsPage({ apiBaseUrl, portalBaseUrl }: Options) {
       if (recipients !== undefined) {
         setLastSent(recipients);
         setModalOpen(false);
+        setPage(1);
+        reload();
       }
     },
-    [run],
+    [run, reload],
   );
 
   const dismissSent = useCallback(() => setLastSent(null), []);
 
   return {
+    search,
+    setSearch,
+    page,
+    setPage,
+    list,
     modalOpen,
     openModal,
     closeModal,

@@ -21,12 +21,13 @@ export default async function UnitsPage({ params }: Props) {
   }
 
   const t = await getTranslations("MasterData");
-  const { apiBaseUrl, portalBaseUrl } = await readBrowserApiConfig();
+  const { apiBaseUrl, portalBaseUrl, sessionProject } = await readBrowserApiConfig();
 
   return (
     <UnitsPageClient
       apiBaseUrl={apiBaseUrl}
       portalBaseUrl={portalBaseUrl}
+      sessionProject={sessionProject}
       labels={{
         searchPlaceholder: t("searchUnits"),
         exactSearch: t("exactSearch"),

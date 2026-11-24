@@ -4,6 +4,7 @@ import {
   buildCreateProjectForm,
   buildProjectStatusForm,
   buildUpdateProjectForm,
+  fetchProjectOptions,
   fetchProjects,
   projectsQuery,
   toProject,
@@ -15,16 +16,12 @@ import {
 describe("toProjectOptions", () => {
   it("names each project in the request's language, else in English, and keeps it lenient", () => {
     expect(
-      toProjectOptions({
-        total_count: 3,
-        total_pages: 1,
-        projects: [
-          { id: 2, name: "مارينا", en_name: "Marina", ar_name: "مارينا", is_active: 1, total_units: 10, occupancy: 50 },
-          // No Arabic name and no request-language name: still listed, in English.
-          { id: 3, name: null, en_name: "Palm", ar_name: null, is_active: 0, total_units: 0, occupancy: 0 },
-          { id: 4, en_name: "Gouna", is_active: 1 },
-        ],
-      }),
+      toProjectOptions([
+        { id: 2, name: "مارينا", en_name: "Marina", ar_name: "مارينا", is_active: 1 },
+        // No Arabic name and no request-language name: still listed, in English.
+        { id: 3, name: null, en_name: "Palm", ar_name: null, is_active: 0 },
+        { id: 4, en_name: "Gouna", is_active: 1 },
+      ]),
     ).toEqual([
       { id: 2, name: "مارينا", active: true },
       { id: 3, name: "Palm", active: false },
@@ -32,8 +29,33 @@ describe("toProjectOptions", () => {
     ]);
   });
 
-  it("rejects an answer without projects", () => {
+  it("rejects an answer that isn't a list of projects", () => {
     expect(() => toProjectOptions({ total_count: 0 })).toThrow(ProjectsAnswerError);
+  });
+});
+
+describe("fetchProjectOptions", () => {
+  const answer = [
+    { id: 2, name: "Marina", en_name: "Marina", ar_name: "مارينا", is_active: 1 },
+    { id: 3, name: "Palm", en_name: "Palm", ar_name: "بالم", is_active: 0 },
+  ];
+
+  it("asks for the employee's projects and keeps only the active ones when asked", async () => {
+    const fetchImpl = vi.fn(
+      async () => new Response(JSON.stringify({ result: answer, success: true, statusCode: 200 }), { status: 200 }),
+    );
+    vi.stubGlobal("fetch", fetchImpl);
+    let active: Awaited<ReturnType<typeof fetchProjectOptions>> = [];
+    let all: typeof active = [];
+    try {
+      active = await fetchProjectOptions("https://api.test/admin", { activeOnly: true }, "en");
+      all = await fetchProjectOptions("https://api.test/admin", { activeOnly: false }, "en");
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(fetchImpl).toHaveBeenCalledWith("https://api.test/admin/projects/accessible", expect.objectContaining({ method: "GET" }));
+    expect(active.map((project) => project.id)).toEqual([2]);
+    expect(all.map((project) => project.id)).toEqual([2, 3]);
   });
 });
 

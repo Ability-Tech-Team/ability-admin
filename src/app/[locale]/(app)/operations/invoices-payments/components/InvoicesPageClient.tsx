@@ -6,6 +6,7 @@ import Pagination from "@/src/components/Pagination";
 import { useInvoicesPage } from "../hooks/useInvoicesPage";
 import InvoiceSummaryCards from "./InvoiceSummaryCards";
 import InvoiceToolbar from "./InvoiceToolbar";
+import GenerateInvoiceModal from "./GenerateInvoiceModal";
 import InvoicesTable from "./InvoicesTable";
 import RecordPaymentModal from "./RecordPaymentModal";
 
@@ -19,7 +20,7 @@ type Props = {
 export default function InvoicesPageClient({ apiBaseUrl, portalBaseUrl }: Props) {
   const t = useTranslations("InvoicesScreen");
   const page = useInvoicesPage({ apiBaseUrl, portalBaseUrl });
-  const { list, stats, payment } = page;
+  const { list, stats, payment, generate } = page;
 
   return (
     <>
@@ -33,14 +34,22 @@ export default function InvoicesPageClient({ apiBaseUrl, portalBaseUrl }: Props)
         isExact={page.filters.isExact}
         statusId={page.filters.statusId}
         projectId={page.filters.projectId}
+        invoiceTypeId={page.filters.invoiceTypeId}
         onSearchChange={page.setSearch}
         onExactChange={page.setIsExact}
         onStatusChange={page.setStatusId}
         onProjectChange={page.setProjectId}
+        onInvoiceTypeChange={page.setInvoiceTypeId}
         projectOptions={page.projectOptions}
+        invoiceTypeOptions={page.invoiceTypeOptions}
         onExport={page.exportSheet}
         exportPending={page.exportPending}
+        onGenerateInvoice={generate.open}
       />
+
+      {page.invoiceTypesFailure && list.failure?.reason !== page.invoiceTypesFailure.reason && (
+        <ApiFailureNotice failure={page.invoiceTypesFailure} onRetry={page.reloadInvoiceTypes} className="mx-5" />
+      )}
 
       {page.exportFailure && (
         <ApiFailureNotice failure={page.exportFailure} className="mx-5" />
@@ -55,6 +64,22 @@ export default function InvoicesPageClient({ apiBaseUrl, portalBaseUrl }: Props)
           <button
             type="button"
             onClick={payment.dismissPaid}
+            className="rounded-lg bg-white px-3 py-1.5 font-semibold text-emerald-800 shadow-sm hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+          >
+            {t("dismiss")}
+          </button>
+        </div>
+      )}
+
+      {generate.createdInvoiceNumber && (
+        <div
+          role="status"
+          className="mx-5 flex items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-[12px] text-emerald-800"
+        >
+          <span>{t("generate.success", { number: generate.createdInvoiceNumber })}</span>
+          <button
+            type="button"
+            onClick={generate.dismissCreated}
             className="rounded-lg bg-white px-3 py-1.5 font-semibold text-emerald-800 shadow-sm hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
           >
             {t("dismiss")}
@@ -89,6 +114,15 @@ export default function InvoicesPageClient({ apiBaseUrl, portalBaseUrl }: Props)
           failure={payment.failure}
           onSubmit={payment.submit}
           onClose={payment.close}
+        />
+      )}
+
+      {generate.isOpen && (
+        <GenerateInvoiceModal
+          apiBaseUrl={apiBaseUrl}
+          portalBaseUrl={portalBaseUrl}
+          onCreated={generate.created}
+          onClose={generate.close}
         />
       )}
     </>

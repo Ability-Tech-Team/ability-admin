@@ -437,6 +437,27 @@
         "description": "Description",
         "submittedBy": "Submitted By",
         "date": "Date"
+      },
+      "create": {
+        "title": "New Complaint",
+        "type": "Complaint Type",
+        "description": "Description",
+        "project": "Project",
+        "unit": "Unit",
+        "customer": "Customer",
+        "status": "Status",
+        "date": "Complaint Date",
+        "chooseType": "Choose a complaint type",
+        "noTypes": "This project has no complaint types",
+        "chooseStatus": "Choose a status",
+        "chooseUnitFirst": "Choose a unit first",
+        "loadingLists": "Loading…",
+        "cancel": "Cancel",
+        "submit": "Create Complaint",
+        "errors": {
+          "required": "Required.",
+          "tooLong": "At most {max} characters."
+        }
       }
     },
     "complaintDetail": {
@@ -646,15 +667,9 @@
       "newArticle": "New Article",
       "columns": {
         "article": "Article",
-        "category": "Category",
         "project": "Project",
         "status": "Status",
         "date": "Date"
-      },
-      "categories": {
-        "facilities": "Facilities",
-        "announcement": "Announcement",
-        "maintenance": "Maintenance"
       },
       "statuses": {
         "published": "published",
@@ -662,7 +677,45 @@
       },
       "edit": "Edit",
       "loading": "Loading news…",
-      "empty": "No news match these filters."
+      "empty": "No news match these filters.",
+      "form": {
+        "newTitle": "New Article",
+        "editTitle": "Edit Article",
+        "close": "Close",
+        "loading": "Loading article…",
+        "titleEn": "Title (English)",
+        "titleAr": "Title (Arabic)",
+        "contentEn": "Content (English)",
+        "contentAr": "Content (Arabic)",
+        "project": "Project",
+        "chooseProject": "Choose a project",
+        "allProjects": "All Projects",
+        "publishingStatus": "Publishing Status",
+        "draft": "Draft",
+        "published": "Published",
+        "media": "Photos and videos",
+        "mediaHint": "JPG, PNG or WebP up to {photo} MB, MP4, MOV or WebM up to {video} MB. At most {count} files.",
+        "photo": "Photo {number}",
+        "video": "Video {number}",
+        "remove": "Remove",
+        "removeItem": "Remove {name}",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving…",
+        "savedDraft": "Article saved as draft",
+        "savedPublished": "Article published",
+        "saved": "Article saved",
+        "errors": {
+          "required": "This field is required.",
+          "tooLong": "This is too long.",
+          "mediaRequired": "Add at least one photo or video.",
+          "mediaType": "{name}: choose a JPG, PNG, WebP, MP4, MOV or WebM file.",
+          "photoTooLarge": "{name}: a photo can be up to {max} MB.",
+          "videoTooLarge": "{name}: a video can be up to {max} MB.",
+          "tooMany": "At most {max} photos and videos."
+        },
+        "delete": "Delete"
+      }
     },
     "phoneDir": {
       "searchPlaceholder": "Search directory...",
@@ -676,7 +729,31 @@
         "security": "Security",
         "operations": "Operations"
       },
-      "edit": "Edit"
+      "edit": "Edit",
+      "form": {
+        "newTitle": "Add Contact",
+        "editTitle": "Edit Contact",
+        "close": "Close",
+        "nameEn": "Name (English)",
+        "nameAr": "Name (Arabic)",
+        "phone": "Phone Number",
+        "project": "Project",
+        "chooseProject": "Choose a project",
+        "allProjects": "All Projects",
+        "publishingStatus": "Publishing Status",
+        "draft": "Draft",
+        "published": "Published",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving…",
+        "delete": "Delete",
+        "saved": "Contact saved",
+        "errors": {
+          "required": "This field is required.",
+          "tooLong": "This is too long.",
+          "phone": "Enter 3 to 15 digits, with an optional + at the start."
+        }
+      }
     },
     "newsShopsComingSoon": "News & Shops module is coming soon.",
     "phoneDirectoryComingSoon": "Phone Directory module is coming soon.",
@@ -780,6 +857,25 @@
         "cancel": "Cancel",
         "savePublish": "Save & Publish",
         "guidelinePublished": "Guideline published"
+      }
+    },
+    "deleteDialog": {
+      "title": {
+        "news": "Delete article?",
+        "event": "Delete event?",
+        "guideline": "Delete guideline?",
+        "contact": "Delete contact?"
+      },
+      "body": "“{name}” will be deleted and won't show in the residents' app.",
+      "irreversible": "This can't be undone from this screen.",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleting": "Deleting…",
+      "deleted": {
+        "news": "Article deleted",
+        "event": "Event deleted",
+        "guideline": "Guideline deleted",
+        "contact": "Contact deleted"
       }
     }
   },
@@ -1136,6 +1232,32 @@
       "statusFinal": "This request's status can't change any more.",
       "chooseStatus": "Choose a new status",
       "updateStatus": "Update status"
+    },
+    "create": {
+      "title": "New Service Request",
+      "project": "Project",
+      "department": "Department",
+      "chooseDepartment": "Choose a department",
+      "chooseUnitFirst": "Choose a unit first",
+      "service": "Service",
+      "chooseService": "Choose a service",
+      "noServices": "This department has no active services.",
+      "loadingOptions": "Loading…",
+      "loadingCustomer": "Loading the customer's mobile…",
+      "quantity": "Quantity",
+      "price": "Price",
+      "requesterName": "Requester Name",
+      "requesterMobile": "Requester Mobile",
+      "dueTimeSlot": "Due Time",
+      "cancel": "Cancel",
+      "submit": "Create Request",
+      "errors": {
+        "required": "Required.",
+        "mobile": "Enter an 11-digit mobile number.",
+        "quantity": "Enter a whole number of 1 or more.",
+        "past": "Choose a time that hasn't passed.",
+        "noMobile": "This customer has no mobile number on record. Add one in Customers first."
+      }
     }
   },
   "ComplaintsScreen": {
@@ -1208,7 +1330,20 @@
       "success": "Payment recorded for invoice {number}."
     },
     "invoiceType": "Invoice type",
-    "allTypes": "All types"
+    "allTypes": "All types",
+    "generate": {
+      "customerName": "Customer Name",
+      "customerHint": "The unit's owner",
+      "chooseType": "Choose the invoice type",
+      "loadingTypes": "Loading invoice types…",
+      "noTypes": "This project has no invoice types.",
+      "unitInfo": "One invoice is created for the chosen unit, in its owner's name, as Pending.",
+      "success": "Invoice {number} generated.",
+      "errors": {
+        "required": "Required.",
+        "amount": "Enter an amount above zero, with up to two decimals."
+      }
+    }
   },
   "RentalsScreen": {
     "viewsLabel": "Rental lists",
@@ -1371,7 +1506,8 @@
       "notes": "Notes",
       "furnished": "Furnished",
       "eligibleForRent": "Eligible for rent",
-      "broker": "Broker unit"
+      "broker": "Broker unit",
+      "noneDefined": "None are defined for this project yet."
     },
     "errors": {
       "required": "Required.",
@@ -1584,7 +1720,9 @@
     "loadingHistory": "Loading sent notifications…",
     "noneSent": "No notifications have been sent yet.",
     "previousPage": "Previous page",
-    "nextPage": "Next page"
+    "nextPage": "Next page",
+    "pushNotRecorded": "Push results weren't recorded for this notification.",
+    "noDevice": "{count, plural, one {# recipient has no phone registered (not counted as failed).} other {# recipients have no phone registered (not counted as failed).}}"
   },
   "GuidelinesScreen": {
     "loading": "Loading guidelines…",
@@ -1600,7 +1738,13 @@
     "editTitle": "Edit Event",
     "dateTime": "{date} at {time}",
     "errors": {
-      "capacity": "Enter a whole number, 1 or more."
-    }
+      "capacity": "Enter a whole number, 1 or more.",
+      "imageType": "Choose a JPG, PNG or WebP image.",
+      "imageTooLarge": "The image can be up to {max} MB."
+    },
+    "ticketingUrl": "Ticketing Link",
+    "image": "Image",
+    "imageHint": "JPG, PNG or WebP, up to {max} MB.",
+    "imageHintEdit": "Leave empty to keep the current image. JPG, PNG or WebP, up to {max} MB."
   }
 }

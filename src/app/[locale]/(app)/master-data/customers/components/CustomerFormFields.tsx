@@ -2,7 +2,8 @@
 
 import { useId } from "react";
 import { useTranslations } from "next-intl";
-import type { CustomerLookupField } from "../schema";
+import type { Dropdowns } from "@/src/services/definitions";
+import { CUSTOMER_LOOKUP_LISTS, type CustomerLookupField } from "../schema";
 import type { CustomerFormField, CustomerFormValues, Named } from "../types";
 
 type Variant = "add" | "edit";
@@ -17,7 +18,9 @@ type Props = {
   disabled?: boolean;
   /** The add form's project choice; left out when editing. */
   projects?: { options: Named[] | null; forbidden: boolean };
-  /** The edit form's saved choices by name, shown in their disabled fields. */
+  /** The definitions lists the choice fields pick from; null while they load (the fields wait). */
+  lookups: Dropdowns | null;
+  /** The edit form's saved choices by name, for a saved choice the lists no longer offer. */
   savedNames?: Partial<Record<CustomerLookupField, string | null>>;
 };
 
@@ -39,7 +42,7 @@ const styles: Record<Variant, { label: string; input: string; file: string; grid
 };
 
 /** The customer's fields, shared by the add and edit forms. */
-export default function CustomerFormFields({ variant, values, onChange, required, missing, disabled, projects, savedNames }: Props) {
+export default function CustomerFormFields({ variant, values, onChange, required, missing, disabled, projects, lookups, savedNames }: Props) {
   const t = useTranslations("MasterData");
   const tc = useTranslations("CustomersScreen");
   const prefix = useId();
@@ -74,23 +77,29 @@ export default function CustomerFormFields({ variant, values, onChange, required
       />
     ));
 
-  // No admin route lists these choices, so they can't be changed here. Editing shows the saved
-  // choice by its name (or its id), and a save leaves it as it is.
+  // The choices come from the definitions lists. A saved choice the list no longer offers (say an
+  // inactive one) is still shown, by its name, so editing doesn't drop it unasked.
   const select = (name: CustomerLookupField, label: string) =>
-    field(name, label, (id, className) => (
-      <select
-        id={id}
-        value={values[name]}
-        onChange={(e) => onChange(name, e.target.value)}
-        disabled
-        title={tc("notAvailable")}
-        aria-invalid={missing.includes(name) || undefined}
-        className={className}
-      >
-        <option value="">{tc("choose")}</option>
-        {values[name] && <option value={values[name]}>{savedNames?.[name] ?? `#${values[name]}`}</option>}
-      </select>
-    ));
+    field(name, label, (id, className) => {
+      const options = lookups?.[CUSTOMER_LOOKUP_LISTS[name]] ?? [];
+      const saved = values[name] && !options.some((option) => String(option.id) === values[name]);
+      return (
+        <select
+          id={id}
+          value={values[name]}
+          onChange={(e) => onChange(name, e.target.value)}
+          disabled={disabled || !lookups}
+          aria-invalid={missing.includes(name) || undefined}
+          className={className}
+        >
+          <option value="">{tc("choose")}</option>
+          {saved && <option value={values[name]}>{savedNames?.[name] ?? `#${values[name]}`}</option>}
+          {options.map((option) => (
+            <option key={option.id} value={option.id}>{option.name}</option>
+          ))}
+        </select>
+      );
+    });
 
   return (
     <div className={style.grid}>

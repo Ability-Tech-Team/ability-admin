@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import type { ToolbarLabels } from "@/src/components/Toolbar";
 import ApiFailureNotice from "@/src/components/ApiFailureNotice";
 import Pagination from "@/src/components/Pagination";
+import DeleteContentDialog from "../../components/DeleteContentDialog";
 import { useEventsPage } from "../hooks/useEventsPage";
 import EventToolbarWithModal from "./EventToolbarWithModal";
 import EventFilters from "./EventFilters";
@@ -25,7 +26,7 @@ export default function EventsPageClient({ apiBaseUrl, portalBaseUrl, labels }: 
   const t = useTranslations("EventsContent");
   const locale = useLocale();
   const page = useEventsPage({ apiBaseUrl, portalBaseUrl });
-  const { list } = page;
+  const { list, editing, deletion } = page;
   const [view, setView] = useState<"grid" | "list">("grid");
 
   const projectOptions = (page.projects.data ?? []).map((project) => ({
@@ -85,30 +86,38 @@ export default function EventsPageClient({ apiBaseUrl, portalBaseUrl, labels }: 
 
       {page.modal?.mode === "create" && (
         <CreateEventModal
-          mode="create"
           event={null}
-          projectOptions={projectOptions}
-          pending={false}
-          failure={null}
-          onClose={page.closeModal}
-        />
-      )}
-      {page.modal?.mode === "edit" && page.editing && (
-        <CreateEventModal
-          key={page.editing.id}
-          mode="edit"
-          event={page.editing}
           projectOptions={projectOptions}
           pending={page.savePending}
           failure={page.saveFailure}
           onClose={page.closeModal}
           onSubmit={async (values, published) => {
-            if (page.editing && (await page.submitEdit(page.editing, values, published, locale))) {
+            if (await page.submitCreate(values, published)) {
               toast.success(published ? t("createModal.eventPublished") : t("createModal.savedAsDraft"));
             }
           }}
         />
       )}
+      {page.modal?.mode === "edit" && editing && (
+        <CreateEventModal
+          key={editing.id}
+          event={editing}
+          projectOptions={projectOptions}
+          pending={page.savePending}
+          failure={page.saveFailure}
+          onClose={() => {
+            // The delete confirmation over the form closes first.
+            if (!deletion.target) page.closeModal();
+          }}
+          onDelete={() => deletion.ask({ id: editing.id, name: locale === "ar" ? editing.arTitle : editing.enTitle })}
+          onSubmit={async (values, published) => {
+            if (await page.submitEdit(editing, values, published, locale)) {
+              toast.success(published ? t("createModal.eventPublished") : t("createModal.savedAsDraft"));
+            }
+          }}
+        />
+      )}
+      <DeleteContentDialog kind="event" deletion={deletion} />
     </div>
   );
 }

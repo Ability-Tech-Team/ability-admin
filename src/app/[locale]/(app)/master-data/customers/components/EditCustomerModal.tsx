@@ -6,12 +6,15 @@ import ModalWrapper from "@/src/components/ModalWrapper";
 import CloseButton from "@/src/components/CloseButton";
 import ApiFailureNotice from "@/src/components/ApiFailureNotice";
 import type { ApiFailure } from "@/src/lib/apiFailure";
+import type { Dropdowns } from "@/src/services/definitions";
 import type { Customer, CustomerFormField, CustomerFormValues } from "../types";
 import { customerFormFrom, EDIT_REQUIRED, missingFields } from "../utils";
 import CustomerFormFields from "./CustomerFormFields";
 
 type EditCustomerModalProps = {
   customer: Customer;
+  /** The definitions lists the choice fields pick from (null while they load) and why they failed. */
+  lookups: { data: Dropdowns | null; failure: ApiFailure | null; reload: () => void };
   /** Resolves true once saved (or when nothing changed). */
   onSave: (values: CustomerFormValues) => Promise<boolean>;
   saving: boolean;
@@ -21,7 +24,7 @@ type EditCustomerModalProps = {
   onDelete: () => void;
 };
 
-export default function EditCustomerModal({ customer, onSave, saving, failure, onClose, onDelete }: EditCustomerModalProps) {
+export default function EditCustomerModal({ customer, lookups, onSave, saving, failure, onClose, onDelete }: EditCustomerModalProps) {
   const t = useTranslations("MasterData");
   const tc = useTranslations("CustomersScreen");
   const [values, setValues] = useState<CustomerFormValues>(() => customerFormFrom(customer));
@@ -63,6 +66,7 @@ export default function EditCustomerModal({ customer, onSave, saving, failure, o
                 required={EDIT_REQUIRED}
                 missing={missing}
                 disabled={saving}
+                lookups={lookups.data}
                 savedNames={{
                   idTypeId: customer.idTypeName,
                   countryId: customer.countryName,
@@ -71,6 +75,7 @@ export default function EditCustomerModal({ customer, onSave, saving, failure, o
                   religionId: customer.religionName,
                 }}
               />
+              {lookups.failure && <ApiFailureNotice failure={lookups.failure} onRetry={lookups.reload} className="mt-3" />}
               {failure && <ApiFailureNotice failure={failure} className="mt-3" />}
             </div>
 

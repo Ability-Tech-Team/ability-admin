@@ -1,12 +1,13 @@
 "use client";
 
 import { useMemo } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { ToolbarLabels } from "@/src/components/Toolbar";
 import Toolbar from "@/src/components/Toolbar";
 import FilterDropdown from "@/src/components/FilterDropdown";
 import ApiFailureNotice from "@/src/components/ApiFailureNotice";
 import { ALL_PROJECTS_ID } from "@/src/services/guidelines";
+import DeleteContentDialog from "../../components/DeleteContentDialog";
 import { useGuidelinesPage } from "../hooks/useGuidelinesPage";
 import type { ProjectChoice } from "../types";
 import GuidelineStatsCards from "./GuidelineStatsCards";
@@ -33,8 +34,9 @@ type Props = {
 
 export default function GuidelinesPageClient({ apiBaseUrl, portalBaseUrl, labels, statsLabels, projectsLabel }: Props) {
   const t = useTranslations("EventsContent.guidelines");
+  const locale = useLocale();
   const page = useGuidelinesPage({ apiBaseUrl, portalBaseUrl });
-  const { list, stats } = page;
+  const { list, stats, editing, deletion } = page;
 
   // The active projects (none for a role that can't list them); the form adds "All Projects".
   const projectOptions: ProjectChoice[] = useMemo(
@@ -57,17 +59,22 @@ export default function GuidelinesPageClient({ apiBaseUrl, portalBaseUrl, labels
           onSubmit={page.submitCreate}
         />
       )}
-      {page.modal?.mode === "edit" && page.editing && (
+      {page.modal?.mode === "edit" && editing && (
         <EditGuidelineModal
-          key={page.editing.id}
-          guideline={page.editing}
+          key={editing.id}
+          guideline={editing}
           projectOptions={projectOptions}
           pending={page.savePending}
           failure={page.saveFailure}
-          onClose={page.closeModal}
-          onSubmit={(input) => (page.editing ? page.submitEdit(page.editing.id, input) : Promise.resolve(false))}
+          onClose={() => {
+            // The delete confirmation over the form closes first.
+            if (!deletion.target) page.closeModal();
+          }}
+          onDelete={() => deletion.ask({ id: editing.id, name: locale === "ar" ? editing.titleAr : editing.titleEn })}
+          onSubmit={(input) => page.submitEdit(editing.id, input)}
         />
       )}
+      <DeleteContentDialog kind="guideline" deletion={deletion} />
       <GuidelineStatsCards
         stats={{ published: stats.data?.published ?? null, draft: stats.data?.draft ?? null, contentSections: null }}
         labels={statsLabels}

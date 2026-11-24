@@ -34,10 +34,20 @@ the workspace instead of assuming it exists.
   rental management, service requests, complaints, invoices, guest
   invitations, sending notifications, events, news, guidelines, the phone
   directory and About Us (branding), plus the side-menu and tab counts.
-  Controls whose route doesn't exist yet stay visible but disabled with a
-  "not available yet" title (e.g. Add Unit and Add Customer, which need an
-  admin lookups route; the sent-notifications list and Delivery Logs, which
-  need `GET /admin/notifications`). Screens with no admin routes at all still
+  Since 2026-11-23 the forms' choice lists come from the definitions routes
+  (`GET /admin/definitions/all-dropdowns`, `/definitions/services`; the CRM's
+  shared `libs/domain/src/definitions`), through `src/services/definitions.ts`
+  and `src/hooks/useDropdowns.ts`. They feed Add/Edit Customer, Add Unit, New
+  Request, New Complaint, Generate Invoice and the invoice-type filter. The
+  forms acting for a resident pick an owned unit with
+  `src/components/OwnedUnitPicker.tsx` (`useOwnedUnitSearch`) and save to the
+  unit's project; Add Customer and Add Unit save to the chosen project (or,
+  if the project list is refused, the sign-in project,
+  `readBrowserApiConfig().sessionProject`). Controls whose route doesn't
+  exist yet stay visible but disabled with a "not available yet" title (e.g.
+  Save Draft on the notification form). The sent-notifications list, its tab
+  count and Delivery Logs load from `GET /admin/notifications` (one entry per
+  send, with read counts and push results). Screens with no admin routes at all still
   show sample data: Users, Roles & Permissions, Audit Log, Notification
   Templates, and Settings (`src/services/*.ts` marked `TODO: replace with
   real API call`).
@@ -48,8 +58,9 @@ the workspace instead of assuming it exists.
   language), `useDebouncedValue.ts`, `src/lib/apiFailure.ts` with
   `src/components/ApiFailureNotice.tsx`, and `src/components/Pagination.tsx`.
   The one project list for pickers is `fetchProjectOptions` in
-  `src/services/projects.ts` (Super Admin only on the API, so other roles get
-  no project choices). Never add sample or fallback data to a connected screen. The app reads its API address from the sign-in and has the local
+  `src/services/projects.ts` (`GET /projects/accessible`, open to every
+  employee: all projects for the Super Admin, else the sign-in project plus
+  the employee's other granted projects). Never add sample or fallback data to a connected screen. The app reads its API address from the sign-in and has the local
   dev proxy (below). Do not expose protected features without the check, and
   do not add a stub, bypass, or demo mode.
 - **Backend:** this app's API is `../ability-crm-api/apps/community-admin`

@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import ApiFailureNotice from "@/src/components/ApiFailureNotice";
 import FilterDropdown from "@/src/components/FilterDropdown";
 import Toolbar from "@/src/components/Toolbar";
 import { useNotificationsPage } from "../hooks/useNotificationsPage";
@@ -16,8 +17,8 @@ type Props = {
 };
 
 /**
- * The send form, and the sent notifications' table. No admin route lists what was sent, so the
- * table stays empty and the filters that only act on it are disabled.
+ * The send form, and what was sent (searched by title, paged by the API). Every entry is a sent
+ * announcement, so the Status and Type filters, which the route can't apply, stay disabled.
  */
 export default function NotificationsPageClient({ apiBaseUrl, portalBaseUrl }: Props) {
   const t = useTranslations("Notifications");
@@ -51,6 +52,7 @@ export default function NotificationsPageClient({ apiBaseUrl, portalBaseUrl }: P
             <NotificationFilters disabled title={unavailable} />
           </>
         }
+        onSearch={page.setSearch}
         onAdd={page.openModal}
       />
 
@@ -70,10 +72,16 @@ export default function NotificationsPageClient({ apiBaseUrl, portalBaseUrl }: P
             </button>
           </div>
         )}
+        {page.list.failure && <ApiFailureNotice failure={page.list.failure} onRetry={page.list.reload} />}
       </div>
 
       {/* The table keeps its own margins, as before. */}
-      <NotificationsTable />
+      <NotificationsTable
+        data={page.list.data}
+        loading={page.list.loading}
+        page={page.page}
+        onPageChange={page.setPage}
+      />
 
       {page.modalOpen && (
         <CreateNotificationModal

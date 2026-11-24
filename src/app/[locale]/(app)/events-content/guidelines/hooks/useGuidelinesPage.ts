@@ -6,6 +6,7 @@ import { useApiQuery } from "@/src/hooks/useApiQuery";
 import { useDebouncedValue } from "@/src/hooks/useDebouncedValue";
 import {
   createGuideline,
+  deleteGuideline,
   fetchGuidelineStats,
   fetchGuidelines,
   updateGuideline,
@@ -13,6 +14,7 @@ import {
   type GuidelinesFilter,
 } from "@/src/services/guidelines";
 import { fetchProjectOptions } from "@/src/services/projects";
+import { pageAfterDelete, useContentDelete } from "../../hooks/useContentDelete";
 import type { GuidelineModalState } from "../types";
 import { singleProjectId } from "../utils";
 
@@ -25,8 +27,8 @@ type Options = {
 
 /**
  * The guidelines list (search and one project on the API, its pages), the published and draft
- * counts, the active projects to pick from, and the new and edit forms. Every save reloads the
- * list and the counts.
+ * counts, the active projects to pick from, the new and edit forms, and deleting. Every save
+ * reloads the list and the counts.
  */
 export function useGuidelinesPage({ apiBaseUrl, portalBaseUrl }: Options) {
   const [search, setSearchValue] = useState("");
@@ -55,7 +57,7 @@ export function useGuidelinesPage({ apiBaseUrl, portalBaseUrl }: Options) {
     load: ({ apiBaseUrl: base, locale }) => fetchGuidelineStats(base, locale),
   });
 
-  // The list route is Super Admin only: another role gets no project choices.
+  // The projects this employee can work in (GET /projects/accessible).
   const projects = useApiQuery({
     apiBaseUrl,
     portalBaseUrl,
@@ -122,6 +124,17 @@ export function useGuidelinesPage({ apiBaseUrl, portalBaseUrl }: Options) {
     [runSave, afterSave],
   );
 
+  const shown = list.data?.guidelines.length ?? 0;
+  const deletion = useContentDelete({
+    apiBaseUrl,
+    portalBaseUrl,
+    remove: deleteGuideline,
+    onDeleted: () => {
+      setPage(pageAfterDelete(page, shown));
+      afterSave();
+    },
+  });
+
   const editing =
     modal?.mode === "edit"
       ? (list.data?.guidelines.find((guideline) => guideline.id === modal.guidelineId) ?? null)
@@ -144,5 +157,6 @@ export function useGuidelinesPage({ apiBaseUrl, portalBaseUrl }: Options) {
     submitEdit,
     savePending: save.pending,
     saveFailure: save.failure,
+    deletion,
   };
 }

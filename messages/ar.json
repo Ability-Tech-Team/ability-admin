@@ -437,6 +437,27 @@
         "description": "الوصف",
         "submittedBy": "مقدم من",
         "date": "التاريخ"
+      },
+      "create": {
+        "title": "شكوى جديدة",
+        "type": "نوع الشكوى",
+        "description": "الوصف",
+        "project": "المشروع",
+        "unit": "الوحدة",
+        "customer": "العميل",
+        "status": "الحالة",
+        "date": "تاريخ الشكوى",
+        "chooseType": "اختر نوع الشكوى",
+        "noTypes": "لا توجد أنواع شكاوى لهذا المشروع",
+        "chooseStatus": "اختر الحالة",
+        "chooseUnitFirst": "اختر الوحدة أولاً",
+        "loadingLists": "جارٍ التحميل…",
+        "cancel": "إلغاء",
+        "submit": "إنشاء شكوى",
+        "errors": {
+          "required": "مطلوب.",
+          "tooLong": "{max} حرفًا على الأكثر."
+        }
       }
     },
     "complaintDetail": {
@@ -646,15 +667,9 @@
       "newArticle": "مقال جديد",
       "columns": {
         "article": "المقال",
-        "category": "الفئة",
         "project": "المشروع",
         "status": "الحالة",
         "date": "التاريخ"
-      },
-      "categories": {
-        "facilities": "مرافق",
-        "announcement": "إعلان",
-        "maintenance": "صيانة"
       },
       "statuses": {
         "published": "منشور",
@@ -662,7 +677,45 @@
       },
       "edit": "تعديل",
       "loading": "جارٍ تحميل الأخبار…",
-      "empty": "لا توجد أخبار مطابقة لهذه الفلاتر."
+      "empty": "لا توجد أخبار مطابقة لهذه الفلاتر.",
+      "form": {
+        "newTitle": "مقال جديد",
+        "editTitle": "تعديل المقال",
+        "close": "إغلاق",
+        "loading": "جارٍ تحميل المقال…",
+        "titleEn": "العنوان (الإنجليزية)",
+        "titleAr": "العنوان (العربية)",
+        "contentEn": "المحتوى (الإنجليزية)",
+        "contentAr": "المحتوى (العربية)",
+        "project": "المشروع",
+        "chooseProject": "اختر مشروعاً",
+        "allProjects": "جميع المشاريع",
+        "publishingStatus": "حالة النشر",
+        "draft": "مسودة",
+        "published": "منشور",
+        "media": "الصور ومقاطع الفيديو",
+        "mediaHint": "JPG أو PNG أو WebP حتى {photo} ميغابايت، وMP4 أو MOV أو WebM حتى {video} ميغابايت. {count} ملفات كحد أقصى.",
+        "photo": "صورة {number}",
+        "video": "فيديو {number}",
+        "remove": "إزالة",
+        "removeItem": "إزالة {name}",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "saving": "جارٍ الحفظ…",
+        "savedDraft": "تم حفظ المقال كمسودة",
+        "savedPublished": "تم نشر المقال",
+        "saved": "تم حفظ المقال",
+        "errors": {
+          "required": "هذا الحقل مطلوب.",
+          "tooLong": "النص أطول من المسموح.",
+          "mediaRequired": "أضف صورة أو مقطع فيديو واحداً على الأقل.",
+          "mediaType": "{name}: اختر ملف JPG أو PNG أو WebP أو MP4 أو MOV أو WebM.",
+          "photoTooLarge": "{name}: الحد الأقصى للصورة {max} ميغابايت.",
+          "videoTooLarge": "{name}: الحد الأقصى للفيديو {max} ميغابايت.",
+          "tooMany": "{max} صور ومقاطع فيديو كحد أقصى."
+        },
+        "delete": "حذف"
+      }
     },
     "phoneDir": {
       "searchPlaceholder": "البحث في الدليل...",
@@ -676,7 +729,31 @@
         "security": "أمن",
         "operations": "عمليات"
       },
-      "edit": "تعديل"
+      "edit": "تعديل",
+      "form": {
+        "newTitle": "إضافة جهة اتصال",
+        "editTitle": "تعديل جهة الاتصال",
+        "close": "إغلاق",
+        "nameEn": "الاسم (الإنجليزية)",
+        "nameAr": "الاسم (العربية)",
+        "phone": "رقم الهاتف",
+        "project": "المشروع",
+        "chooseProject": "اختر مشروعاً",
+        "allProjects": "جميع المشاريع",
+        "publishingStatus": "حالة النشر",
+        "draft": "مسودة",
+        "published": "منشور",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "saving": "جارٍ الحفظ…",
+        "delete": "حذف",
+        "saved": "تم حفظ جهة الاتصال",
+        "errors": {
+          "required": "هذا الحقل مطلوب.",
+          "tooLong": "النص أطول من المسموح.",
+          "phone": "أدخل من 3 إلى 15 رقماً، ويمكن أن يبدأ بعلامة +."
+        }
+      }
     },
     "newsShopsComingSoon": "وحدة الأخبار والمتاجر قيد الإنشاء.",
     "phoneDirectoryComingSoon": "وحدة دليل الهاتف قيد الإنشاء.",
@@ -780,6 +857,25 @@
         "cancel": "إلغاء",
         "savePublish": "حفظ ونشر",
         "guidelinePublished": "تم نشر الدليل"
+      }
+    },
+    "deleteDialog": {
+      "title": {
+        "news": "حذف المقال؟",
+        "event": "حذف الفعالية؟",
+        "guideline": "حذف الإرشاد؟",
+        "contact": "حذف جهة الاتصال؟"
+      },
+      "body": "سيتم حذف «{name}» ولن يظهر في تطبيق السكان.",
+      "irreversible": "لا يمكن التراجع عن هذا من هذه الشاشة.",
+      "cancel": "إلغاء",
+      "delete": "حذف",
+      "deleting": "جارٍ الحذف…",
+      "deleted": {
+        "news": "تم حذف المقال",
+        "event": "تم حذف الفعالية",
+        "guideline": "تم حذف الإرشاد",
+        "contact": "تم حذف جهة الاتصال"
       }
     }
   },
@@ -1136,6 +1232,32 @@
       "statusFinal": "لم يعد من الممكن تغيير حالة هذا الطلب.",
       "chooseStatus": "اختر حالة جديدة",
       "updateStatus": "تحديث الحالة"
+    },
+    "create": {
+      "title": "طلب خدمة جديد",
+      "project": "المشروع",
+      "department": "القسم",
+      "chooseDepartment": "اختر القسم",
+      "chooseUnitFirst": "اختر الوحدة أولاً",
+      "service": "الخدمة",
+      "chooseService": "اختر الخدمة",
+      "noServices": "لا توجد خدمات مفعّلة في هذا القسم.",
+      "loadingOptions": "جارٍ التحميل…",
+      "loadingCustomer": "جارٍ تحميل رقم هاتف العميل…",
+      "quantity": "الكمية",
+      "price": "السعر",
+      "requesterName": "اسم مقدم الطلب",
+      "requesterMobile": "هاتف مقدم الطلب",
+      "dueTimeSlot": "وقت الاستحقاق",
+      "cancel": "إلغاء",
+      "submit": "إنشاء طلب",
+      "errors": {
+        "required": "مطلوب.",
+        "mobile": "أدخل رقم هاتف من 11 رقمًا.",
+        "quantity": "أدخل عددًا صحيحًا 1 أو أكثر.",
+        "past": "اختر وقتًا لم يمضِ بعد.",
+        "noMobile": "لا يوجد رقم هاتف مسجّل لهذا العميل. أضفه من شاشة العملاء أولاً."
+      }
     }
   },
   "ComplaintsScreen": {
@@ -1208,7 +1330,20 @@
       "success": "تم تسجيل الدفعة للفاتورة {number}."
     },
     "invoiceType": "نوع الفاتورة",
-    "allTypes": "كل الأنواع"
+    "allTypes": "كل الأنواع",
+    "generate": {
+      "customerName": "اسم العميل",
+      "customerHint": "مالك الوحدة",
+      "chooseType": "اختر نوع الفاتورة",
+      "loadingTypes": "جارٍ تحميل أنواع الفواتير…",
+      "noTypes": "لا توجد أنواع فواتير لهذا المشروع.",
+      "unitInfo": "تُنشأ فاتورة واحدة للوحدة المختارة باسم مالكها، بحالة قيد الانتظار.",
+      "success": "تم إنشاء الفاتورة {number}.",
+      "errors": {
+        "required": "مطلوب.",
+        "amount": "أدخل مبلغًا أكبر من صفر، بحد أقصى رقمين عشريين."
+      }
+    }
   },
   "RentalsScreen": {
     "viewsLabel": "قوائم الإيجارات",
@@ -1371,7 +1506,8 @@
       "notes": "ملاحظات",
       "furnished": "مفروشة",
       "eligibleForRent": "متاحة للإيجار",
-      "broker": "وحدة وسيط"
+      "broker": "وحدة وسيط",
+      "noneDefined": "لم يُعرَّف أيٌّ منها لهذا المشروع بعد."
     },
     "errors": {
       "required": "مطلوب.",
@@ -1584,7 +1720,9 @@
     "loadingHistory": "جارٍ تحميل الإشعارات المرسلة…",
     "noneSent": "لم يُرسل أي إشعار بعد.",
     "previousPage": "الصفحة السابقة",
-    "nextPage": "الصفحة التالية"
+    "nextPage": "الصفحة التالية",
+    "pushNotRecorded": "لم تُسجَّل نتائج الإرسال الفوري لهذا الإشعار.",
+    "noDevice": "{count, plural, one {مستلم واحد ليس لديه هاتف مسجّل (لا يُحسب ضمن الفاشلة).} two {مستلمان ليس لديهما هاتف مسجّل (لا يُحسبان ضمن الفاشلة).} few {# مستلمين ليس لديهم هاتف مسجّل (لا يُحسبون ضمن الفاشلة).} many {# مستلماً ليس لديهم هاتف مسجّل (لا يُحسبون ضمن الفاشلة).} other {# مستلم ليس لديهم هاتف مسجّل (لا يُحسبون ضمن الفاشلة).}}"
   },
   "GuidelinesScreen": {
     "loading": "جارٍ تحميل الأدلة الإرشادية…",
@@ -1600,7 +1738,13 @@
     "editTitle": "تعديل الفعالية",
     "dateTime": "{date} الساعة {time}",
     "errors": {
-      "capacity": "أدخل عددًا صحيحًا، 1 أو أكثر."
-    }
+      "capacity": "أدخل عددًا صحيحًا، 1 أو أكثر.",
+      "imageType": "اختر صورة JPG أو PNG أو WebP.",
+      "imageTooLarge": "الحد الأقصى للصورة {max} ميغابايت."
+    },
+    "ticketingUrl": "رابط التذاكر",
+    "image": "الصورة",
+    "imageHint": "JPG أو PNG أو WebP، حتى {max} ميغابايت.",
+    "imageHintEdit": "اتركها فارغة للإبقاء على الصورة الحالية. JPG أو PNG أو WebP، حتى {max} ميغابايت."
   }
 }

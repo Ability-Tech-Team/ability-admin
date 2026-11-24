@@ -10,11 +10,11 @@ type Props = {
   loading: boolean;
   page: number;
   onPageChange: (page: number) => void;
+  onEdit: (articleId: number) => void;
 };
 
-export default function NewsShopsTable({ data, loading, page, onPageChange }: Props) {
+export default function NewsShopsTable({ data, loading, page, onPageChange, onEdit }: Props) {
   const t = useTranslations("EventsContent.newsShops");
-  const tUnits = useTranslations("UnitsScreen");
   const articles = data?.articles ?? [];
 
   return (
@@ -24,9 +24,6 @@ export default function NewsShopsTable({ data, loading, page, onPageChange }: Pr
           <tr className="border-b border-gray-100 bg-gray-50/60">
             <th className="px-4 py-2.5 text-start text-[10px] font-semibold uppercase tracking-wider text-gray-400">
               {t("columns.article")}
-            </th>
-            <th className="px-4 py-2.5 text-start text-[10px] font-semibold uppercase tracking-wider text-gray-400">
-              {t("columns.category")}
             </th>
             <th className="px-4 py-2.5 text-start text-[10px] font-semibold uppercase tracking-wider text-gray-400">
               {t("columns.project")}
@@ -43,7 +40,7 @@ export default function NewsShopsTable({ data, loading, page, onPageChange }: Pr
         <tbody className={loading && data ? "opacity-60" : undefined}>
           {articles.length === 0 && (
             <tr>
-              <td colSpan={6} className="px-4 py-10 text-center text-[12px] text-gray-400">
+              <td colSpan={5} className="px-4 py-10 text-center text-[12px] text-gray-400">
                 {loading ? t("loading") : data ? t("empty") : "—"}
               </td>
             </tr>
@@ -57,8 +54,6 @@ export default function NewsShopsTable({ data, loading, page, onPageChange }: Pr
                 <div className="text-[12px] font-semibold text-gray-900">{article.titleEn}</div>
                 <div className="text-[10px] text-gray-400">{article.titleAr}</div>
               </td>
-              {/* The API has no news categories. */}
-              <td className="px-4 py-3 text-[11px] text-gray-400">—</td>
               <td className="px-4 py-3 text-[11px] text-gray-600">
                 {article.project.name ?? "—"}
               </td>
@@ -77,12 +72,10 @@ export default function NewsShopsTable({ data, loading, page, onPageChange }: Pr
                 {newsDisplayDate(article) ?? "—"}
               </td>
               <td className="px-4 py-3">
-                {/* The API can edit news, but the screen has no form for it yet. */}
                 <button
                   type="button"
-                  disabled
-                  title={tUnits("notAvailableYet")}
-                  className="text-[11px] font-medium text-blue-600 hover:text-blue-800 transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:text-blue-600"
+                  onClick={() => onEdit(article.id)}
+                  className="text-[11px] font-medium text-blue-600 hover:text-blue-800 transition-colors"
                 >
                   {t("edit")}
                 </button>

@@ -63,7 +63,17 @@ export type SessionDetails = {
    * `API_ALLOWED_URLS` (`readApiBaseUrl` in src/lib/session.ts).
    */
   apiUrl: string | null;
+  /**
+   * The project the user signed in to, which the forms save to when the user can't pick one
+   * (if the project list is refused). Display data: the API checks every project sent.
+   */
+  project: { id: number; name: string | null } | null;
 };
+
+function sessionProject(id: string | number | null | undefined, name: string | null | undefined): SessionDetails["project"] {
+  const projectId = Number(id);
+  return Number.isInteger(projectId) && projectId > 0 ? { id: projectId, name: name?.trim() || null } : null;
+}
 
 function decodeBase64Url(value: string): string | null {
   if (!/^[A-Za-z0-9_-]+={0,2}$/.test(value)) {
@@ -118,6 +128,7 @@ export function parseSessionDetails(
       platforms
         ?.find((platform) => platform.key === COMMUNITY_ADMIN_PLATFORM)
         ?.apiUrl?.trim() || null,
+    project: sessionProject(session.company_project_id, session.project_name),
   };
 }
 

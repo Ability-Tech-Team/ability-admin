@@ -6,7 +6,7 @@ import { OWNERSHIP_FILTER_OPTIONS } from "../schema";
 import type { Named } from "../types";
 
 type Props = {
-  /** The projects to filter by; null hides the filter (e.g. not a Super Admin). */
+  /** The projects to filter by; null hides the filter (e.g. while they load). */
   projects: Named[] | null;
   onProjectChange?: (selected: Set<string>) => void;
   onTypeChange?: (selected: Set<string>) => void;

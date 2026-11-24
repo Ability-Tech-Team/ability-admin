@@ -22,7 +22,7 @@ type Props = {
   /** Active projects; null until they load. */
   projects: ProjectOption[] | null;
   projectsLoading: boolean;
-  /** The project list is Super Admin only, so other roles can't pick one. */
+  /** The employee's projects; none to pick when the list can't load. */
   projectsFailure: ApiFailure | null;
   onRetryProjects: () => void;
   pending: boolean;

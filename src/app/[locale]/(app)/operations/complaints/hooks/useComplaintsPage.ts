@@ -20,13 +20,16 @@ type Options = {
 /**
  * The complaints list (filtered and paged by the API, the search box debounced), the open
  * complaint, and its saves: a response to the customer and a status change. There is no
- * route for one complaint, so the open one is refreshed from the reloaded list.
+ * route for one complaint, so the open one is refreshed from the reloaded list. New Complaint
+ * (`NewComplaintModal`) saves on its own; once it has, the first page, where the newest
+ * complaint is, loads again.
  */
 export function useComplaintsPage({ apiBaseUrl, portalBaseUrl }: Options) {
   const [search, setSearchValue] = useState("");
   const [statusId, setStatusIdValue] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const [opened, setOpened] = useState<Complaint | null>(null);
+  const [creating, setCreating] = useState(false);
 
   const debouncedSearch = useDebouncedValue(search);
   const filters: ComplaintFilters = { search: debouncedSearch, statusId };
@@ -63,6 +66,14 @@ export function useComplaintsPage({ apiBaseUrl, portalBaseUrl }: Options) {
   const selected = opened
     ? (list.data?.complaints.find((complaint) => complaint.id === opened.id) ?? opened)
     : null;
+
+  const openNewComplaint = useCallback(() => setCreating(true), []);
+  const closeNewComplaint = useCallback(() => setCreating(false), []);
+  const complaintCreated = useCallback(() => {
+    setCreating(false);
+    setPage(1);
+    reload();
+  }, [reload]);
 
   /** Resolves true when the response was saved. */
   const addResponse = useCallback(
@@ -102,6 +113,10 @@ export function useComplaintsPage({ apiBaseUrl, portalBaseUrl }: Options) {
     select,
     addResponse,
     changeStatus,
+    creating,
+    openNewComplaint,
+    closeNewComplaint,
+    complaintCreated,
     saving: mutation.pending,
     saveFailure: mutation.failure,
   };

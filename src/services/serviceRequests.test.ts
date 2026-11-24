@@ -3,6 +3,8 @@ import {
   ServiceRequestsAnswerError,
   TICKET_STATUS,
   changeStatusBody,
+  createServiceRequest,
+  createServiceRequestBody,
   fetchServiceRequests,
   nextTicketStatusIds,
   serviceRequestFiltersQuery,
@@ -230,5 +232,99 @@ describe("changeStatusBody", () => {
   it("sends a reason only when rejecting", () => {
     expect(changeStatusBody(TICKET_STATUS.done, "ignored")).toEqual({ status_id: 6 });
     expect(changeStatusBody(TICKET_STATUS.rejected, " Duplicate ")).toEqual({ status_id: 7, reject_reason: "Duplicate" });
+  });
+});
+
+describe("createServiceRequestBody", () => {
+  const input = {
+    projectId: 2,
+    unitId: 14,
+    unitNumber: "A-301",
+    customerId: 7,
+    customerName: " Ahmed Ali ",
+    customerMobile: " 01000000000 ",
+    departmentId: 3,
+    requesterName: " Mona Ali ",
+    requesterMobile: " 01111111111 ",
+    arrivalTime: "2026-11-24 09:30",
+    services: [{ serviceId: 5, quantity: 2, price: 150 }],
+    notes: "  Leaking tap  ",
+  };
+
+  it("uses CreateTicketDto's names, trimmed", () => {
+    expect(createServiceRequestBody(input)).toEqual({
+      project_id: 2,
+      unit_id: 14,
+      unit_number: "A-301",
+      customer_id: 7,
+      customer_name: "Ahmed Ali",
+      customer_mobile: "01000000000",
+      department_id: 3,
+      requester_name: "Mona Ali",
+      requester_mobile: "01111111111",
+      arrival_time: "2026-11-24 09:30",
+      services: [{ service_id: 5, quantity: 2, price: 150 }],
+      notes: "Leaking tap",
+    });
+  });
+
+  it("leaves out empty notes (the DTO refuses an empty string)", () => {
+    expect(createServiceRequestBody({ ...input, notes: "  " })).not.toHaveProperty("notes");
+  });
+});
+
+describe("createServiceRequest", () => {
+  it("posts the body and resolves with the new ticket's id", async () => {
+    const fetchImpl = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            result: { message: "TICKET_CREATED_SUCCESSFULLY", ticket_id: 912, invoice_number: "INV-1" },
+            success: true,
+            statusCode: 201,
+          }),
+          { status: 201 },
+        ),
+    );
+    vi.stubGlobal("fetch", fetchImpl);
+    const body = createServiceRequestBody({
+      projectId: 2,
+      unitId: 14,
+      unitNumber: "A-301",
+      customerId: 7,
+      customerName: "Ahmed Ali",
+      customerMobile: "01000000000",
+      departmentId: 3,
+      requesterName: "Ahmed Ali",
+      requesterMobile: "01000000000",
+      arrivalTime: "2026-11-24 09:30",
+      services: [{ serviceId: 5, quantity: 1, price: 150 }],
+      notes: "",
+    });
+    let id: number;
+    try {
+      id = await createServiceRequest("https://api.test/admin", body, "en");
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(id).toBe(912);
+    expect(fetchImpl).toHaveBeenCalledWith(
+      "https://api.test/admin/orders/tickets",
+      expect.objectContaining({ method: "POST", body: JSON.stringify(body) }),
+    );
+  });
+
+  it("throws when the answer has no ticket id", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response(JSON.stringify({ result: {}, success: true, statusCode: 201 }), { status: 201 })),
+    );
+    try {
+      await expect(
+        createServiceRequest("https://api.test/admin", {} as Parameters<typeof createServiceRequest>[1], "en"),
+      ).rejects.toBeInstanceOf(ServiceRequestsAnswerError);
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

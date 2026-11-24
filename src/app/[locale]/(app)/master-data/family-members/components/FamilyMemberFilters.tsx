@@ -5,7 +5,7 @@ import FilterDropdown from "@/src/components/FilterDropdown";
 import type { Named } from "@/src/services/customers";
 
 type Props = {
-  /** The projects to filter by; null hides the filter (e.g. not a Super Admin). */
+  /** The projects to filter by; null hides the filter (e.g. while they load). */
   projects: Named[] | null;
   onProjectChange?: (selected: Set<string>) => void;
 };

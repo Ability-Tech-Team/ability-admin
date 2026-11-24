@@ -19,7 +19,7 @@ type Props = {
   portalBaseUrl: string | null;
   /** Active projects to assign in. */
   projects: ProjectOption[];
-  /** Why the projects couldn't load (the list is Super Admin only). */
+  /** Why the projects couldn't load. */
   projectsFailure: ApiFailure | null;
   /** The project the list is filtered by, picked to start with. */
   initialProjectId: number | undefined;

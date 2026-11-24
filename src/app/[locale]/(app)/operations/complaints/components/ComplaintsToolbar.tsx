@@ -10,13 +10,15 @@ type Props = {
   onSearchChange: (value: string) => void;
   statusId: number | null;
   onStatusChange: (value: number | null) => void;
+  /** Opens New Complaint (`NewComplaintModal`). */
+  onNewComplaint: () => void;
 };
 
 /**
  * The search box (a complaint number, or part of the customer's name) and the status filter,
- * both sent to the API. New Complaint is shown but not available yet.
+ * both sent to the API, and New Complaint, which records one for a unit's owner.
  */
-export default function ComplaintsToolbar({ search, onSearchChange, statusId, onStatusChange }: Props) {
+export default function ComplaintsToolbar({ search, onSearchChange, statusId, onStatusChange, onNewComplaint }: Props) {
   const t = useTranslations("Operations");
   const tc = useTranslations("ComplaintsScreen");
 
@@ -53,9 +55,8 @@ export default function ComplaintsToolbar({ search, onSearchChange, statusId, on
       <div className="flex items-center gap-2">
         <button
           type="button"
-          disabled
-          title={tc("notAvailableYet")}
-          className="flex items-center gap-1 rounded-md bg-blue-600 px-3 h-7 text-[10.5px] font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={onNewComplaint}
+          className="flex items-center gap-1 rounded-md bg-blue-600 px-3 h-7 text-[10.5px] font-medium text-white hover:bg-blue-700 transition-colors"
         >
           {t("newComplaint")}
         </button>

@@ -20,7 +20,7 @@ export default async function CustomersPage({ params }: Props) {
     return <ProductAccessNotice access={access} locale={locale} />;
   }
 
-  const [t, { apiBaseUrl, portalBaseUrl }] = await Promise.all([
+  const [t, { apiBaseUrl, portalBaseUrl, sessionProject }] = await Promise.all([
     getTranslations("MasterData"),
     readBrowserApiConfig(),
   ]);
@@ -29,6 +29,7 @@ export default async function CustomersPage({ params }: Props) {
     <CustomersPageClient
       apiBaseUrl={apiBaseUrl}
       portalBaseUrl={portalBaseUrl}
+      sessionProject={sessionProject}
       labels={{
         searchPlaceholder: t("searchCustomers"),
         exactSearch: t("exactSearch"),

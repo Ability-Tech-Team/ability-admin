@@ -3,9 +3,11 @@ import {
   COMPLAINT_STATUS,
   ComplaintsAnswerError,
   complaintFiltersQuery,
+  createComplaint,
   fetchComplaints,
   nextComplaintStatusIds,
   toComplaintPage,
+  type CreateComplaintBody,
 } from "./complaints";
 
 // Shaped like OrdersService.formatComplainRecord (ability-crm-api/libs/domain/src/orders/orders.service.ts):
@@ -169,5 +171,48 @@ describe("nextComplaintStatusIds", () => {
   it("offers only later statuses", () => {
     expect(nextComplaintStatusIds(COMPLAINT_STATUS.open)).toEqual([2, 3, 4]);
     expect(nextComplaintStatusIds(COMPLAINT_STATUS.rejected)).toEqual([]);
+  });
+});
+
+describe("createComplaint", () => {
+  const body: CreateComplaintBody = {
+    project_id: 2,
+    unit_id: 31,
+    unit_number: "A-301",
+    customer_id: 77,
+    customer_name: "Ahmed Ali",
+    type_id: 5,
+    department_id: 9,
+    status_id: 1,
+    details: "Leak",
+    complain_date: "2026-11-23",
+    request_from_id: 1,
+  };
+
+  async function send(result: unknown) {
+    const fetchImpl = vi.fn(
+      async () => new Response(JSON.stringify({ result, success: true, statusCode: 201 }), { status: 201 }),
+    );
+    vi.stubGlobal("fetch", fetchImpl);
+    try {
+      return { id: await createComplaint("https://api.test/admin", body, "ar"), fetchImpl };
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  }
+
+  it("posts the DTO's body and resolves with the new complaint's id", async () => {
+    // As OrdersService.createComplain answers.
+    const { id, fetchImpl } = await send({ message: "Complain created successfully", complain_id: 413 });
+    expect(id).toBe(413);
+    expect(fetchImpl).toHaveBeenCalledWith(
+      "https://api.test/admin/orders/complains",
+      expect.objectContaining({ method: "POST", body: JSON.stringify(body) }),
+    );
+  });
+
+  it("still resolves when the answer doesn't name the complaint, since it was saved", async () => {
+    const { id } = await send({ message: "Complain created successfully" });
+    expect(id).toBeNull();
   });
 });

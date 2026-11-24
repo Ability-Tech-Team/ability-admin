@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
+import { readBrowserApiConfig } from "@/src/lib/apiConfig";
 import DeliveryLogsPageClient from "./components/DeliveryLogsPageClient";
 
 type Props = {
@@ -8,8 +9,9 @@ type Props = {
 };
 
 /**
- * Delivery logs: each sent announcement with its recipients, push results and read rate. No
- * admin route lists them, so the page shows the table empty, with "not available yet".
+ * Delivery logs: each sent announcement with its recipients, push results and read rate. The
+ * browser loads them from the API (`useDeliveryLogsPage`), since only it holds the API's
+ * `access_token` cookie.
  */
 export default async function DeliveryLogsPage({ params }: Props) {
   const { locale } = await params;
@@ -19,10 +21,13 @@ export default async function DeliveryLogsPage({ params }: Props) {
     return <ProductAccessNotice access={access} locale={locale} />;
   }
 
+  const { apiBaseUrl, portalBaseUrl } = await readBrowserApiConfig();
   const t = await getTranslations("Notifications");
 
   return (
     <DeliveryLogsPageClient
+      apiBaseUrl={apiBaseUrl}
+      portalBaseUrl={portalBaseUrl}
       labels={{
         notification: t("deliveryLogs.notification"),
         sentAt: t("deliveryLogs.sentAt"),

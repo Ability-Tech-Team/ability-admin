@@ -3,6 +3,7 @@ import PageHeader from "@/src/components/PageHeader";
 import NotificationsTabs from "./components/NotificationsTabs";
 import ProductAccessNotice from "@/src/components/ProductAccessNotice";
 import { requireProductAccess } from "@/src/lib/access";
+import { readBrowserApiConfig } from "@/src/lib/apiConfig";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -17,6 +18,7 @@ export default async function NotificationsLayout({ params, children }: Props) {
     return <ProductAccessNotice access={access} locale={locale} />;
   }
 
+  const { apiBaseUrl, portalBaseUrl } = await readBrowserApiConfig();
   const t = await getTranslations("Notifications");
   const tSide = await getTranslations("SideMenu");
 
@@ -30,7 +32,7 @@ export default async function NotificationsLayout({ params, children }: Props) {
         title={t("title")}
         subtitle={t("subtitle")}
       />
-      <NotificationsTabs />
+      <NotificationsTabs apiBaseUrl={apiBaseUrl} portalBaseUrl={portalBaseUrl} />
       {children}
     </div>
   );

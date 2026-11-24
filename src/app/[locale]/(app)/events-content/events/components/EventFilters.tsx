@@ -5,7 +5,7 @@ import FilterDropdown from "@/src/components/FilterDropdown";
 
 type Props = {
   projectOptions: { value: string; label: string }[];
-  /** The project list couldn't load (the API gives it to the Super Admin only). */
+  /** The project list couldn't load. */
   projectsUnavailable?: boolean;
   onProjectChange?: (selected: Set<string>) => void;
 };

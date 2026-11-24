@@ -10,19 +10,24 @@ import UnitToolbarWithModal from "./UnitToolbarWithModal";
 import ContractFilter from "./ContractFilter";
 import UnitsTable from "./UnitsTable";
 import ImportUnitsModal from "./ImportUnitsModal";
+import AddUnitModal from "./AddUnitModal";
+import { addUnitProjectChoice } from "../utils";
 
 type Props = {
   /** Where the browser calls the API, or null when the sign-in names none this app trusts. */
   apiBaseUrl: string | null;
   /** Ability Portal, for signing in again when the session has ended. */
   portalBaseUrl: string | null;
+  /** The sign-in project: where Add Unit saves if the project list is refused. */
+  sessionProject: { id: number; name: string | null } | null;
   labels: ToolbarLabels;
 };
 
-export default function UnitsPageClient({ apiBaseUrl, portalBaseUrl, labels }: Props) {
+export default function UnitsPageClient({ apiBaseUrl, portalBaseUrl, sessionProject, labels }: Props) {
   const screen = useUnitsPage({ apiBaseUrl, portalBaseUrl });
   const importFlow = useUnitImport({ apiBaseUrl, portalBaseUrl });
   const [importOpen, setImportOpen] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
 
   const { units, projects } = screen;
   const { status: importStatus, reset: resetImport } = importFlow;
@@ -37,6 +42,13 @@ export default function UnitsPageClient({ apiBaseUrl, portalBaseUrl, labels }: P
     }
   }, [importStatus, resetImport, reloadUnits]);
 
+  const addChoice = addUnitProjectChoice(projects, sessionProject, screen.projectId);
+  const closeAdd = useCallback(() => setAddOpen(false), []);
+  const unitAdded = useCallback(() => {
+    setAddOpen(false);
+    reloadUnits();
+  }, [reloadUnits]);
+
   return (
     <>
       <UnitToolbarWithModal
@@ -46,6 +58,7 @@ export default function UnitsPageClient({ apiBaseUrl, portalBaseUrl, labels }: P
         onExactSearchChange={screen.setExact}
         onExport={screen.exportUnits}
         onImport={() => setImportOpen(true)}
+        onAdd={() => setAddOpen(true)}
         extraFilters={
           <ContractFilter
             projects={projects.data ?? []}
@@ -76,6 +89,18 @@ export default function UnitsPageClient({ apiBaseUrl, portalBaseUrl, labels }: P
           projectsUnavailable={projects.failure !== null}
           flow={importFlow}
           onClose={closeImport}
+        />
+      )}
+      {addOpen && (
+        <AddUnitModal
+          // Starts again if the project choice arrives after opening (the project list's answer).
+          key={addChoice.initialProjectId}
+          apiBaseUrl={apiBaseUrl}
+          portalBaseUrl={portalBaseUrl}
+          projects={addChoice.projects}
+          initialProjectId={addChoice.initialProjectId}
+          onCreated={unitAdded}
+          onClose={closeAdd}
         />
       )}
     </>

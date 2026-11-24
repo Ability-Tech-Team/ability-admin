@@ -12,7 +12,7 @@ import {
 /**
  * Invoices and payments (`/admin/orders/invoices...`,
  * ability-crm-api/libs/domain/src/orders: `OrdersController`, `OrdersService`, `GetInvoiceDto`,
- * `CreateInvoiceTransactionsDto`). Each call resolves with the adapted answer or throws:
+ * `CreateInvoiceDto`, `CreateInvoiceTransactionsDto`). Each call resolves with the adapted answer or throws:
  * `ApiError` (src/lib/apiClient.ts) when the API refuses or can't be reached,
  * `InvoicesAnswerError` when an answer doesn't have the expected shape.
  *
@@ -93,16 +93,19 @@ export type InvoiceFilters = {
   isExact: boolean;
   statusId: number | null;
   projectId: number | null;
+  /** One of the chosen project's invoice types (`GET /definitions/all-dropdowns`). */
+  invoiceTypeId: number | null;
 };
 
-/** The `GetInvoiceDto` query for the filters; the list and its stats take the same one. */
-export function invoiceFiltersQuery({ search, isExact, statusId, projectId }: InvoiceFilters): ApiQuery {
+/** The `GetInvoiceDto` query for the filters; the list, its stats and the export take the same one. */
+export function invoiceFiltersQuery({ search, isExact, statusId, projectId, invoiceTypeId }: InvoiceFilters): ApiQuery {
   const term = search.trim();
   return {
     search: term,
     is_exact: term && isExact ? 1 : undefined,
     invoice_status_id: statusId,
     project_id: projectId,
+    invoice_type_id: invoiceTypeId,
   };
 }
 
@@ -244,6 +247,60 @@ export async function fetchInvoiceStats(
     locale,
   });
   return toInvoiceStats(result);
+}
+
+// POST /orders/invoices
+
+/** A new invoice ("Generate Invoice") for an owned unit and one of its owners. */
+export type NewInvoice = {
+  /** The unit's project: the admin API needs it for writes. */
+  projectId: number;
+  unitId: number;
+  unitNumber: string;
+  customerId: number;
+  customerName: string;
+  invoiceTypeId: number;
+  totalAmount: number;
+};
+
+/**
+ * Where the invoice comes from (`requestSourceEnums`, `request_sources`). The column is required
+ * although the DTO marks it optional: without it the API answers `FAILED_CREATE_INVOICE`.
+ * `COMMUNITY_ADMIN` (5) isn't seeded in `request_sources`, so an invoice raised by staff here is a
+ * CRM one, as with complaints (`COMPLAINT_REQUEST_SOURCE_CRM`).
+ */
+export const INVOICE_REQUEST_SOURCE_CRM = 1;
+
+/**
+ * The `CreateInvoiceDto` body. The API sets the number, the date (today, Cairo) and the status
+ * (Pending when none is sent), and takes the customer code from the customer.
+ */
+export function buildCreateInvoiceBody(invoice: NewInvoice) {
+  return {
+    project_id: invoice.projectId,
+    unit_id: invoice.unitId,
+    unit_number: invoice.unitNumber,
+    customer_id: invoice.customerId,
+    customer_name: invoice.customerName,
+    invoice_type_id: invoice.invoiceTypeId,
+    total_amount: invoice.totalAmount,
+    request_from_id: INVOICE_REQUEST_SOURCE_CRM,
+  };
+}
+
+export type CreateInvoiceBody = ReturnType<typeof buildCreateInvoiceBody>;
+
+const createdInvoiceSchema = z.object({ invoice_number: z.string() }).loose();
+
+/** Raises the invoice and resolves with its number. */
+export async function createInvoice(
+  apiBaseUrl: string,
+  body: CreateInvoiceBody,
+  locale: string,
+  fetchImpl?: typeof fetch,
+): Promise<{ invoiceNumber: string }> {
+  const result = await apiPost(apiBaseUrl, "/orders/invoices", body, { locale, fetchImpl });
+  return { invoiceNumber: parse(createdInvoiceSchema, result, "new invoice").invoice_number };
 }
 
 // POST /orders/invoices/transactions/pay

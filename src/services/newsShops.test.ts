@@ -1,5 +1,17 @@
 import { describe, expect, it, vi } from "vitest";
-import { NewsAnswerError, fetchNews, newsDisplayDate, newsQuery, toNewsPage } from "./newsShops";
+import {
+  NewsAnswerError,
+  buildCreateNewsForm,
+  buildUpdateNewsForm,
+  createNews,
+  deleteNews,
+  fetchNews,
+  fetchNewsArticle,
+  newsDisplayDate,
+  newsQuery,
+  toNewsPage,
+  updateNews,
+} from "./newsShops";
 
 const row = {
   id: 7,
@@ -80,5 +92,112 @@ describe("fetchNews", () => {
       "https://api.test/admin/content/news?page=1&limit=20",
       expect.objectContaining({ method: "GET" }),
     );
+  });
+});
+
+const input = {
+  projectId: 2,
+  titleEn: " Pool ",
+  titleAr: " المسبح ",
+  contentEn: " Opens Monday. ",
+  contentAr: " يفتح الاثنين. ",
+  published: true,
+};
+const photo = new File(["x"], "pool.jpg", { type: "image/jpeg" });
+const clip = new File(["y"], "pool.mp4", { type: "video/mp4" });
+
+/** FormData's text fields and file names, in order. */
+function entriesOf(form: FormData) {
+  return [...form.entries()].map(([key, value]) => [key, value instanceof File ? value.name : value]);
+}
+
+describe("buildCreateNewsForm", () => {
+  it("sends the DTO's fields trimmed, and each file as media", () => {
+    expect(entriesOf(buildCreateNewsForm(input, [photo, clip]))).toEqual([
+      ["project_id", "2"],
+      ["en_title", "Pool"],
+      ["ar_title", "المسبح"],
+      ["en_content", "Opens Monday."],
+      ["ar_content", "يفتح الاثنين."],
+      ["is_published", "1"],
+      ["media", "pool.jpg"],
+      ["media", "pool.mp4"],
+    ]);
+  });
+});
+
+describe("buildUpdateNewsForm", () => {
+  it("sends only what changed, with the removed files as one list", () => {
+    expect(entriesOf(buildUpdateNewsForm({ published: false, newMedia: [clip], removedMediaIds: [3, 4] }))).toEqual([
+      ["is_published", "0"],
+      ["deleted_media_ids", "3,4"],
+      ["media", "pool.mp4"],
+    ]);
+    expect(entriesOf(buildUpdateNewsForm({ titleEn: "New", newMedia: [], removedMediaIds: [] }))).toEqual([["en_title", "New"]]);
+  });
+});
+
+describe("saving and loading one article", () => {
+  function stub(result: unknown) {
+    const fetchImpl = vi.fn(
+      async () => new Response(JSON.stringify({ result, success: true, statusCode: 200 }), { status: 200 }),
+    );
+    vi.stubGlobal("fetch", fetchImpl);
+    return fetchImpl;
+  }
+
+  it("posts a new article as form-data and resolves with its id", async () => {
+    const fetchImpl = stub({ message_code: "NEWS_CREATED_SUCCESSFULLY", id: 12 });
+    try {
+      await expect(createNews("https://api.test/admin", input, [photo], "en")).resolves.toBe(12);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(fetchImpl).toHaveBeenCalledWith(
+      "https://api.test/admin/content/news",
+      expect.objectContaining({ method: "POST", body: expect.any(FormData) }),
+    );
+  });
+
+  it("rejects a create answer without an id", async () => {
+    stub({ message_code: "NEWS_CREATED_SUCCESSFULLY" });
+    try {
+      await expect(createNews("https://api.test/admin", input, [photo], "en")).rejects.toThrow(NewsAnswerError);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("puts an edit to the article's route as form-data", async () => {
+    const fetchImpl = stub({ message_code: "NEWS_UPDATED_SUCCESSFULLY" });
+    try {
+      await updateNews("https://api.test/admin", 7, { titleEn: "New", newMedia: [], removedMediaIds: [] }, "en");
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(fetchImpl).toHaveBeenCalledWith(
+      "https://api.test/admin/content/news/7",
+      expect.objectContaining({ method: "PUT", body: expect.any(FormData) }),
+    );
+  });
+
+  it("deletes an article", async () => {
+    const fetchImpl = stub({ message_code: "NEWS_DELETED_SUCCESSFULLY" });
+    try {
+      await deleteNews("https://api.test/admin", 7, "en");
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(fetchImpl).toHaveBeenCalledWith("https://api.test/admin/content/news/7", expect.objectContaining({ method: "DELETE" }));
+  });
+
+  it("loads one article", async () => {
+    const fetchImpl = stub(row);
+    try {
+      await expect(fetchNewsArticle("https://api.test/admin", 7, "en")).resolves.toMatchObject({ id: 7, titleEn: "Pool reopening" });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(fetchImpl).toHaveBeenCalledWith("https://api.test/admin/content/news/7", expect.objectContaining({ method: "GET" }));
   });
 });

@@ -16,13 +16,14 @@ type Props = {
   /** Downloads every request the filters match. */
   onExport: () => void;
   exporting: boolean;
+  /** Opens New Request. */
+  onNewRequest: () => void;
 };
 
 /**
  * Search, exact search and the status filter, all sent to the API (one status at a time:
- * `status_id` takes one). Export downloads every matching request (`is_excel=1`). New Request
- * is shown but not available yet: its form needs departments and services, which no admin route
- * lists.
+ * `status_id` takes one). Export downloads every matching request (`is_excel=1`); New Request
+ * opens the form (`POST /orders/tickets`).
  */
 export default function ServiceRequestsToolbar({
   search,
@@ -34,6 +35,7 @@ export default function ServiceRequestsToolbar({
   extraFilters,
   onExport,
   exporting,
+  onNewRequest,
 }: Props) {
   const t = useTranslations("Operations");
   const ts = useTranslations("ServiceRequestsScreen");
@@ -92,9 +94,8 @@ export default function ServiceRequestsToolbar({
         </button>
         <button
           type="button"
-          disabled
-          title={ts("notAvailableYet")}
-          className="flex items-center gap-1 rounded-md bg-blue-600 px-3 h-7 text-[10.5px] font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={onNewRequest}
+          className="flex items-center gap-1 rounded-md bg-blue-600 px-3 h-7 text-[10.5px] font-medium text-white hover:bg-blue-700 transition-colors"
         >
           {t("newRequest")}
         </button>

@@ -6,12 +6,17 @@ import ModalWrapper from "@/src/components/ModalWrapper";
 import CloseButton from "@/src/components/CloseButton";
 import ApiFailureNotice from "@/src/components/ApiFailureNotice";
 import type { ApiFailure } from "@/src/lib/apiFailure";
+import type { Dropdowns } from "@/src/services/definitions";
 import type { CustomerFormField, CustomerFormValues, Named } from "../types";
 import { CREATE_REQUIRED, emptyCustomerForm, missingFields } from "../utils";
 import CustomerFormFields from "./CustomerFormFields";
 
 type Props = {
   projects: { options: Named[] | null; forbidden: boolean; failure: ApiFailure | null };
+  /** The project chosen at first: the sign-in project for a user who can't pick one. */
+  defaultProjectId: string;
+  /** The definitions lists the choice fields pick from (null while they load) and why they failed. */
+  lookups: { data: Dropdowns | null; failure: ApiFailure | null; reload: () => void };
   /** Resolves true once the customer is saved. */
   onSave: (values: CustomerFormValues) => Promise<boolean>;
   saving: boolean;
@@ -19,10 +24,10 @@ type Props = {
   onClose: () => void;
 };
 
-export default function AddCustomerModal({ projects, onSave, saving, failure, onClose }: Props) {
+export default function AddCustomerModal({ projects, defaultProjectId, lookups, onSave, saving, failure, onClose }: Props) {
   const t = useTranslations("MasterData");
   const tc = useTranslations("CustomersScreen");
-  const [values, setValues] = useState<CustomerFormValues>(() => emptyCustomerForm());
+  const [values, setValues] = useState<CustomerFormValues>(() => emptyCustomerForm(defaultProjectId));
   const [missing, setMissing] = useState<CustomerFormField[]>([]);
   const [saved, setSaved] = useState(false);
 
@@ -38,18 +43,12 @@ export default function AddCustomerModal({ projects, onSave, saving, failure, on
     if (empty.length > 0) return;
     if (!(await onSave(values))) return;
     if (addAnother) {
-      // Keep the project: the next customer usually joins the same one.
-      setValues(emptyCustomerForm(values.projectId));
+      // Keep the project: the next customer usually joins the same one.      setValues(emptyCustomerForm(values.projectId));
       setSaved(true);
     } else {
       onClose();
     }
   }
-
-  // `CreateCustomerDto` requires the id type, country, customer type, marital status and
-  // religion, and no admin route lists those choices: a new customer can't be saved, so both
-  // saves stay disabled (and `submit` stops at those empty required fields anyway).
-  const unavailable = tc("notAvailable");
 
   return (
     <ModalWrapper onClose={onClose} width="max-w-[560px]" labelledBy="add-customer-title">
@@ -76,8 +75,10 @@ export default function AddCustomerModal({ projects, onSave, saving, failure, on
                 missing={missing}
                 disabled={saving}
                 projects={projects}
+                lookups={lookups.data}
               />
               {!projects.forbidden && projects.failure && <ApiFailureNotice failure={projects.failure} className="mt-4" />}
+              {lookups.failure && <ApiFailureNotice failure={lookups.failure} onRetry={lookups.reload} className="mt-4" />}
               {failure && <ApiFailureNotice failure={failure} className="mt-4" />}
               {saved && (
                 <p role="status" className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-[11px] text-emerald-700">
@@ -97,8 +98,7 @@ export default function AddCustomerModal({ projects, onSave, saving, failure, on
               </button>
               <button
                 type="button"
-                disabled
-                title={unavailable}
+                disabled={saving}
                 onClick={() => void submit(true)}
                 className="rounded-lg border border-blue-600 px-4 py-2 text-[12px] font-medium text-blue-600 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
               >
@@ -106,8 +106,7 @@ export default function AddCustomerModal({ projects, onSave, saving, failure, on
               </button>
               <button
                 type="submit"
-                disabled
-                title={unavailable}
+                disabled={saving}
                 className="rounded-lg bg-blue-600 px-4 py-2 text-[12px] font-medium text-white hover:bg-blue-700 active:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
               >
                 {saving ? tc("saving") : t("addCustomerModal.submit")}

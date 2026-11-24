@@ -3,6 +3,7 @@
 import ApiFailureNotice from "@/src/components/ApiFailureNotice";
 import StatusCards from "../../components/StatusCards";
 import { useServiceRequestsPage } from "../hooks/useServiceRequestsPage";
+import NewServiceRequestModal from "./NewServiceRequestModal";
 import ServiceRequestDetail from "./ServiceRequestDetail";
 import ServiceRequestFilters from "./ServiceRequestFilters";
 import ServiceRequestsTable from "./ServiceRequestsTable";
@@ -29,6 +30,7 @@ export default function ServiceRequestsPageClient({ apiBaseUrl, portalBaseUrl }:
         onStatusChange={page.setStatusId}
         onExport={page.exportSheet}
         exporting={page.exporting}
+        onNewRequest={() => page.setCreating(true)}
         extraFilters={
           page.projectOptions.length > 0 && (
             <ServiceRequestFilters
@@ -58,6 +60,14 @@ export default function ServiceRequestsPageClient({ apiBaseUrl, portalBaseUrl }:
           id={page.selectedId}
           onChanged={page.reloadAll}
           onClose={() => page.select(null)}
+        />
+      )}
+      {page.creating && (
+        <NewServiceRequestModal
+          apiBaseUrl={apiBaseUrl}
+          portalBaseUrl={portalBaseUrl}
+          onCreated={page.reloadAll}
+          onClose={() => page.setCreating(false)}
         />
       )}
     </>

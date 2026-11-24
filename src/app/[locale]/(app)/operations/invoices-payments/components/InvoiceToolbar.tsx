@@ -8,6 +8,7 @@ import {
   invoiceStatusKeys,
 } from "@/src/services/invoices";
 import InvoiceFilterSelect from "./InvoiceFilterSelect";
+import type { DefinitionOption } from "@/src/services/definitions";
 import type { ProjectOption } from "@/src/services/projects";
 
 type Props = {
@@ -15,35 +16,45 @@ type Props = {
   isExact: boolean;
   statusId: number | null;
   projectId: number | null;
+  invoiceTypeId: number | null;
   onSearchChange: (value: string) => void;
   onExactChange: (value: boolean) => void;
   onStatusChange: (value: number | null) => void;
   onProjectChange: (value: number | null) => void;
+  onInvoiceTypeChange: (value: number | null) => void;
   /** Null hides the project filter (not loaded, or the role can't list projects). */
   projectOptions: ProjectOption[] | null;
+  /** The chosen project's invoice types; null (no project, loading, failed) disables the filter. */
+  invoiceTypeOptions: DefinitionOption[] | null;
   onExport: () => void;
   exportPending: boolean;
+  onGenerateInvoice: () => void;
 };
 
 const secondaryButton =
   "flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2.5 h-7 text-[10.5px] font-medium text-gray-600 hover:bg-gray-50 transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400";
 
 /**
- * The search box and filters (sent to the API), the export, and the actions the admin API
- * doesn't have routes for yet (shown disabled).
+ * The search box and filters (sent to the API), the export, and Generate Invoice
+ * (`POST /orders/invoices`). Maintenance Deposit Difference has no admin route yet, so it stays
+ * disabled.
  */
 export default function InvoiceToolbar({
   search,
   isExact,
   statusId,
   projectId,
+  invoiceTypeId,
   onSearchChange,
   onExactChange,
   onStatusChange,
   onProjectChange,
+  onInvoiceTypeChange,
   projectOptions,
+  invoiceTypeOptions,
   onExport,
   exportPending,
+  onGenerateInvoice,
 }: Props) {
   const t = useTranslations("Operations");
   const tScreen = useTranslations("InvoicesScreen");
@@ -98,16 +109,15 @@ export default function InvoiceToolbar({
           />
         )}
 
-        {/* A project's invoice types: no admin route lists them, so the filter can't be used. */}
+        {/* The chosen project's invoice types (a type belongs to one project). */}
         {projectId !== null && (
           <InvoiceFilterSelect
             label={tScreen("invoiceType")}
             allLabel={tScreen("allTypes")}
-            options={[]}
-            value={null}
-            onChange={() => {}}
-            disabled
-            title={tScreen("notAvailable")}
+            options={(invoiceTypeOptions ?? []).map((type) => ({ value: type.id, label: type.name }))}
+            value={invoiceTypeId}
+            onChange={onInvoiceTypeChange}
+            disabled={invoiceTypeOptions === null}
           />
         )}
       </div>
@@ -129,16 +139,13 @@ export default function InvoiceToolbar({
             {t("invoice.maintenanceDeposit")}
           </button>
         </span>
-        <span title={tScreen("notAvailable")}>
-          <button
-            type="button"
-            disabled
-            aria-describedby={unavailableId}
-            className="flex items-center gap-1 rounded-md bg-blue-600 px-3 h-7 text-[10.5px] font-medium text-white hover:bg-blue-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-600"
-          >
-            {t("invoice.generateInvoice")}
-          </button>
-        </span>
+        <button
+          type="button"
+          onClick={onGenerateInvoice}
+          className="flex items-center gap-1 rounded-md bg-blue-600 px-3 h-7 text-[10.5px] font-medium text-white hover:bg-blue-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+        >
+          {t("invoice.generateInvoice")}
+        </button>
         <span id={unavailableId} className="sr-only">
           {tScreen("notAvailable")}
         </span>

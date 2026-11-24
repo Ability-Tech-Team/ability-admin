@@ -26,6 +26,8 @@ function parse<S extends z.ZodType>(schema: S, result: unknown, route: string): 
   return parsed.data;
 }
 
+/** `projectEnums.ALL_PROJECTS`: a contact every project's app shows. Super Admin only for writes. */
+export const ALL_PROJECTS_ID = 1;
 /** `CreatePhoneContactDto` limits. */
 export const PHONE_CONTACT_NAME_MAX = 100;
 /** What the app dials: an optional +, then 3-15 digits; the API drops spaces and dashes first. */
@@ -195,6 +197,7 @@ export async function updatePhoneContact(
   });
 }
 
+/** The API marks it deleted; it can't be brought back from this app. */
 export async function deletePhoneContact(apiBaseUrl: string, id: number, locale: string): Promise<void> {
   await apiDelete(apiBaseUrl, `/content/phone-directory/${id}`, undefined, { locale });
 }

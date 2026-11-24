@@ -353,3 +353,79 @@ export async function changeServiceRequestStatus(
   });
 }
 
+
+// POST /orders/tickets
+
+/**
+ * A new request as the New Request form checked it. The unit, its project and the customer
+ * come from the owned-unit search; the services from the department's list, with their listed
+ * prices (`createTicket` refuses a price that differs from the service's).
+ */
+export type NewServiceRequest = {
+  projectId: number;
+  unitId: number;
+  unitNumber: string;
+  customerId: number;
+  customerName: string;
+  customerMobile: string;
+  departmentId: number;
+  requesterName: string;
+  /** 11 characters (the DTO's rule). */
+  requesterMobile: string;
+  /** `YYYY-MM-DD HH:mm`, Cairo clock time (`toStoredLocalDateTimeFromClock`). */
+  arrivalTime: string;
+  services: { serviceId: number; quantity: number; price: number }[];
+  /** Optional free text. */
+  notes: string;
+};
+
+/** `CreateTicketDto` (libs/domain/src/orders/dtos/create-ticket.dto.ts), the fields this app sends. */
+export type CreateServiceRequestBody = {
+  project_id: number;
+  unit_id: number;
+  unit_number: string;
+  customer_id: number;
+  customer_name: string;
+  customer_mobile: string;
+  department_id: number;
+  requester_name: string;
+  requester_mobile: string;
+  arrival_time: string;
+  services: { service_id: number; quantity: number; price: number }[];
+  notes?: string;
+};
+
+export function createServiceRequestBody(input: NewServiceRequest): CreateServiceRequestBody {
+  const notes = input.notes.trim();
+  return {
+    project_id: input.projectId,
+    unit_id: input.unitId,
+    unit_number: input.unitNumber,
+    customer_id: input.customerId,
+    customer_name: input.customerName.trim(),
+    customer_mobile: input.customerMobile.trim(),
+    department_id: input.departmentId,
+    requester_name: input.requesterName.trim(),
+    requester_mobile: input.requesterMobile.trim(),
+    arrival_time: input.arrivalTime,
+    services: input.services.map((service) => ({
+      service_id: service.serviceId,
+      quantity: service.quantity,
+      price: service.price,
+    })),
+    // The DTO refuses an empty string.
+    ...(notes ? { notes } : {}),
+  };
+}
+
+const createdSchema = z.object({ ticket_id: z.number().int() });
+
+/** Creates the ticket (and its pending invoice) and resolves with the new ticket's id. */
+export async function createServiceRequest(
+  apiBaseUrl: string,
+  body: CreateServiceRequestBody,
+  locale: string,
+): Promise<number> {
+  const result = await apiPost(apiBaseUrl, "/orders/tickets", body, { locale });
+  return parse(createdSchema, result, "tickets (create)").ticket_id;
+}

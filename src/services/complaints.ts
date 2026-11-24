@@ -4,7 +4,8 @@ import { apiGet, apiPost, type ApiQuery } from "@/src/lib/apiClient";
 /**
  * Complaints (`/admin/orders/complains...`, ability-crm-api/libs/domain/src/orders: controller,
  * `dtos/get-complains.dto.ts`, and `OrdersService.getComplains`, whose rows come from
- * `formatComplainRecord`). There is no route for one complaint: the list carries each one's
+ * `formatComplainRecord`; New Complaint sends `dtos/create-complain.dto.ts` to
+ * `OrdersService.createComplain`). There is no route for one complaint: the list carries each one's
  * responses and log. Each call resolves with the adapted answer or throws: `ApiError` when
  * the API refuses or can't be reached, `ComplaintsAnswerError` when an answer doesn't have the
  * expected shape.
@@ -235,4 +236,55 @@ export async function changeComplaintStatus(
   locale: string,
 ): Promise<void> {
   await apiPost(apiBaseUrl, `/orders/complains/${id}/change-status`, { status_id: statusId }, { locale });
+}
+
+// POST /orders/complains
+
+/** The DTO's limit for the details (`CreateComplainDto.details`, `@Length(0, 255)`). */
+export const COMPLAINT_DETAILS_MAX_LENGTH = 255;
+
+/**
+ * Where a complaint came from (`requestSourceEnums`, libs/core/src/common/enums/shared.enum.ts).
+ * The column is required although the DTO marks it optional: without it the API answers
+ * `FAILED_CREATE_COMPLAIN`. `COMMUNITY_ADMIN` (5) isn't seeded in `request_sources`, so a
+ * complaint recorded by staff here is a CRM one, as in Ability CRM's own form.
+ */
+export const COMPLAINT_REQUEST_SOURCE_CRM = 1;
+
+/**
+ * `CreateComplainDto` (libs/domain/src/orders/dtos/create-complain.dto.ts). The API refuses
+ * fields the DTO doesn't list, and writes to the project sent (the unit's), which the admin
+ * API needs for writes.
+ */
+export type CreateComplaintBody = {
+  project_id: number;
+  unit_id: number;
+  unit_number: string;
+  customer_id: number;
+  customer_name: string;
+  type_id: number;
+  department_id?: number;
+  status_id: number;
+  /** At most `COMPLAINT_DETAILS_MAX_LENGTH` characters. */
+  details: string;
+  /** `YYYY-MM-DD`. */
+  complain_date: string;
+  request_from_id: number;
+};
+
+const createdComplaintSchema = z.object({ complain_id: z.number().int() });
+
+/**
+ * Records a complaint for a unit's owner. Resolves with the new complaint's id, or null when
+ * the answer doesn't name it: the complaint was saved either way, so that isn't a failure
+ * (which could lead to a second copy being sent).
+ */
+export async function createComplaint(
+  apiBaseUrl: string,
+  body: CreateComplaintBody,
+  locale: string,
+): Promise<number | null> {
+  const result = await apiPost(apiBaseUrl, "/orders/complains", body, { locale });
+  const created = createdComplaintSchema.safeParse(result);
+  return created.success ? created.data.complain_id : null;
 }

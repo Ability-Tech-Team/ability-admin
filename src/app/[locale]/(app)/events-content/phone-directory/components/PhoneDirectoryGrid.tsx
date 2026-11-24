@@ -10,11 +10,10 @@ type Props = {
   loading: boolean;
   page: number;
   onPageChange: (page: number) => void;
-  /** Why Edit is disabled: the screen has no contact form yet. */
-  editTitle: string;
+  onEdit: (contactId: number) => void;
 };
 
-export default function PhoneDirectoryGrid({ data, loading, page, onPageChange, editTitle }: Props) {
+export default function PhoneDirectoryGrid({ data, loading, page, onPageChange, onEdit }: Props) {
   const t = useTranslations("EventsContent.phoneDir");
   const tScreen = useTranslations("PhoneDirectoryScreen");
   const locale = useLocale();
@@ -54,9 +53,8 @@ export default function PhoneDirectoryGrid({ data, loading, page, onPageChange, 
           {/* Edit */}
           <button
             type="button"
-            disabled
-            title={editTitle}
-            className="shrink-0 text-[11px] font-medium text-gray-500 hover:text-gray-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:text-gray-500"
+            onClick={() => onEdit(contact.id)}
+            className="shrink-0 text-[11px] font-medium text-gray-500 hover:text-gray-700 transition-colors"
           >
             {t("edit")}
           </button>

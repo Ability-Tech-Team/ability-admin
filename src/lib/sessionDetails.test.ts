@@ -42,6 +42,7 @@ describe("parseSessionDetails", () => {
       roleName: "Super Admin",
       platforms: ["crm", "community-admin"],
       apiUrl: "http://172.20.1.141:9998",
+      project: { id: 2, name: "Main Project" },
     });
     expect(includesCommunityAdminPlatform(details!)).toBe(true);
   });
@@ -64,8 +65,16 @@ describe("parseSessionDetails", () => {
       roleName: null,
       platforms: null,
       apiUrl: null,
+      project: null,
     });
     expect(includesCommunityAdminPlatform(details!)).toBe(false);
+  });
+
+  it("reads the sign-in project, given as a number or a string", () => {
+    const details = parseSessionDetails(
+      encode({ ...COOKIE, session: { ...COOKIE.session, company_project_id: "5", project_name: " " } }),
+    );
+    expect(details?.project).toEqual({ id: 5, name: null });
   });
 
   it("has no API address when the sign-in lists none for this app", () => {

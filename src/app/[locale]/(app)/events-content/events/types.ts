@@ -1,4 +1,4 @@
-/** The event form's text, as typed. */
+/** The event form's fields, as typed. */
 export type EventFormValues = {
   titleEn: string;
   titleAr: string;
@@ -13,10 +13,13 @@ export type EventFormValues = {
   location: string;
   /** A project id, or "" for All Projects. */
   project: string;
+  ticketingUrl: string;
+  /** A newly picked image; null keeps the saved one when editing. */
+  image: File | null;
 };
 
 /** Why a field can't be saved; each has a label (see `EVENT_FORM_ERROR_KEYS`). */
-export type EventFormError = "required" | "tooLong" | "capacity";
+export type EventFormError = "required" | "tooLong" | "capacity" | "invalidUrl" | "imageType" | "imageTooLarge";
 
 export type EventFormErrors = Partial<Record<keyof EventFormValues, EventFormError>>;
 

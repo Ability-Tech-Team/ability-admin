@@ -6,7 +6,8 @@ import ApiFailureNotice from "@/src/components/ApiFailureNotice";
 import Pagination from "@/src/components/Pagination";
 import type { ToolbarLabels } from "@/src/components/Toolbar";
 import { useCustomerDetail, useCustomersPage } from "../hooks/useCustomersPage";
-import type { Customer } from "../types";
+import { useDropdowns } from "@/src/hooks/useDropdowns";
+import type { Customer, Named } from "../types";
 import AddCustomerModal from "./AddCustomerModal";
 import AttachmentsModal from "./AttachmentsModal";
 import CustomerFilters from "./CustomerFilters";
@@ -21,11 +22,13 @@ type Props = {
   /** Where the browser calls the API, or null when the sign-in names none this app trusts. */
   apiBaseUrl: string | null;
   portalBaseUrl: string | null;
+  /** The sign-in project: where a user who can't list projects adds customers. */
+  sessionProject: Named | null;
   labels: ToolbarLabels;
 };
 
 /** The customers list, loaded page by page from the API in the browser. */
-export default function CustomersPageClient({ apiBaseUrl, portalBaseUrl, labels }: Props) {
+export default function CustomersPageClient({ apiBaseUrl, portalBaseUrl, sessionProject, labels }: Props) {
   const tc = useTranslations("CustomersScreen");
   const page = useCustomersPage({ apiBaseUrl, portalBaseUrl });
   const [selected, setSelected] = useState<Customer | null>(null);
@@ -35,6 +38,14 @@ export default function CustomersPageClient({ apiBaseUrl, portalBaseUrl, labels 
   const [adding, setAdding] = useState(false);
   const [importing, setImporting] = useState(false);
   const detail = useCustomerDetail({ apiBaseUrl, portalBaseUrl }, selected?.id ?? null);
+  // The form's choice lists (id types, countries...), the same for every project.
+  const lookups = useDropdowns({ apiBaseUrl, portalBaseUrl, projectId: null, enabled: adding || editing !== null });
+  // If the project list is refused (an API without /projects/accessible), add to the sign-in project.
+  const addProjects =
+    page.projects.forbidden && sessionProject
+      ? { options: [sessionProject], forbidden: false, failure: null }
+      : page.projects;
+  const defaultProjectId = page.projects.forbidden && sessionProject ? String(sessionProject.id) : "";
 
   const { data, loading, failure, reload } = page.list;
   const customers = data?.customers ?? [];
@@ -122,7 +133,9 @@ export default function CustomersPageClient({ apiBaseUrl, portalBaseUrl, labels 
       {/* Add modal */}
       {adding && (
         <AddCustomerModal
-          projects={page.projects}
+          projects={addProjects}
+          defaultProjectId={defaultProjectId}
+          lookups={lookups}
           onSave={page.create}
           saving={page.formAction.pending}
           failure={page.formAction.failure}
@@ -134,6 +147,7 @@ export default function CustomersPageClient({ apiBaseUrl, portalBaseUrl, labels 
       {editing && !deleting && (
         <EditCustomerModal
           customer={editing}
+          lookups={lookups}
           onSave={(values) => page.update(editing, values)}
           saving={page.formAction.pending}
           failure={page.formAction.failure}

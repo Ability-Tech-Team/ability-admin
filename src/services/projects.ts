@@ -4,7 +4,8 @@ import { apiGet, apiPost, apiPut } from "@/src/lib/apiClient";
 /**
  * Projects (`/admin/projects`, ability-crm-api/apps/community-admin/src/projects, answers
  * built by libs/domain/src/company-projects/company-projects.service.ts). Super Admin only:
- * other roles get 403. Each call resolves with the adapted answer or throws: `ApiError`
+ * other roles get 403. The pickers' list, `GET /admin/projects/accessible`
+ * (`fetchProjectOptions`), is open to every employee. Each call resolves with the adapted answer or throws: `ApiError`
  * (src/lib/apiClient.ts) when the API refuses or can't be reached, `ProjectsAnswerError` when
  * an answer doesn't have the expected shape.
  */
@@ -173,21 +174,20 @@ export type ProjectOption = { id: number; name: string; active: boolean };
  * Only what a picker needs, so one project with an odd field (say a missing Arabic name) can't
  * take every screen's project filter down with it, as the full list's stricter parse would.
  */
-const optionsSchema = z.object({
-  projects: z.array(
-    z.object({
-      id: z.number().int(),
-      name: z.string().nullable().optional(),
-      en_name: z.string(),
-      is_active: activeFlag,
-    }),
-  ),
-});
+const optionsSchema = z.array(
+  z.object({
+    id: z.number().int(),
+    name: z.string().nullable().optional(),
+    en_name: z.string(),
+    is_active: activeFlag,
+  }),
+);
 
+/** `GET /projects/accessible` (ProjectService.getAccessibleProjects in libs/domain/src/project). */
 export function toProjectOptions(result: unknown): ProjectOption[] {
   const parsed = optionsSchema.safeParse(result);
-  if (!parsed.success) throw new ProjectsAnswerError("projects (options)");
-  return parsed.data.projects.map((project) => ({
+  if (!parsed.success) throw new ProjectsAnswerError("projects/accessible");
+  return parsed.data.map((project) => ({
     id: project.id,
     name: project.name || project.en_name,
     active: project.is_active === 1,
@@ -195,24 +195,18 @@ export function toProjectOptions(result: unknown): ProjectOption[] {
 }
 
 /**
- * Every project (or only the active ones), for pickers. There is no lighter route; this is the
- * Super Admin-only list, asked for one large page, so other roles get a 403 and the screens
- * leave their project choice out.
+ * The projects the signed-in employee can work in (or only the active ones), for pickers. Open to
+ * every employee: all projects for the Super Admin, else the sign-in project plus the other
+ * projects the employee was given access to.
  */
-export const PROJECT_OPTIONS_LIMIT = 500;
-
 export async function fetchProjectOptions(
   apiBaseUrl: string,
   { activeOnly }: { activeOnly: boolean },
   locale: string,
 ): Promise<ProjectOption[]> {
-  const result = await apiGet(
-    apiBaseUrl,
-    "/projects",
-    { is_active: activeOnly ? 1 : undefined, page: 1, limit: PROJECT_OPTIONS_LIMIT },
-    { locale },
-  );
-  return toProjectOptions(result);
+  const result = await apiGet(apiBaseUrl, "/projects/accessible", {}, { locale });
+  const options = toProjectOptions(result);
+  return activeOnly ? options.filter((project) => project.active) : options;
 }
 
 // POST /projects and PUT /projects/:id (form-data, AttachmentsInterceptor(PROJECT_FILES))

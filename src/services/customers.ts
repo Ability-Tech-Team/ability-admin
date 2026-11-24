@@ -4,7 +4,7 @@ import { apiDelete, apiGet, apiPost, apiPut, type ApiQuery, type DownloadRequest
 /**
  * Customers (`/admin/customers`, ability-crm-api/apps/community-admin/src/customers, answers
  * built by libs/domain/src/customers/customer-shared.service.ts), the project options the
- * customer screens filter and save with (`GET /admin/projects`, Super Admin only), and the
+ * customer screens filter and save with (`GET /admin/projects/accessible`), and the
  * spreadsheet imports of customers and relatives (`/admin/imports`,
  * libs/domain/src/imports). Each call resolves with the adapted answer or throws: `ApiError`
  * (src/lib/apiClient.ts) when the API refuses or can't be reached, `CustomersAnswerError` when

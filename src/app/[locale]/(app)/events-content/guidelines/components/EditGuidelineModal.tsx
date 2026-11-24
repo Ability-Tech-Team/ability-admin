@@ -19,16 +19,19 @@ type Props = {
   pending: boolean;
   failure: ApiFailure | null;
   onClose: () => void;
+  /** Asks to delete the guideline. */
+  onDelete: () => void;
   /** Resolves true once saved. */
   onSubmit: (input: Partial<GuidelineInput>) => Promise<boolean>;
 };
 
 const disabledClass = "disabled:cursor-not-allowed disabled:opacity-50";
 
-export default function EditGuidelineModal({ guideline, projectOptions, pending, failure, onClose, onSubmit }: Props) {
+export default function EditGuidelineModal({ guideline, projectOptions, pending, failure, onClose, onDelete, onSubmit }: Props) {
   const t = useTranslations("EventsContent.guidelines.editModal");
   const tGuidelines = useTranslations("EventsContent.guidelines");
   const tErrors = useTranslations("ProjectsScreen.errors");
+  const tDelete = useTranslations("EventsContent.deleteDialog");
   // The API has no category, summary or PDF for a guideline.
   const notAvailable = useTranslations("UnitsScreen")("notAvailableYet");
 
@@ -181,6 +184,10 @@ export default function EditGuidelineModal({ guideline, projectOptions, pending,
         onConfirm={handleSave}
         cancelLabel={t("cancel")}
         confirmLabel={t("savePublish")}
+        onDelete={() => {
+          if (!pending) onDelete();
+        }}
+        deleteLabel={tDelete("delete")}
       />
     </ModalWrapper>
   );

@@ -8,8 +8,9 @@ import { apiGet, apiPost, apiPut, type DownloadRequest } from "@/src/lib/apiClie
  * - `GET /projects/units?all_units=1` lists every unit of the projects the user can reach (or of the one
  *   asked for), owned or not, with each unit's current owners; with `is_excel=1` the matching
  *   units come back as a spreadsheet.
- * - `POST /projects/units` creates a unit; not used yet: the form needs unit types and locations,
- *   and no admin route lists them.
+ * - `POST /projects/units` creates a unit (`CreateUnitDto`) in the project sent, which the admin
+ *   API requires; Add Unit takes its unit types, locations and buildings from
+ *   `GET /definitions/all-dropdowns` (src/services/definitions.ts).
  * - `PUT /projects/units/:id` changes a unit (`UpdateUnitDto`, every field optional); the screen sends
  *   only `is_active`. A unit outside the user's projects is refused.
  * - `POST /imports/units` (libs/domain/src/imports) queues a spreadsheet of units for a
@@ -165,6 +166,57 @@ export function unitsExportRequest(filter: UnitsFilter): DownloadRequest {
 /** Turns a unit on or off; it answers with a message only. */
 export async function setUnitActive(apiBaseUrl: string, unitId: number, active: boolean, locale: string) {
   await apiPut(apiBaseUrl, `/projects/units/${unitId}`, { is_active: active ? 1 : 0 }, { locale });
+}
+
+// POST /projects/units
+
+/** A new unit, as the Add Unit form checked it (`validateUnitForm`). */
+export type NewUnit = {
+  /** The admin API requires one: the Super Admin's choice, or the sign-in project. */
+  projectId: number;
+  /** The building (sub-project); null leaves the unit without one. */
+  subProjectId: number | null;
+  unitNumber: string;
+  unitTypeId: number;
+  locationId: number;
+  /** In m², above 0. */
+  totalArea: number;
+  floor: number | null;
+};
+
+/**
+ * `CreateUnitDto`: a new unit starts active, unlocked, not a broker unit, not offered for rent
+ * and unfurnished (the form has no switches for them; the unit's own screen changes them).
+ * Optional fields left empty are left out, since the DTO refuses empty values.
+ */
+export function buildCreateUnitBody(input: NewUnit) {
+  return {
+    project_id: input.projectId,
+    sub_project_id: input.subProjectId ?? undefined,
+    unit_number: input.unitNumber.trim(),
+    is_active: 1,
+    is_broker: 0,
+    is_eligible_for_rent: 0,
+    is_locked: 0,
+    unit_specifications: {
+      unit_type_id: input.unitTypeId,
+      location_id: input.locationId,
+      total_area: input.totalArea,
+      floor: input.floor ?? undefined,
+      is_furnished: 0,
+    },
+  };
+}
+
+const createdUnitSchema = z.object({ unit_id: z.number().int() });
+
+/**
+ * Creates the unit and resolves with its id. The API refuses a unit number already used in the
+ * same project and building (409), and a building outside the project.
+ */
+export async function createUnit(apiBaseUrl: string, input: NewUnit, locale: string): Promise<number> {
+  const result = await apiPost(apiBaseUrl, "/projects/units", buildCreateUnitBody(input), { locale });
+  return parse(createdUnitSchema, result, "projects/units (create)").unit_id;
 }
 
 // POST /imports/units, GET /imports/:id, GET /imports/:id/errors

@@ -3,8 +3,10 @@ import { ApiError } from "@/src/lib/apiClient";
 import {
   InvoicesAnswerError,
   amountDue,
+  buildCreateInvoiceBody,
   buildPaymentBody,
   canRecordPayment,
+  createInvoice,
   downloadInvoicesSheet,
   invoiceFiltersQuery,
   invoiceStatusKey,
@@ -19,7 +21,7 @@ import {
 // libs/domain/src/company-projects/company-projects.service.ts (getProjects). Money columns are
 // Prisma Decimals, which JSON writes as strings.
 
-const noFilters: InvoiceFilters = { search: "", isExact: false, statusId: null, projectId: null };
+const noFilters: InvoiceFilters = { search: "", isExact: false, statusId: null, projectId: null, invoiceTypeId: null };
 
 function invoiceRecord(overrides: Record<string, unknown> = {}) {
   return {
@@ -135,15 +137,19 @@ describe("invoiceFiltersQuery", () => {
       is_exact: undefined,
       invoice_status_id: null,
       project_id: null,
+      invoice_type_id: null,
     });
   });
 
   it("trims the search and sends is_exact only with a search", () => {
-    expect(invoiceFiltersQuery({ search: "  INV-1 ", isExact: true, statusId: 2, projectId: 7 })).toEqual({
+    expect(
+      invoiceFiltersQuery({ search: "  INV-1 ", isExact: true, statusId: 2, projectId: 7, invoiceTypeId: 3 }),
+    ).toEqual({
       search: "INV-1",
       is_exact: 1,
       invoice_status_id: 2,
       project_id: 7,
+      invoice_type_id: 3,
     });
     expect(invoiceFiltersQuery({ ...noFilters, isExact: true }).is_exact).toBeUndefined();
   });
@@ -200,6 +206,83 @@ describe("buildPaymentBody", () => {
   });
 });
 
+describe("buildCreateInvoiceBody", () => {
+  it("builds the CreateInvoiceDto body for the unit's project and owner", () => {
+    expect(
+      buildCreateInvoiceBody({
+        projectId: 2,
+        unitId: 12,
+        unitNumber: "301",
+        customerId: 40,
+        customerName: "Ahmed Al Rashidi",
+        invoiceTypeId: 3,
+        totalAmount: 1250.5,
+      }),
+    ).toEqual({
+      project_id: 2,
+      unit_id: 12,
+      unit_number: "301",
+      customer_id: 40,
+      customer_name: "Ahmed Al Rashidi",
+      invoice_type_id: 3,
+      total_amount: 1250.5,
+      request_from_id: 1,
+    });
+  });
+});
+
+describe("createInvoice", () => {
+  const body = buildCreateInvoiceBody({
+    projectId: 2,
+    unitId: 12,
+    unitNumber: "301",
+    customerId: 40,
+    customerName: "Ahmed",
+    invoiceTypeId: 3,
+    totalAmount: 100,
+  });
+
+  it("posts the body and returns the new invoice's number", async () => {
+    const fetchImpl = vi.fn(async () =>
+      Response.json({
+        result: { message: "Invoice created successfully", invoice_number: "INV-2-26112310-7" },
+        success: true,
+        statusCode: 201,
+      }),
+    );
+    await expect(createInvoice("https://api.example/admin", body, "en", fetchImpl)).resolves.toEqual({
+      invoiceNumber: "INV-2-26112310-7",
+    });
+    expect(fetchImpl).toHaveBeenCalledWith(
+      "https://api.example/admin/orders/invoices",
+      expect.objectContaining({ method: "POST", credentials: "include", body: JSON.stringify(body) }),
+    );
+  });
+
+  it("rejects an answer without the invoice number", async () => {
+    const fetchImpl = vi.fn(async () =>
+      Response.json({ result: { message: "ok" }, success: true, statusCode: 201 }),
+    );
+    await expect(createInvoice("https://api.example/admin", body, "en", fetchImpl)).rejects.toBeInstanceOf(
+      InvoicesAnswerError,
+    );
+  });
+
+  it("throws the API's refusal", async () => {
+    const fetchImpl = vi.fn(async () =>
+      Response.json(
+        {
+          result: { message: "Invoice amount must be greater than zero", message_code: "INVOICE_AMOUNT_MUST_BE_GREATER_THAN_ZERO" },
+          success: false,
+          statusCode: 400,
+        },
+        { status: 400 },
+      ),
+    );
+    await expect(createInvoice("https://api.example/admin", body, "en", fetchImpl)).rejects.toBeInstanceOf(ApiError);
+  });
+});
+
 describe("downloadInvoicesSheet", () => {
   it("asks for the Excel sheet with the filters and returns the file", async () => {
     const fetchImpl = vi.fn(async () =>
@@ -213,14 +296,14 @@ describe("downloadInvoicesSheet", () => {
     );
     const sheet = await downloadInvoicesSheet(
       "https://api.example/admin",
-      { ...noFilters, statusId: 2 },
+      { ...noFilters, statusId: 2, projectId: 2, invoiceTypeId: 5 },
       "ar",
       fetchImpl,
     );
     expect(sheet.fileName).toBe("invoices-2026-11-22.xlsx");
     expect(await sheet.blob.text()).toBe("xlsx");
     expect(fetchImpl).toHaveBeenCalledWith(
-      "https://api.example/admin/orders/invoices?invoice_status_id=2&is_excel=1",
+      "https://api.example/admin/orders/invoices?invoice_status_id=2&project_id=2&invoice_type_id=5&is_excel=1",
       expect.objectContaining({ credentials: "include", headers: { "Accept-Language": "ar", lang: "ar" } }),
     );
   });

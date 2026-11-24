@@ -5,6 +5,7 @@ import { saveFile } from "@/src/hooks/useApiDownload";
 import { useApiQuery } from "@/src/hooks/useApiQuery";
 import { useApiMutation } from "@/src/hooks/useApiMutation";
 import { useDebouncedValue } from "@/src/hooks/useDebouncedValue";
+import { useDropdowns } from "@/src/hooks/useDropdowns";
 import {
   downloadInvoicesSheet,
   fetchInvoiceStats,
@@ -27,20 +28,22 @@ type Options = {
 export const INVOICES_PAGE_SIZE = 10;
 
 /**
- * The Invoices & Payments screen: the filtered, paged list and its figures, the project
- * filter's options, recording a payment ("Mark paid"), and the Excel export.
+ * The Invoices & Payments screen: the filtered, paged list and its figures, the project and
+ * invoice-type filters' options, recording a payment ("Mark paid"), opening Generate Invoice
+ * (its form is `useGenerateInvoice`), and the Excel export.
  */
 export function useInvoicesPage({ apiBaseUrl, portalBaseUrl }: Options) {
   const [search, setSearchText] = useState("");
   const [isExact, setIsExactValue] = useState(false);
   const [statusId, setStatusIdValue] = useState<number | null>(null);
   const [projectId, setProjectIdValue] = useState<number | null>(null);
+  const [invoiceTypeId, setInvoiceTypeIdValue] = useState<number | null>(null);
   const [page, setPage] = useState(1);
 
   const debouncedSearch = useDebouncedValue(search);
   const filters = useMemo<InvoiceFilters>(
-    () => ({ search: debouncedSearch, isExact, statusId, projectId }),
-    [debouncedSearch, isExact, statusId, projectId],
+    () => ({ search: debouncedSearch, isExact, statusId, projectId, invoiceTypeId }),
+    [debouncedSearch, isExact, statusId, projectId, invoiceTypeId],
   );
   const filtersKey = JSON.stringify(filters);
 
@@ -59,13 +62,16 @@ export function useInvoicesPage({ apiBaseUrl, portalBaseUrl }: Options) {
     load: ({ apiBaseUrl: base, locale }) => fetchInvoiceStats(base, filters, locale),
   });
 
-  // Super Admin only: for other roles the project filter stays hidden.
+  // The employee's projects; the project filter stays hidden while there are none.
   const projects = useApiQuery({
     apiBaseUrl,
     portalBaseUrl,
     key: "projects",
     load: ({ apiBaseUrl: base, locale }) => fetchProjectOptions(base, { activeOnly: false }, locale),
   });
+
+  // The chosen project's invoice types, for the type filter (shown once a project is chosen).
+  const projectDropdowns = useDropdowns({ apiBaseUrl, portalBaseUrl, projectId, enabled: projectId !== null });
 
   // Every filter change starts again at page 1.
   const setSearch = useCallback((value: string) => {
@@ -80,8 +86,14 @@ export function useInvoicesPage({ apiBaseUrl, portalBaseUrl }: Options) {
     setStatusIdValue(value);
     setPage(1);
   }, []);
+  // Another project has other invoice types, so changing it clears the type.
   const setProjectId = useCallback((value: number | null) => {
     setProjectIdValue(value);
+    setInvoiceTypeIdValue(null);
+    setPage(1);
+  }, []);
+  const setInvoiceTypeId = useCallback((value: number | null) => {
+    setInvoiceTypeIdValue(value);
     setPage(1);
   }, []);
 
@@ -127,6 +139,26 @@ export function useInvoicesPage({ apiBaseUrl, portalBaseUrl }: Options) {
     [payingInvoice, runPayment, reloadList, reloadStats],
   );
 
+  // Generate Invoice
+
+  const [generating, setGenerating] = useState(false);
+  const [createdInvoiceNumber, setCreatedInvoiceNumber] = useState<string | null>(null);
+
+  const openGenerate = useCallback(() => {
+    setCreatedInvoiceNumber(null);
+    setGenerating(true);
+  }, []);
+  const closeGenerate = useCallback(() => setGenerating(false), []);
+  const invoiceCreated = useCallback(
+    (invoiceNumber: string) => {
+      setGenerating(false);
+      setCreatedInvoiceNumber(invoiceNumber);
+      reloadList();
+      reloadStats();
+    },
+    [reloadList, reloadStats],
+  );
+
   // Export
 
   const exporting = useApiMutation({ apiBaseUrl, portalBaseUrl });
@@ -140,16 +172,31 @@ export function useInvoicesPage({ apiBaseUrl, portalBaseUrl }: Options) {
   }, [runExport, filters]);
 
   return {
-    filters: { search, isExact, statusId, projectId },
+    filters: { search, isExact, statusId, projectId, invoiceTypeId },
     setSearch,
     setIsExact,
     setStatusId,
     setProjectId,
+    setInvoiceTypeId,
     page,
     setPage,
     list,
     stats,
     projectOptions: projects.data,
+    /** The chosen project's invoice types; null while none is chosen, loading, or after a failure. */
+    // While another project's types load, the previous project's are not offered.
+    invoiceTypeOptions:
+      projectId !== null && !projectDropdowns.loading ? (projectDropdowns.data?.invoiceTypes ?? null) : null,
+    invoiceTypesFailure: projectId !== null ? projectDropdowns.failure : null,
+    reloadInvoiceTypes: projectDropdowns.reload,
+    generate: {
+      isOpen: generating,
+      open: openGenerate,
+      close: closeGenerate,
+      created: invoiceCreated,
+      createdInvoiceNumber,
+      dismissCreated: () => setCreatedInvoiceNumber(null),
+    },
     payment: {
       invoice: payingInvoice,
       open: openPayment,

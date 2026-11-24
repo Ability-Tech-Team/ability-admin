@@ -1,24 +1,45 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useApiQuery } from "@/src/hooks/useApiQuery";
 import { Link, usePathname } from "@/src/i18n/navigation";
+import { formatBadge } from "@/src/lib/sideMenuCounts";
+import { fetchSentNotificationsCount } from "@/src/services/notifications";
 
 type Tab = {
   key: string;
   href: string;
-  /** A count from the API; none yet (no route counts sent notifications). Never a made-up number. */
-  count?: number;
+  /** Shows how many notifications were sent (GET /admin/notifications). Never a made-up number. */
+  sentCount?: boolean;
 };
 
 const tabs: Tab[] = [
-  { key: "notifications", href: "/notifications" },
+  { key: "notifications", href: "/notifications", sentCount: true },
+  // No count for these in the API.
   { key: "templates", href: "/notifications/templates" },
   { key: "deliveryLogs", href: "/notifications/delivery-logs" },
 ];
 
-export default function NotificationsTabs() {
+type Props = {
+  /** Where the browser calls the API, for the count; null shows none. */
+  apiBaseUrl: string | null;
+  portalBaseUrl: string | null;
+};
+
+/**
+ * The section's tabs. The Notifications tab counts the sends in every project the employee can
+ * reach; when that can't be loaded the badge is left out, and the page itself says why.
+ */
+export default function NotificationsTabs({ apiBaseUrl, portalBaseUrl }: Props) {
   const t = useTranslations("Notifications");
   const pathname = usePathname();
+  const sent = useApiQuery({
+    apiBaseUrl,
+    portalBaseUrl,
+    key: "sent-count",
+    load: ({ apiBaseUrl: base, locale }) => fetchSentNotificationsCount(base, locale),
+  });
+  const sentBadge = sent.failure ? null : formatBadge(sent.data ?? undefined);
 
   return (
     <div className="flex items-center gap-0.5 overflow-x-auto px-5">
@@ -38,7 +59,7 @@ export default function NotificationsTabs() {
             }`}
           >
             {t(`tabs.${tab.key}` as Parameters<typeof t>[0])}
-            {tab.count !== undefined && (
+            {tab.sentCount && sentBadge && (
               <span
                 className={`rounded-full px-1.5 py-1 text-[10.5px] font-medium leading-none ${
                   isActive
@@ -46,7 +67,7 @@ export default function NotificationsTabs() {
                     : "bg-[#e2e8f0] text-gray-400"
                 }`}
               >
-                {tab.count.toLocaleString()}
+                {sentBadge}
               </span>
             )}
           </Link>
